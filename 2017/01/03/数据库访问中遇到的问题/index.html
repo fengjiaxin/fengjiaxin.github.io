@@ -8,28 +8,25 @@
   <link rel="dns-prefetch" href="https://fengjiaxin.github.io">
   <title>数据库访问中遇到的问题 | fengjiaxin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在编程过程中，Servlet总是抛出异常，说驱动加载失败，在网上找了很多例子，发现代码并没有问题，后来发现是jdbc的问题；
+  <meta name="description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
-在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。
-
-但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Drive">
+连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
+驱动字符串出错(com.mysql.jdbc.Driver">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库访问中遇到的问题">
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/01/03/数据库访问中遇到的问题/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
-<meta property="og:description" content="在编程过程中，Servlet总是抛出异常，说驱动加载失败，在网上找了很多例子，发现代码并没有问题，后来发现是jdbc的问题；
+<meta property="og:description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
-在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。
-
-但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Drive">
-<meta property="og:updated_time" content="2017-01-03T08:42:38.652Z">
+连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
+驱动字符串出错(com.mysql.jdbc.Driver">
+<meta property="og:updated_time" content="2017-01-03T09:51:58.989Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库访问中遇到的问题">
-<meta name="twitter:description" content="在编程过程中，Servlet总是抛出异常，说驱动加载失败，在网上找了很多例子，发现代码并没有问题，后来发现是jdbc的问题；
+<meta name="twitter:description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
-在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。
-
-但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Drive">
+连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
+驱动字符串出错(com.mysql.jdbc.Driver">
   
     <link rel="alternative" href="/atom.xml" title="fengjiaxin&#39;s blog" type="application/atom+xml">
   
@@ -189,12 +186,60 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在编程过程中，Servlet总是抛出异常，说驱动加载失败，在网上找了很多例子，发现代码并没有问题，后来发现是jdbc的问题；</p>
-<hr>
-<p>在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。</p>
-<hr>
-<p>但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Driver”);时 不会去查找驱动的。所以本实例中我们需要把mysql-connector-java-5.1.39-bin.jar 拷贝到 tomcat 下 lib 目录。</p>
+        <p>今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：</p>
+<ol>
+<li>连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”</li>
+<li>驱动字符串出错(com.mysql.jdbc.Driver)</li>
+<li>三是Classpath中没有加入合适的mysql_jdbc驱动</li>
+</ol>
+<p>经过我的仔细检查，出现了两次错误，总结如下：</p>
+<ol>
+<li>在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Driver”);时 不会去查找驱动的。所以本实例中我们需要把mysql-connector-java-5.1.39-bin.jar 拷贝到 tomcat 下 lib 目录。</li>
+<li>查看资料说Java1.8之后就不用写Class.forName(“com.mysql.jdbc.Driver”) ;  我就没写，后来将这句代码写上，发现成功连接数据库，下次还是写上吧。</li>
+</ol>
+<p>那我就把自己写的DBUtil.java代码贴上吧！</p>
+<pre><code>public class DBUtil {
+    public static Connection getConnection() {
+        String username = &quot;root&quot;;
+        String password = &quot;123456&quot;;
+        String url = &quot;jdbc:mysql://localhost:3306/itat_shop&quot;;
+        Connection con = null;
+        //1.加载驱动程序
+        try {
+            Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+            con = DriverManager.getConnection(url, username, password);
+        } catch(ClassNotFoundException |SQLException e) {
+            e.printStackTrace();
+        }
 
+        return con;
+    }
+
+    public static void close(Connection con) {
+        try {
+            if(con!=null) con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void close(java.sql.PreparedStatement ps) {
+        try {
+            if(ps!=null) ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void close(ResultSet rs) {
+        try {
+            if(rs!=null) rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
       
 
       
@@ -428,11 +473,11 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color2">Servlet/JSP 技术详解</a>
+                <a href="javascript:void(0)" class="color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color5">数据结构</a>
+                <a href="javascript:void(0)" class="color2">Servlet/JSP 技术详解</a>
               </li>
              
               <li class="article-tag-list-item">
