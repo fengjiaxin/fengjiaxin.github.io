@@ -158,6 +158,79 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-返回类型是接口的分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/03/返回类型是接口的分析/">返回类型是接口的分析</a>
+    </h1>
+  
+
+        
+        <a href="/2017/01/03/返回类型是接口的分析/" class="archive-article-date">
+  	<time datetime="2017-01-03T02:36:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天在学习Servlet的过程中，书上关于DaoFactory的代码如下：</p>
+<pre><code>public class DAOFactory {
+    public static IUserDao getUserDao() {
+        return new UserDao();
+    }
+}
+</code></pre><p>在这里IUserDao是一个接口类型，但是返回的确实一个实现类，这明显不是一个类型啊，我就带着疑问上网搜索，总结如下：</p>
+<ol>
+<li>接口虽然不能被实例化，但是接口的实现类都可以向上转型为接口；</li>
+<li>面向接口编程是指我们在编写代码时对数据参数的定义尽量写成接口，待真正实现的时候再用实际类型代替；</li>
+<li>代码的耦合性降低，在运行时我只需修改实现类类型，就可以实现不同的功能，而不必要修改接口的代码。</li>
+</ol>
+<h1 id="总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"><a href="#总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。" class="headerlink" title="总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"></a>总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color4">编程中遇到的问题</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/03/返回类型是接口的分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-Stack" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -532,6 +605,10 @@ public static String getString() throws IOException{
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color4">编程中遇到的问题</a>
               </li>
             
             <div class="clearfix"></div>
