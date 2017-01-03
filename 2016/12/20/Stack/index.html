@@ -9,48 +9,36 @@
   <title>StacK的一些例子 | fengjiaxin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="栈就是后进先出的数据结构1. 栈的简单实现，采用数组实现class StackX{
-private int maxSize;
-private long[] stackArray;
-private int top;
+    private int maxSize;
+    private long[] stackArray;
+    private int top;
 
-public StackX(int s){
-    maxSize = s;
-    stackArray = new long[maxSize];
-    top=-1;
-}
-
-pu">
+    public StackX(int s){
+        maxSize = s;
+        stackArray = new long[max">
 <meta property="og:type" content="article">
 <meta property="og:title" content="StacK的一些例子">
 <meta property="og:url" content="https://fengjiaxin.github.io/2016/12/20/Stack/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
 <meta property="og:description" content="栈就是后进先出的数据结构1. 栈的简单实现，采用数组实现class StackX{
-private int maxSize;
-private long[] stackArray;
-private int top;
+    private int maxSize;
+    private long[] stackArray;
+    private int top;
 
-public StackX(int s){
-    maxSize = s;
-    stackArray = new long[maxSize];
-    top=-1;
-}
-
-pu">
-<meta property="og:updated_time" content="2017-01-02T07:54:46.174Z">
+    public StackX(int s){
+        maxSize = s;
+        stackArray = new long[max">
+<meta property="og:updated_time" content="2017-01-03T03:13:02.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StacK的一些例子">
 <meta name="twitter:description" content="栈就是后进先出的数据结构1. 栈的简单实现，采用数组实现class StackX{
-private int maxSize;
-private long[] stackArray;
-private int top;
+    private int maxSize;
+    private long[] stackArray;
+    private int top;
 
-public StackX(int s){
-    maxSize = s;
-    stackArray = new long[maxSize];
-    top=-1;
-}
-
-pu">
+    public StackX(int s){
+        maxSize = s;
+        stackArray = new long[max">
   
     <link rel="alternative" href="/atom.xml" title="fengjiaxin&#39;s blog" type="application/atom+xml">
   
@@ -210,215 +198,202 @@ pu">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="栈就是后进先出的数据结构"><a href="#栈就是后进先出的数据结构" class="headerlink" title="栈就是后进先出的数据结构"></a>栈就是后进先出的数据结构</h1><h2 id="1-栈的简单实现，采用数组实现"><a href="#1-栈的简单实现，采用数组实现" class="headerlink" title="1. 栈的简单实现，采用数组实现"></a>1. 栈的简单实现，采用数组实现</h2><p><code>class StackX{</code></p>
-<pre><code>private int maxSize;
-private long[] stackArray;
-private int top;
+        <h1 id="栈就是后进先出的数据结构"><a href="#栈就是后进先出的数据结构" class="headerlink" title="栈就是后进先出的数据结构"></a>栈就是后进先出的数据结构</h1><h2 id="1-栈的简单实现，采用数组实现"><a href="#1-栈的简单实现，采用数组实现" class="headerlink" title="1. 栈的简单实现，采用数组实现"></a>1. 栈的简单实现，采用数组实现</h2><pre><code>class StackX{
+    private int maxSize;
+    private long[] stackArray;
+    private int top;
 
-public StackX(int s){
-    maxSize = s;
-    stackArray = new long[maxSize];
-    top=-1;
-}
-
-public void push(long value){
-    stackArray[++top] = value;
-}
-
-public long pop(){
-    return stackArray[top--];
-}
-
-public long peek(){
-    return stackArray[top];
-}
-
-public boolean isEmpty(){
-    return (top==-1);
-}
-
-public boolean isFull(){
-    return (top==maxSize-1);
-}}
-</code></pre><p> <code>class stackApp {</code></p>
-<pre><code>public static void main(String[] args) {
-    StackX theStack = new StackX(10);
-    theStack.push(20);
-    theStack.push(40);
-    theStack.push(60);
-    theStack.push(80);
-    while(!theStack.isEmpty()){
-        long value = theStack.pop();
-        System.out.print(value);
-        System.out.print(&quot; &quot;);
+    public StackX(int s){
+        maxSize = s;
+        stackArray = new long[maxSize];
+        top=-1;
     }
-    System.out.println(&quot;&quot;);
 
-}
-</code></pre><p><code>}</code></p>
-<h2 id="2-实现单词逆序功能"><a href="#2-实现单词逆序功能" class="headerlink" title="2. 实现单词逆序功能"></a>2. 实现单词逆序功能</h2><p><code>class StackY</code></p>
-<pre><code>private int maxSize;
-private char[] stackArray;
-private int top;
-
-public StackY(int s){
-    maxSize = s;
-    stackArray = new char[maxSize];
-    top =-1;
-}
-
-public void push(char j){
-    stackArray[++top] =j;
-}
-
-public char pop(){
-    return stackArray[top--];
-}
-
-public char peek(){
-    return stackArray[top];
-}
-
-public boolean isEmpty(){
-    return top==-1;
-}
-
-public boolean isFull(){
-    return (top==maxSize-1);
-}    
-</code></pre><p><code>}</code></p>
-<p><code>class Reverser{</code></p>
-<pre><code>private String input;
-private String output;
-public Reverser(String in){
-    this.input =in;
-}
-
-public String doRev(){
-    int stackSize =input.length();
-    StackY theStack  = new StackY(stackSize);
-    for(int i=0;i&lt;input.length();i++){
-        char ch = input.charAt(i);
-        theStack.push(ch);
+    public void push(long value){
+        stackArray[++top] = value;
     }
-    output = &quot;&quot;;
-    while(!theStack.isEmpty()){
-        char ch = theStack.pop();
-        output = output +ch;
+
+    public long pop(){
+        return stackArray[top--];
     }
-    return output;
-}
-</code></pre><p><code>}</code></p>
-<p> <code>class ReverseApp{</code></p>
-<pre><code>public static void main(String[] args) throws IOException{
-    String input,output;
-    while(true){
-        System.out.print(&quot;Enter a String:&quot;);
-        System.out.flush();
-        input = getString();
-        if(input.equals(&quot;&quot;))
-            break;
-        Reverser theReverser = new Reverser(input);
-        output = theReverser.doRev();
-        System.out.println(&quot;Reverse:&quot;+output);
+
+    public long peek(){
+        return stackArray[top];
+    }
+
+    public boolean isEmpty(){
+        return (top==-1);
+    }
+
+    public boolean isFull(){
+        return (top==maxSize-1);
     }
 }
-
-public static String getString() throws IOException{
-    InputStreamReader isr = new InputStreamReader(System.in);
-    BufferedReader br = new BufferedReader(isr);
-    String s = br.readLine();
-    return s;
+class stackApp {
+    public static void main(String[] args) {
+        StackX theStack = new StackX(10);
+        theStack.push(20);
+        theStack.push(40);
+        theStack.push(60);
+        theStack.push(80);
+        while(!theStack.isEmpty()){
+            long value = theStack.pop();
+            System.out.print(value);
+            System.out.print(&quot; &quot;);
+        }
+        System.out.println(&quot;&quot;);
+    }
 }
-</code></pre><p><code>}</code></p>
-<h2 id="3-实现分隔符匹配"><a href="#3-实现分隔符匹配" class="headerlink" title="3. 实现分隔符匹配"></a>3. 实现分隔符匹配</h2><h3 id="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"><a href="#具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。" class="headerlink" title="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"></a>具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。</h3><p><code>class StackZ{</code></p>
-<pre><code>private int maxSize;
-private char[] stackArray;
-private int top;
-
-public StackZ(int s){
-    maxSize = s;
-    stackArray = new char[maxSize];
-    top =-1;
+</code></pre><h2 id="2-实现单词逆序功能"><a href="#2-实现单词逆序功能" class="headerlink" title="2. 实现单词逆序功能"></a>2. 实现单词逆序功能</h2><pre><code>class StackY
+    private int maxSize;
+    private char[] stackArray;
+    private int top;
+    public StackY(int s){
+        maxSize = s;
+        stackArray = new char[maxSize];
+        top =-1;
+    }
+    public void push(char j){
+        stackArray[++top] =j;
+    }
+    public char pop(){
+        return stackArray[top--];
+    }
+    public char peek(){
+        return stackArray[top];
+    }
+    public boolean isEmpty(){
+        return top==-1;
+    }
+    public boolean isFull(){
+        return (top==maxSize-1);
+    }    
 }
-
-public void push(char j){
-    stackArray[++top] =j;
+class Reverser{
+    private String input;
+    private String output;
+    public Reverser(String in){
+        this.input =in;
+    }
+    public String doRev(){
+        int stackSize =input.length();
+        StackY theStack  = new StackY(stackSize);
+        for(int i=0;i&lt;input.length();i++){
+            char ch = input.charAt(i);
+            theStack.push(ch);
+        }
+        output = &quot;&quot;;
+        while(!theStack.isEmpty()){
+            char ch = theStack.pop();
+            output = output +ch;
+        }
+        return output;
+    }
 }
-
-public char pop(){
-    return stackArray[top--];
-}
-
-public char peek(){
-    return stackArray[top];
-}
-
-public boolean isEmpty(){
-    return top==-1;
-}
-</code></pre><p><code>}</code></p>
-<p><code>class BracketChecker{</code></p>
-<pre><code>private String input;
-public BracketChecker(String in){
-    this.input =in;
-}
-
-public void check(){
-    int stackSize = input.length();
-    StackZ theStack = new StackZ(stackSize);
-    for(int j =0;j&lt;input.length();j++){
-        char ch =input.charAt(j);
-        switch(ch)
-        {
-            case&apos;{&apos;:
-            case&apos;[&apos;:
-            case&apos;(&apos;:
-                theStack.push(ch);
+class ReverseApp{
+    public static void main(String[] args) throws IOException{
+        String input,output;
+        while(true){
+            System.out.print(&quot;Enter a String:&quot;);
+            System.out.flush();
+            input = getString();
+            if(input.equals(&quot;&quot;))
                 break;
-            case&apos;}&apos;:
-            case&apos;]&apos;:
-            case&apos;)&apos;:
-                if(!theStack.isEmpty()){
-                    char chx = theStack.pop();
-                    if(chx ==&apos;{&apos; &amp;&amp; ch!=&apos;}&apos; ||
-                       chx ==&apos;[&apos; &amp;&amp; ch!=&apos;]&apos; ||
-                       chx ==&apos;(&apos; &amp;&amp; ch!=&apos;)&apos;) 
-                        System.out.println(&quot;Error: &quot;+ch+&quot; at &quot;+j);
-                }else
-                    System.out.println(&quot;Error: &quot;+ch+&quot; at &quot;+j);
-                break;
-            default:
-                break;
+            Reverser theReverser = new Reverser(input);
+            output = theReverser.doRev();
+            System.out.println(&quot;Reverse:&quot;+output);
         }
     }
-    if(!theStack.isEmpty()){
-        System.out.println(&quot;Error :missing right delimiter&quot;);
+    public static String getString() throws IOException{
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(isr);
+        String s = br.readLine();
+        return s;
     }
 }
-</code></pre><p><code>}</code></p>
-<p><code>class BracketsApp{</code></p>
-<pre><code>public static void main(String[] args) throws IOException{
-    String input;
-    while(true){
-        System.out.print(&quot;Enter string containing delimiters:&quot;);
-        System.out.flush();
-        input = getString();
-        if(input.equals(&quot;&quot;))
-            break;
-        BracketChecker theChecker = new BracketChecker(input);
-        theChecker.check();
+</code></pre><h2 id="3-实现分隔符匹配"><a href="#3-实现分隔符匹配" class="headerlink" title="3. 实现分隔符匹配"></a>3. 实现分隔符匹配</h2><h3 id="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"><a href="#具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。" class="headerlink" title="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"></a>具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。</h3><pre><code>class StackZ{
+    private int maxSize;
+    private char[] stackArray;
+    private int top;
+    public StackZ(int s){
+        maxSize = s;
+        stackArray = new char[maxSize];
+        top =-1;
+    }
+    public void push(char j){
+        stackArray[++top] =j;
+    }
+    public char pop(){
+        return stackArray[top--];
+    }
+    public char peek(){
+        return stackArray[top];
+    }
+    public boolean isEmpty(){
+        return top==-1;
     }
 }
 
-public static String getString() throws IOException{
-    InputStreamReader isr = new InputStreamReader(System.in);
-    BufferedReader br = new BufferedReader(isr);
-    String s = br.readLine();
-    return s;
+class BracketChecker{
+    private String input;
+    public BracketChecker(String in){
+        this.input =in;
+    }
+    public void check(){
+        int stackSize = input.length();
+        StackZ theStack = new StackZ(stackSize);
+        for(int j =0;j&lt;input.length();j++){
+            char ch =input.charAt(j);
+            switch(ch)
+            {
+                case&apos;{&apos;:
+                case&apos;[&apos;:
+                case&apos;(&apos;:
+                    theStack.push(ch);
+                    break;
+                case&apos;}&apos;:
+                case&apos;]&apos;:
+                case&apos;)&apos;:
+                    if(!theStack.isEmpty()){
+                        char chx = theStack.pop();
+                        if(chx ==&apos;{&apos; &amp;&amp; ch!=&apos;}&apos; ||
+                           chx ==&apos;[&apos; &amp;&amp; ch!=&apos;]&apos; ||
+                           chx ==&apos;(&apos; &amp;&amp; ch!=&apos;)&apos;) 
+                            System.out.println(&quot;Error: &quot;+ch+&quot; at &quot;+j);
+                    }else
+                        System.out.println(&quot;Error: &quot;+ch+&quot; at &quot;+j);
+                    break;
+                default:
+                    break;
+            }
+        }
+        if(!theStack.isEmpty()){
+            System.out.println(&quot;Error :missing right delimiter&quot;);
+        }
+    }
 }
-</code></pre><p><code>}</code></p>
-<h2 id="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"><a href="#总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。" class="headerlink" title="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"></a>总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。</h2>
+
+class BracketsApp{
+    public static void main(String[] args) throws IOException{
+        String input;
+        while(true){
+            System.out.print(&quot;Enter string containing delimiters:&quot;);
+            System.out.flush();
+            input = getString();
+            if(input.equals(&quot;&quot;))
+                break;
+            BracketChecker theChecker = new BracketChecker(input);
+            theChecker.check();
+        }
+    }
+    public static String getString() throws IOException{
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(isr);
+        String s = br.readLine();
+        return s;
+    }
+}
+</code></pre><h2 id="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"><a href="#总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。" class="headerlink" title="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"></a>总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。</h2>
       
 
       
