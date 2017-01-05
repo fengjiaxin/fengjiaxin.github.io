@@ -72,6 +72,8 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/tags/随笔/">随笔</a></li>
+	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -124,6 +126,8 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -140,7 +144,9 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
+		        
+					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
 		        
 				</ul>
 			</nav>
@@ -379,6 +385,15 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
   
 <nav id="article-nav">
   
+    <a href="/2017/01/05/JVM内存回收策略/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          JVM内存回收策略
+        
+      </div>
+    </a>
+  
   
     <a href="/2017/01/03/关于javaWeb学习过程中的一些个人感悟/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">关于javaWeb学习过程中的一些个人感悟</div>
@@ -417,16 +432,16 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
     </div>
     <script>
 	var yiliaConfig = {
-		mathjax: false,
+		mathjax: true,
 		isHome: false,
 		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
-		open_in_new: false,
+		open_in_new: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
@@ -446,6 +461,27 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 </script>
 
 
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
     
@@ -500,11 +536,15 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color2">JAVA总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">个人笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">stack</a>
+                <a href="javascript:void(0)" class="color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -512,11 +552,11 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color2">Java接口</a>
+                <a href="javascript:void(0)" class="color3">JavaWeb</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">JavaWeb</a>
+                <a href="javascript:void(0)" class="color2">Java接口</a>
               </li>
             
             <div class="clearfix"></div>

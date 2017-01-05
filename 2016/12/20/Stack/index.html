@@ -28,7 +28,7 @@
     public StackX(int s){
         maxSize = s;
         stackArray = new long[max">
-<meta property="og:updated_time" content="2017-01-03T10:03:37.581Z">
+<meta property="og:updated_time" content="2017-01-05T03:29:00.920Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StacK的一些例子">
 <meta name="twitter:description" content="栈就是后进先出的数据结构1. 栈的简单实现，采用数组实现class StackX{
@@ -80,6 +80,8 @@
 			<ul>
 			
 				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔/">随笔</a></li>
 	        
 			</ul>
 		</nav>
@@ -133,6 +135,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -149,7 +153,9 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
+		        
+					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
 		        
 				</ul>
 			</nav>
@@ -297,7 +303,8 @@ class ReverseApp{
         return s;
     }
 }
-</code></pre><h2 id="3-实现分隔符匹配"><a href="#3-实现分隔符匹配" class="headerlink" title="3. 实现分隔符匹配"></a>3. 实现分隔符匹配</h2><h3 id="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"><a href="#具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。" class="headerlink" title="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"></a>具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。</h3><pre><code>class StackZ{
+</code></pre><h2 id="3-实现分隔符匹配"><a href="#3-实现分隔符匹配" class="headerlink" title="3. 实现分隔符匹配"></a>3. 实现分隔符匹配</h2><p>　 具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。</p>
+<pre><code>class StackZ{
     private int maxSize;
     private char[] stackArray;
     private int top;
@@ -379,7 +386,8 @@ class BracketsApp{
         return s;
     }
 }
-</code></pre><h2 id="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"><a href="#总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。" class="headerlink" title="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"></a>总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。</h2>
+</code></pre><p>　 <strong>总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。</strong></p>
+
       
 
       
@@ -413,18 +421,13 @@ class BracketsApp{
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color1">stack</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">数据结构</a>
         </li>
       
 		</ul>
 	</div>
 
       
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/数据结构/">数据结构</a>
-	</div>
-
 
       
 
@@ -530,16 +533,16 @@ class BracketsApp{
     </div>
     <script>
 	var yiliaConfig = {
-		mathjax: false,
+		mathjax: true,
 		isHome: false,
 		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
-		open_in_new: false,
+		open_in_new: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
@@ -559,6 +562,27 @@ class BracketsApp{
 </script>
 
 
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
     
@@ -613,11 +637,15 @@ class BracketsApp{
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color2">JAVA总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">个人笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">stack</a>
+                <a href="javascript:void(0)" class="color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -625,11 +653,11 @@ class BracketsApp{
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color2">Java接口</a>
+                <a href="javascript:void(0)" class="color3">JavaWeb</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">JavaWeb</a>
+                <a href="javascript:void(0)" class="color2">Java接口</a>
               </li>
             
             <div class="clearfix"></div>

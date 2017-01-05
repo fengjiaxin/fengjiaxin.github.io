@@ -59,6 +59,8 @@
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/tags/随笔/">随笔</a></li>
+	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -111,6 +113,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -127,7 +131,9 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
+		        
+					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
 		        
 				</ul>
 			</nav>
@@ -143,6 +149,92 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-JVM内存回收策略" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/05/JVM内存回收策略/">JVM内存回收策略</a>
+    </h1>
+  
+
+        
+        <a href="/2017/01/05/JVM内存回收策略/" class="archive-article-date">
+  	<time datetime="2017-01-05T03:17:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> 　开发人员一般情况下不需要了解内存这个概念，因为内存的开辟与回收由JVM操作，但是在学习了操作系统之后，想要了解数据在Java是如何申请内存的，总结而言就是通常的显示内存申请有如下两种：</p>
+<ol>
+<li>静态内存分配</li>
+<li>动态内存分配</li>
+</ol>
+<h4 id="1-1-静态内存分配"><a href="#1-1-静态内存分配" class="headerlink" title="1.1 静态内存分配"></a>1.1 静态内存分配</h4><p>　在Java中静态内存分配是指在Java编译时就已经能确定需要的内存空间，当程序被加载时系统把内存一次性分配给它；这些内存不会再程序执行时发生变化，直到程序执行结束时内存才会被回收。在Java的类和方法中的局部变量包括原生数据类型和对象的引用都是静态分配内存的。</p>
+<h4 id="1-2-动态内存分配和回收"><a href="#1-2-动态内存分配和回收" class="headerlink" title="1.2 动态内存分配和回收"></a>1.2 动态内存分配和回收</h4><p>　在Java中对象的内存空间是动态分配的，所谓动态分配就是在程序执行时才知道要分配的存储空间大小，而不是在编译时就能够确定的。</p>
+<p>　从前面的分析中可知内存的分配实在对象创建时发生的，而内存的回收是以对象不再引用为前提的，这种动态内存的分配和回收是和Java中的一些数据结构类型关联的。</p>
+<p>　如何确定这个对象什么时候不再被使用，如何回收，这正是JVM的垃圾收集器的工作。</p>
+<h4 id="1-3-如何检测垃圾"><a href="#1-3-如何检测垃圾" class="headerlink" title="1.3 如何检测垃圾"></a>1.3 如何检测垃圾</h4><p>垃圾收集器的工作：</p>
+<ol>
+<li>正确检测出垃圾对象</li>
+<li>释放垃圾对象占用的内存空间</li>
+</ol>
+<p>如何检测出垃圾是GC上的关键；从前面的分析可以总结出：只要某个对象不再被其他的活动对象引用，这个对象就可以被回收了，活动对象指的是能够被一个跟对象集合到达的对象。</p>
+<p>那么跟对象集合中有些什么呢？</p>
+<ol>
+<li>在方法中局部变量区的引用</li>
+<li>在Java操作栈中的对象引用</li>
+<li>在常量池的对象引用</li>
+<li>在本地方法中次有的对象引用</li>
+<li>类的Class对象</li>
+</ol>
+<p>JVM在做垃圾回收时就会检查堆中的所有对象是否都会被这些跟对象直接或间接引用，能够被引用的对象就是活动对象，否则就被GC回收。</p>
+<h4 id="1-4-基于分代的垃圾收集算法"><a href="#1-4-基于分代的垃圾收集算法" class="headerlink" title="1.4 基于分代的垃圾收集算法"></a>1.4 基于分代的垃圾收集算法</h4><p>算法的设计思路：把对象按照寿命长短分组，分为年轻代和老年代，新创建的对象被分在年轻代，如果对象经过几次回收后仍然存活，那么把这个对象划分到老年代。老年代的收集频度不像年轻代那么频繁，这样就减少了每次垃圾收集时所要扫描的对象的数量，提高了垃圾回收效率。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color2">JAVA总结</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/05/JVM内存回收策略/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
   
     <article id="post-Servlet技术笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -704,7 +796,8 @@ class ReverseApp{
         return s;
     }
 }
-</code></pre><h2 id="3-实现分隔符匹配"><a href="#3-实现分隔符匹配" class="headerlink" title="3. 实现分隔符匹配"></a>3. 实现分隔符匹配</h2><h3 id="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"><a href="#具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。" class="headerlink" title="具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。"></a>具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。</h3><pre><code>class StackZ{
+</code></pre><h2 id="3-实现分隔符匹配"><a href="#3-实现分隔符匹配" class="headerlink" title="3. 实现分隔符匹配"></a>3. 实现分隔符匹配</h2><p>　 具体实现思想：程序从字符串不断读取字符，每次读取一个字符，若发现它是左分隔符，将它压栈，当从输入中读到一个右分割符时，弹出栈顶的的左分割符，并且查看它是否和右分隔符相匹配，如果不匹配，则程序报错；如果栈中没有左分隔符和右分隔符匹配，程序也报错；分隔符没有被匹配，表现为把所有的字符读入之后，栈中仍留有分隔符。</p>
+<pre><code>class StackZ{
     private int maxSize;
     private char[] stackArray;
     private int top;
@@ -786,7 +879,8 @@ class BracketsApp{
         return s;
     }
 }
-</code></pre><h2 id="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"><a href="#总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。" class="headerlink" title="总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。"></a>总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。</h2>
+</code></pre><p>　 <strong>总结：在编程过程中，好的编程习惯就是将方法细化，任何可能重复的方法将其封装到一个方法中，下次再用调用即可。</strong></p>
+
       
 
       
@@ -799,18 +893,13 @@ class BracketsApp{
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color1">stack</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">数据结构</a>
         </li>
       
 		</ul>
 	</div>
 
       
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/数据结构/">数据结构</a>
-	</div>
-
 
       
         <p class="article-more-link">
@@ -853,16 +942,16 @@ class BracketsApp{
     </div>
     <script>
 	var yiliaConfig = {
-		mathjax: false,
+		mathjax: true,
 		isHome: true,
 		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
-		open_in_new: false,
+		open_in_new: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
@@ -882,6 +971,27 @@ class BracketsApp{
 </script>
 
 
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
     
@@ -936,11 +1046,15 @@ class BracketsApp{
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color2">JAVA总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">个人笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">stack</a>
+                <a href="javascript:void(0)" class="color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -948,11 +1062,11 @@ class BracketsApp{
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color2">Java接口</a>
+                <a href="javascript:void(0)" class="color3">JavaWeb</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">JavaWeb</a>
+                <a href="javascript:void(0)" class="color2">Java接口</a>
               </li>
             
             <div class="clearfix"></div>

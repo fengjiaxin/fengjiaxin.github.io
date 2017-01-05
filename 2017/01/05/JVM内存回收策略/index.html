@@ -6,17 +6,33 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://fengjiaxin.github.io">
-  <title>Tag: stack | fengjiaxin&#39;s blog</title>
+  <title>JVM内存回收策略 | fengjiaxin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一点一滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="fengjiaxin's blog">
-<meta property="og:url" content="https://fengjiaxin.github.io/tags/stack/index.html">
+  <meta name="description" content="开发人员一般情况下不需要了解内存这个概念，因为内存的开辟与回收由JVM操作，但是在学习了操作系统之后，想要了解数据在Java是如何申请内存的，总结而言就是通常的显示内存申请有如下两种：
+
+静态内存分配
+动态内存分配
+
+1.1 静态内存分配　在Java中静态内存分配是指在Java编译时就已经能确定需要的内存空间，当程序被加载时系统把内存一次性分配给它；这些内存不会再程序执行时发生变化，直到程序执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM内存回收策略">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/01/05/JVM内存回收策略/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
-<meta property="og:description" content="记录一点一滴">
+<meta property="og:description" content="开发人员一般情况下不需要了解内存这个概念，因为内存的开辟与回收由JVM操作，但是在学习了操作系统之后，想要了解数据在Java是如何申请内存的，总结而言就是通常的显示内存申请有如下两种：
+
+静态内存分配
+动态内存分配
+
+1.1 静态内存分配　在Java中静态内存分配是指在Java编译时就已经能确定需要的内存空间，当程序被加载时系统把内存一次性分配给它；这些内存不会再程序执行时发生变化，直到程序执">
+<meta property="og:updated_time" content="2017-01-05T07:34:38.813Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="fengjiaxin's blog">
-<meta name="twitter:description" content="记录一点一滴">
+<meta name="twitter:title" content="JVM内存回收策略">
+<meta name="twitter:description" content="开发人员一般情况下不需要了解内存这个概念，因为内存的开辟与回收由JVM操作，但是在学习了操作系统之后，想要了解数据在Java是如何申请内存的，总结而言就是通常的显示内存申请有如下两种：
+
+静态内存分配
+动态内存分配
+
+1.1 静态内存分配　在Java中静态内存分配是指在Java编译时就已经能确定需要的内存空间，当程序被加载时系统把内存一次性分配给它；这些内存不会再程序执行时发生变化，直到程序执">
   
     <link rel="alternative" href="/atom.xml" title="fengjiaxin&#39;s blog" type="application/atom+xml">
   
@@ -58,6 +74,8 @@
 			<ul>
 			
 				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔/">随笔</a></li>
 	        
 			</ul>
 		</nav>
@@ -111,6 +129,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -127,7 +147,9 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
+		        
+					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
 		        
 				</ul>
 			</nav>
@@ -142,65 +164,173 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-JVM内存回收策略" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/12/20/Stack/" class="archive-article-date">
-  	<time datetime="2016-12-20T12:41:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-20</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/12/20/Stack/">StacK的一些例子</a>
+    <h1 class="article-title" itemprop="name">
+      JVM内存回收策略
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/01/05/JVM内存回收策略/" class="archive-article-date">
+  	<time datetime="2017-01-05T03:17:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> 　开发人员一般情况下不需要了解内存这个概念，因为内存的开辟与回收由JVM操作，但是在学习了操作系统之后，想要了解数据在Java是如何申请内存的，总结而言就是通常的显示内存申请有如下两种：</p>
+<ol>
+<li>静态内存分配</li>
+<li>动态内存分配</li>
+</ol>
+<h4 id="1-1-静态内存分配"><a href="#1-1-静态内存分配" class="headerlink" title="1.1 静态内存分配"></a>1.1 静态内存分配</h4><p>　在Java中静态内存分配是指在Java编译时就已经能确定需要的内存空间，当程序被加载时系统把内存一次性分配给它；这些内存不会再程序执行时发生变化，直到程序执行结束时内存才会被回收。在Java的类和方法中的局部变量包括原生数据类型和对象的引用都是静态分配内存的。</p>
+<h4 id="1-2-动态内存分配和回收"><a href="#1-2-动态内存分配和回收" class="headerlink" title="1.2 动态内存分配和回收"></a>1.2 动态内存分配和回收</h4><p>　在Java中对象的内存空间是动态分配的，所谓动态分配就是在程序执行时才知道要分配的存储空间大小，而不是在编译时就能够确定的。</p>
+<p>　从前面的分析中可知内存的分配实在对象创建时发生的，而内存的回收是以对象不再引用为前提的，这种动态内存的分配和回收是和Java中的一些数据结构类型关联的。</p>
+<p>　如何确定这个对象什么时候不再被使用，如何回收，这正是JVM的垃圾收集器的工作。</p>
+<h4 id="1-3-如何检测垃圾"><a href="#1-3-如何检测垃圾" class="headerlink" title="1.3 如何检测垃圾"></a>1.3 如何检测垃圾</h4><p>垃圾收集器的工作：</p>
+<ol>
+<li>正确检测出垃圾对象</li>
+<li>释放垃圾对象占用的内存空间</li>
+</ol>
+<p>如何检测出垃圾是GC上的关键；从前面的分析可以总结出：只要某个对象不再被其他的活动对象引用，这个对象就可以被回收了，活动对象指的是能够被一个跟对象集合到达的对象。</p>
+<p>那么跟对象集合中有些什么呢？</p>
+<ol>
+<li>在方法中局部变量区的引用</li>
+<li>在Java操作栈中的对象引用</li>
+<li>在常量池的对象引用</li>
+<li>在本地方法中次有的对象引用</li>
+<li>类的Class对象</li>
+</ol>
+<p>JVM在做垃圾回收时就会检查堆中的所有对象是否都会被这些跟对象直接或间接引用，能够被引用的对象就是活动对象，否则就被GC回收。</p>
+<h4 id="1-4-基于分代的垃圾收集算法"><a href="#1-4-基于分代的垃圾收集算法" class="headerlink" title="1.4 基于分代的垃圾收集算法"></a>1.4 基于分代的垃圾收集算法</h4><p>算法的设计思路：把对象按照寿命长短分组，分为年轻代和老年代，新创建的对象被分在年轻代，如果对象经过几次回收后仍然存活，那么把这个对象划分到老年代。老年代的收集频度不像年轻代那么频繁，这样就减少了每次垃圾收集时所要扫描的对象的数量，提高了垃圾回收效率。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color1">stack</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color2">JAVA总结</a>
         </li>
       
 		</ul>
 	</div>
 
-          
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/数据结构/">数据结构</a>
-	</div>
+      
 
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://fengjiaxin.github.io/2017/01/05/JVM内存回收策略/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2017/01/03/Servlet技术笔记/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Servlet技术笔记</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -221,16 +351,16 @@
     </div>
     <script>
 	var yiliaConfig = {
-		mathjax: false,
+		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
-		open_in_new: false,
+		open_in_new: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
@@ -250,6 +380,27 @@
 </script>
 
 
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
     
@@ -304,11 +455,15 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color2">JAVA总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">个人笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">stack</a>
+                <a href="javascript:void(0)" class="color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -316,11 +471,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color2">Java接口</a>
+                <a href="javascript:void(0)" class="color3">JavaWeb</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">JavaWeb</a>
+                <a href="javascript:void(0)" class="color2">Java接口</a>
               </li>
             
             <div class="clearfix"></div>
