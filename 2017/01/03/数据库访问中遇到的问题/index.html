@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Java连接jdbc," />
+  <meta name="keywords" content="jdbc,mysql," />
 
 
 
@@ -87,7 +87,7 @@
 <meta name="description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
 连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
-驱动字符串出错(com.mysql.jdbc.Driver">
+驱动字符串出错(com.mysql.jdbc.Drive">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库访问中遇到的问题">
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/01/03/数据库访问中遇到的问题/index.html">
@@ -95,14 +95,14 @@
 <meta property="og:description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
 连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
-驱动字符串出错(com.mysql.jdbc.Driver">
-<meta property="og:updated_time" content="2017-01-03T10:06:08.881Z">
+驱动字符串出错(com.mysql.jdbc.Drive">
+<meta property="og:updated_time" content="2017-01-05T13:19:55.524Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库访问中遇到的问题">
 <meta name="twitter:description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
 连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
-驱动字符串出错(com.mysql.jdbc.Driver">
+驱动字符串出错(com.mysql.jdbc.Drive">
 
 
 
@@ -321,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/常见问题/" itemprop="url" rel="index">
-                    <span itemprop="name">常见问题</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -356,18 +356,18 @@
       
 
       
-        <p>今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：</p>
+        <p>　今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：</p>
 <ol>
 <li>连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”</li>
 <li>驱动字符串出错(com.mysql.jdbc.Driver)</li>
 <li>三是Classpath中没有加入合适的mysql_jdbc驱动</li>
 </ol>
-<p>经过我的仔细检查，出现了两次错误，总结如下：</p>
+<p>　经过我的仔细检查，出现了两次错误，总结如下：</p>
 <ol>
 <li>在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Driver”);时 不会去查找驱动的。所以本实例中我们需要把mysql-connector-java-5.1.39-bin.jar 拷贝到 tomcat 下 lib 目录。</li>
 <li>查看资料说Java1.8之后就不用写Class.forName(“com.mysql.jdbc.Driver”) ;  我就没写，后来将这句代码写上，发现成功连接数据库，下次还是写上吧。</li>
 </ol>
-<p>那我就把自己写的DBUtil.java代码贴上吧！</p>
+<p>　那我就把自己写的DBUtil.java代码贴上吧！</p>
 <pre><code>public class DBUtil {
     public static Connection getConnection() {
         String username = &quot;root&quot;;
@@ -432,7 +432,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java连接jdbc/" rel="tag"># Java连接jdbc</a>
+            <a href="/tags/jdbc/" rel="tag"># jdbc</a>
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
         </div>
       
@@ -441,7 +443,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/03/返回类型是接口的分析/" rel="next" title="返回类型是接口的分析">
+              <a href="/2016/12/27/返回类型是接口的分析/" rel="next" title="返回类型是接口的分析">
                 <i class="fa fa-chevron-left"></i> 返回类型是接口的分析
               </a>
             
@@ -451,8 +453,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/03/关于javaWeb学习过程中的一些个人感悟/" rel="prev" title="关于javaWeb学习过程中的一些个人感悟">
-                关于javaWeb学习过程中的一些个人感悟 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/05/JVM内存回收策略/" rel="prev" title="JVM内存回收策略">
+                JVM内存回收策略 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -532,7 +534,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
