@@ -86,23 +86,38 @@
 
 <meta name="description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
-连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
-驱动字符串出错(com.mysql.jdbc.Drive">
+连接URL格式出现了问题
+驱动字符串出错(com.mysql.jdbc.Driver)
+三是Classpath中没有加入合适的mysql_jdbc驱动
+
+　经过我的仔细检查，出现了两次错误，总结如下：
+
+在 java 项目中，只需要在 Eclipse 中引入 my">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库访问中遇到的问题">
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/01/03/数据库访问中遇到的问题/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
 <meta property="og:description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
-连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
-驱动字符串出错(com.mysql.jdbc.Drive">
-<meta property="og:updated_time" content="2017-01-05T14:10:05.798Z">
+连接URL格式出现了问题
+驱动字符串出错(com.mysql.jdbc.Driver)
+三是Classpath中没有加入合适的mysql_jdbc驱动
+
+　经过我的仔细检查，出现了两次错误，总结如下：
+
+在 java 项目中，只需要在 Eclipse 中引入 my">
+<meta property="og:updated_time" content="2017-01-06T03:54:21.661Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库访问中遇到的问题">
 <meta name="twitter:description" content="今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：
 
-连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”
-驱动字符串出错(com.mysql.jdbc.Drive">
+连接URL格式出现了问题
+驱动字符串出错(com.mysql.jdbc.Driver)
+三是Classpath中没有加入合适的mysql_jdbc驱动
+
+　经过我的仔细检查，出现了两次错误，总结如下：
+
+在 java 项目中，只需要在 Eclipse 中引入 my">
 
 
 
@@ -358,7 +373,7 @@
       
         <p>　今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：</p>
 <ol>
-<li>连接URL格式出现了问题(Connection conn=DriverManager.getConnection(“jdbc:mysql://localhost:3306/XX”,”root”,”XXXX”</li>
+<li>连接URL格式出现了问题</li>
 <li>驱动字符串出错(com.mysql.jdbc.Driver)</li>
 <li>三是Classpath中没有加入合适的mysql_jdbc驱动</li>
 </ol>
@@ -516,7 +531,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -534,7 +549,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="接口,单例设计模式," />
+  <meta name="keywords" content="里氏替换原则," />
 
 
 
@@ -84,34 +84,40 @@
 
 
 
-<meta name="description" content="今天在学习Servlet的过程中，书上关于DaoFactory的代码如下：
-public class DAOFactory {
-    public static IUserDao getUserDao() {
-        return new UserDao();
-    }
-}
-　在这里IUserDao是一个接口类型，但是返回的确实一个实现类，这明显不是一个类型啊，我就带着疑问上网搜索，">
+<meta name="description" content="1 问题由来　对象有三大特性：封装、继承、多态，子类在继承父类后，经常任意重写父类的方法，这时候可能会导致父类的原功能发生故障。
+2 里氏替换原则
+通俗的定义：所有引用基类的地方必须能透明地使用其子类的对象。
+更通俗的定义：子类可以扩展父类的功能，但不能改变父类原有的功能。
+
+
+ 　已经不能再通俗了，那么我们就以简单的例子更好地理解吧：
+
+这里我引用的是李天炜的例子，当初看的时候理解的很清楚，多谢">
 <meta property="og:type" content="article">
-<meta property="og:title" content="返回类型是接口的分析">
-<meta property="og:url" content="https://fengjiaxin.github.io/2016/12/27/返回类型是接口的分析/index.html">
+<meta property="og:title" content="设计模式六大原则(1): 里氏替换原则">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-1-里氏替换原则/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
-<meta property="og:description" content="今天在学习Servlet的过程中，书上关于DaoFactory的代码如下：
-public class DAOFactory {
-    public static IUserDao getUserDao() {
-        return new UserDao();
-    }
-}
-　在这里IUserDao是一个接口类型，但是返回的确实一个实现类，这明显不是一个类型啊，我就带着疑问上网搜索，">
-<meta property="og:updated_time" content="2017-01-05T14:09:54.099Z">
+<meta property="og:description" content="1 问题由来　对象有三大特性：封装、继承、多态，子类在继承父类后，经常任意重写父类的方法，这时候可能会导致父类的原功能发生故障。
+2 里氏替换原则
+通俗的定义：所有引用基类的地方必须能透明地使用其子类的对象。
+更通俗的定义：子类可以扩展父类的功能，但不能改变父类原有的功能。
+
+
+ 　已经不能再通俗了，那么我们就以简单的例子更好地理解吧：
+
+这里我引用的是李天炜的例子，当初看的时候理解的很清楚，多谢">
+<meta property="og:updated_time" content="2017-01-06T04:22:22.369Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="返回类型是接口的分析">
-<meta name="twitter:description" content="今天在学习Servlet的过程中，书上关于DaoFactory的代码如下：
-public class DAOFactory {
-    public static IUserDao getUserDao() {
-        return new UserDao();
-    }
-}
-　在这里IUserDao是一个接口类型，但是返回的确实一个实现类，这明显不是一个类型啊，我就带着疑问上网搜索，">
+<meta name="twitter:title" content="设计模式六大原则(1): 里氏替换原则">
+<meta name="twitter:description" content="1 问题由来　对象有三大特性：封装、继承、多态，子类在继承父类后，经常任意重写父类的方法，这时候可能会导致父类的原功能发生故障。
+2 里氏替换原则
+通俗的定义：所有引用基类的地方必须能透明地使用其子类的对象。
+更通俗的定义：子类可以扩展父类的功能，但不能改变父类原有的功能。
+
+
+ 　已经不能再通俗了，那么我们就以简单的例子更好地理解吧：
+
+这里我引用的是李天炜的例子，当初看的时候理解的很清楚，多谢">
 
 
 
@@ -139,13 +145,13 @@ public class DAOFactory {
 
 
 
-  <link rel="canonical" href="https://fengjiaxin.github.io/2016/12/27/返回类型是接口的分析/"/>
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-1-里氏替换原则/"/>
 
 
 
 
 
-  <title> 返回类型是接口的分析 | fengjiaxin's blog </title>
+  <title> 设计模式六大原则(1): 里氏替换原则 | fengjiaxin's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +274,7 @@ public class DAOFactory {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2016/12/27/返回类型是接口的分析/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-1-里氏替换原则/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -292,7 +298,7 @@ public class DAOFactory {
             
             
               
-                返回类型是接口的分析
+                设计模式六大原则(1): 里氏替换原则
               
             
           </h1>
@@ -307,8 +313,8 @@ public class DAOFactory {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-27T10:36:51+08:00">
-                2016-12-27
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:56:46+08:00">
+                2017-01-06
               </time>
             
 
@@ -365,19 +371,103 @@ public class DAOFactory {
       
 
       
-        <p>　今天在学习Servlet的过程中，书上关于DaoFactory的代码如下：</p>
-<pre><code>public class DAOFactory {
-    public static IUserDao getUserDao() {
-        return new UserDao();
+        <h3 id="1-问题由来"><a href="#1-问题由来" class="headerlink" title="1 问题由来"></a>1 问题由来</h3><p>　对象有三大特性：封装、继承、多态，子类在继承父类后，经常任意重写父类的方法，这时候可能会导致父类的原功能发生故障。</p>
+<h3 id="2-里氏替换原则"><a href="#2-里氏替换原则" class="headerlink" title="2 里氏替换原则"></a>2 里氏替换原则</h3><ul>
+<li>通俗的定义：所有引用基类的地方必须能透明地使用其子类的对象。</li>
+<li>更通俗的定义：子类可以扩展父类的功能，但不能改变父类原有的功能。</li>
+</ul>
+<hr>
+<p> 　已经不能再通俗了，那么我们就以简单的例子更好地理解吧：</p>
+<blockquote>
+<p>这里我引用的是李天炜的例子，当初看的时候理解的很清楚，多谢前辈！</p>
+</blockquote>
+<pre><code>//抽象父类电脑
+public abstract class Computer {
+    public abstract void use();
+}
+
+class IBM extends Computer{
+    @Override
+    public void use() {
+        System.out.println(&quot;use IBM Computer.&quot;);
     }
 }
-</code></pre><p>　在这里IUserDao是一个接口类型，但是返回的确实一个实现类，这明显不是一个类型啊，我就带着疑问上网搜索，总结如下：</p>
-<ol>
-<li>接口虽然不能被实例化，但是接口的实现类都可以向上转型为接口；</li>
-<li>面向接口编程是指我们在编写代码时对数据参数的定义尽量写成接口，待真正实现的时候再用实际类型代替；</li>
-<li>代码的耦合性降低，在运行时我只需修改实现类类型，就可以实现不同的功能，而不必要修改接口的代码。</li>
-</ol>
-<h1 id="总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"><a href="#总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。" class="headerlink" title="　总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"></a>　总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。</h1>
+
+class HP extends Computer{
+    @Override
+    public void use() {
+        System.out.println(&quot;use HP Computer.&quot;);
+    }
+}
+
+public class Client{
+    public static void main(String[] args) {
+        Computer ibm = new IBM();
+        Computer hp = new HP();//引用基类的地方能透明地使用其子类的对象。
+
+        ibm.use();
+        hp.use();
+    }
+}
+</code></pre><h3 id="3-四层含义"><a href="#3-四层含义" class="headerlink" title="3 四层含义"></a>3 四层含义</h3><p>　里氏替换原则包含以下4层含义：</p>
+<hr>
+<ul>
+<li>子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。</li>
+<li>子类中可以增加自己特有的方法。</li>
+<li>当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</li>
+<li>当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</li>
+</ul>
+<h4 id="3-1-子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。"><a href="#3-1-子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。" class="headerlink" title="3.1 子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。"></a>3.1 子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。</h4><p>　里氏替换原则的关键点在于不能覆盖父类的非抽象方法。父类中凡是已经实现好的方法，实际上是在设定一系列的规范和契约，如果子类对这些非抽象方法任意修改，就会对整个继承体系造成破坏。</p>
+<h4 id="3-2-子类中可以增加自己特有的方法。"><a href="#3-2-子类中可以增加自己特有的方法。" class="headerlink" title="3.2 子类中可以增加自己特有的方法。"></a>3.2 子类中可以增加自己特有的方法。</h4><p>　在继承父类属性和方法的同时，每个子类也都可以有自己的个性，在父类的基础上扩展自己的功能。</p>
+<h4 id="3-3-当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。"><a href="#3-3-当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。" class="headerlink" title="3.3 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。"></a>3.3 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</h4><p>　这个其实很好理解，就是入口更宽松，那么就以代码更好地理解吧！</p>
+<pre><code>import java.util.HashMap;
+public class Father {
+    public void func(HashMap m){
+        System.out.println(&quot;执行父类...&quot;);
+    }
+}
+
+import java.util.Map;
+public class Son extends Father{
+    public void func(Map m){//方法的形参比父类的更宽松
+        System.out.println(&quot;执行子类...&quot;);
+    }
+}
+
+import java.util.HashMap;
+public class Client{
+    public static void main(String[] args) {
+        Father f = new Son();//引用基类的地方能透明地使用其子类的对象。
+        HashMap h = new HashMap();
+        f.func(h);
+    }
+}
+</code></pre><p>　运行结果：执行父类…</p>
+<h4 id="3-4-当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。"><a href="#3-4-当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。" class="headerlink" title="3.4 当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。"></a>3.4 当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</h4><p>　这个也不难理解，就是出口更严格，那么就以代码更好地理解吧！</p>
+<pre><code>import java.util.Map;
+public abstract class Father {
+    public abstract Map func();
+}
+
+import java.util.HashMap;
+public class Son extends Father{
+
+    @Override
+    public HashMap func(){//方法的返回值比父类的更严格
+        HashMap h = new HashMap();
+        h.put(&quot;h&quot;, &quot;执行子类...&quot;);
+        return h;
+    }
+}
+
+public class Client{
+    public static void main(String[] args) {
+        Father f = new Son();//引用基类的地方能透明地使用其子类的对象。
+        System.out.println(f.func());
+    }
+}
+</code></pre><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><p> 　继承作为面向对象三大特性之一，在给程序设计带来巨大便利的同时，也带来了一些弊端，它增加了对象之间的耦合性，不符合设计模式的低耦合，高内聚，因此系统设计时，遵循里氏替换原则，尽量避免子类重写父类的方法。</p>
+
       
     </div>
 
@@ -400,9 +490,7 @@ public class DAOFactory {
       
         <div class="post-tags">
           
-            <a href="/tags/接口/" rel="tag"># 接口</a>
-          
-            <a href="/tags/单例设计模式/" rel="tag"># 单例设计模式</a>
+            <a href="/tags/里氏替换原则/" rel="tag"># 里氏替换原则</a>
           
         </div>
       
@@ -411,8 +499,8 @@ public class DAOFactory {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/26/Servlet技术笔记/" rel="next" title="Servlet技术笔记">
-                <i class="fa fa-chevron-left"></i> Servlet技术笔记
+              <a href="/2017/01/05/里氏替换原则/" rel="next" title="里氏替换原则">
+                <i class="fa fa-chevron-left"></i> 里氏替换原则
               </a>
             
           </div>
@@ -421,8 +509,8 @@ public class DAOFactory {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/03/数据库访问中遇到的问题/" rel="prev" title="数据库访问中遇到的问题">
-                数据库访问中遇到的问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/06/设计模式六大原则-2-依赖倒置原则/" rel="prev" title="设计模式六大原则(2): 依赖倒置原则">
+                设计模式六大原则(2): 依赖倒置原则 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -546,7 +634,7 @@ public class DAOFactory {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"><span class="nav-text">　总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-问题由来"><span class="nav-text">1 问题由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-里氏替换原则"><span class="nav-text">2 里氏替换原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-四层含义"><span class="nav-text">3 四层含义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。"><span class="nav-text">3.1 子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-子类中可以增加自己特有的方法。"><span class="nav-text">3.2 子类中可以增加自己特有的方法。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。"><span class="nav-text">3.3 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。"><span class="nav-text">3.4 当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-text">4 总结</span></a></li></ol></div>
             
 
           </div>
