@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="迪米特原则," />
 
 
 
@@ -84,16 +84,43 @@
 
 
 
-<meta name="description" content="记录一点一滴">
+<meta name="description" content="1 问题的由来　类与类之间的关系越密切，耦合度越大，当一个类发生改变时，对另一个类的影响也越大。
+2 迪米特原则
+通俗的来讲：就是一个类对自己依赖的类知道的越少越好。
+  对于被依赖的类来说，无论逻辑多么复杂，都尽量地的将逻辑封装在类的内部，对外除了提供的public方法，不对外泄漏任何信息。
+
+更简单的定义：只与直接的朋友通信。
+
+
+　那么什么是直接的朋友？？？
+　直接的朋友：每个对象都会与其他">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计模式六大原则(4): 迪米特原则">
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-4-迪米特原则/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
-<meta property="og:description" content="记录一点一滴">
-<meta property="og:updated_time" content="2017-01-06T03:58:12.626Z">
+<meta property="og:description" content="1 问题的由来　类与类之间的关系越密切，耦合度越大，当一个类发生改变时，对另一个类的影响也越大。
+2 迪米特原则
+通俗的来讲：就是一个类对自己依赖的类知道的越少越好。
+  对于被依赖的类来说，无论逻辑多么复杂，都尽量地的将逻辑封装在类的内部，对外除了提供的public方法，不对外泄漏任何信息。
+
+更简单的定义：只与直接的朋友通信。
+
+
+　那么什么是直接的朋友？？？
+　直接的朋友：每个对象都会与其他">
+<meta property="og:updated_time" content="2017-01-07T02:44:14.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式六大原则(4): 迪米特原则">
-<meta name="twitter:description" content="记录一点一滴">
+<meta name="twitter:description" content="1 问题的由来　类与类之间的关系越密切，耦合度越大，当一个类发生改变时，对另一个类的影响也越大。
+2 迪米特原则
+通俗的来讲：就是一个类对自己依赖的类知道的越少越好。
+  对于被依赖的类来说，无论逻辑多么复杂，都尽量地的将逻辑封装在类的内部，对外除了提供的public方法，不对外泄漏任何信息。
+
+更简单的定义：只与直接的朋友通信。
+
+
+　那么什么是直接的朋友？？？
+　直接的朋友：每个对象都会与其他">
 
 
 
@@ -300,6 +327,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -325,7 +374,135 @@
       
 
       
-        
+        <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　类与类之间的关系越密切，耦合度越大，当一个类发生改变时，对另一个类的影响也越大。</p>
+<h3 id="2-迪米特原则"><a href="#2-迪米特原则" class="headerlink" title="2 迪米特原则"></a>2 迪米特原则</h3><ul>
+<li><p>通俗的来讲：就是一个类对自己依赖的类知道的越少越好。</p>
+<p>  对于被依赖的类来说，无论逻辑多么复杂，都尽量地的将逻辑封装在类的内部，对外除了提供的public方法，不对外泄漏任何信息。</p>
+</li>
+<li>更简单的定义：只与直接的朋友通信。</li>
+</ul>
+<hr>
+<p>　<strong>那么什么是直接的朋友？？？</strong></p>
+<p>　直接的朋友：每个对象都会与其他对象有耦合关系，只要两个对象之间有耦合关系，我们就说这两个对象之间是朋友关系。耦合的方式很多，依赖、关联、组合、聚合等。</p>
+<ul>
+<li>出现成员变量、方法参数、方法返回值中的类为直接的朋友，</li>
+<li>出现在局部变量中的类则不是直接的朋友。</li>
+</ul>
+<hr>
+<p>　也就是说，陌生的类最好不要作为局部变量的形式出现在类的内部。</p>
+<h3 id="3-举例"><a href="#3-举例" class="headerlink" title="3 举例"></a>3 举例</h3><p>　举一个代码例子：有一个集团公司，下属单位有分公司和直属部门，现在要求打印出所有下属单位的员工ID。</p>
+<p>　<strong>先看一个错误的例子</strong></p>
+<pre><code>//总公司员工  
+class Employee{  
+    private String id;  
+    public void setId(String id){  
+        this.id = id;  
+    }  
+    public String getId(){  
+        return id;  
+    }  
+}  
+
+//分公司员工  
+class SubEmployee{  
+    private String id;  
+    public void setId(String id){  
+        this.id = id;  
+    }  
+    public String getId(){  
+        return id;  
+    }  
+}  
+//分公司管理
+class SubCompanyManager{  
+    public List&lt;SubEmployee&gt; getAllEmployee(){  
+        List&lt;SubEmployee&gt; list = new ArrayList&lt;SubEmployee&gt;();  
+        for(int i=0; i&lt;100; i++){  
+            SubEmployee emp = new SubEmployee();  
+            //为分公司人员按顺序分配一个ID  
+            emp.setId(&quot;分公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+}  
+//总公司管理
+class CompanyManager{  
+    public List&lt;Employee&gt; getAllEmployee(){  
+        List&lt;Employee&gt; list = new ArrayList&lt;Employee&gt;();  
+        for(int i=0; i&lt;30; i++){  
+            Employee emp = new Employee();  
+            //为总公司人员按顺序分配一个ID  
+            emp.setId(&quot;总公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+
+    public void printAllEmployee(SubCompanyManager sub){  
+        List&lt;SubEmployee&gt; list1 = sub.getAllEmployee();  
+        for(SubEmployee e:list1){  
+            System.out.println(e.getId());  
+        }  
+
+        List&lt;Employee&gt; list2 = this.getAllEmployee();  
+        for(Employee e:list2){  
+            System.out.println(e.getId());  
+        }  
+    }  
+}  
+
+public class Client{  
+    public static void main(String[] args){  
+        CompanyManager e = new CompanyManager();  
+        e.printAllEmployee(new SubCompanyManager());  
+    }  
+}  
+</code></pre><p>　主要问题出在CompanyManager中，根据迪米特法则，只与直接的朋友发生通信，而SubEmployee类并不是CompanyManager类的直接朋友（以局部变量出现的耦合不属于直接朋友），从逻辑上讲总公司只与他的分公司耦合就行了，与分公司的员工并没有任何联系，这样设计显然是增加了不必要的耦合。按照迪米特法则，应该避免类中出现这样非直接朋友关系的耦合。</p>
+<hr>
+<p>　<strong>修改后的代码</strong></p>
+<pre><code>class SubCompanyManager{  
+    public List&lt;SubEmployee&gt; getAllEmployee(){  
+        List&lt;SubEmployee&gt; list = new ArrayList&lt;SubEmployee&gt;();  
+        for(int i=0; i&lt;100; i++){  
+            SubEmployee emp = new SubEmployee();  
+            //为分公司人员按顺序分配一个ID  
+            emp.setId(&quot;分公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+    public void printEmployee(){  
+        List&lt;SubEmployee&gt; list = this.getAllEmployee();  
+        for(SubEmployee e:list){  
+            System.out.println(e.getId());  
+        }  
+    }  
+}  
+
+class CompanyManager{  
+    public List&lt;Employee&gt; getAllEmployee(){  
+        List&lt;Employee&gt; list = new ArrayList&lt;Employee&gt;();  
+        for(int i=0; i&lt;30; i++){  
+            Employee emp = new Employee();  
+            //为总公司人员按顺序分配一个ID  
+            emp.setId(&quot;总公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+
+    public void printAllEmployee(SubCompanyManager sub){  
+        sub.printEmployee();  
+        List&lt;Employee&gt; list2 = this.getAllEmployee();  
+        for(Employee e:list2){  
+            System.out.println(e.getId());  
+        }  
+    }  
+}  
+</code></pre><p>　修改后，为分公司增加了打印人员ID的方法，总公司直接调用来打印，从而避免了与分公司的员工发生耦合。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><p>　迪米特法则的初衷是降低类之间的耦合，由于每个类都减少了不必要的依赖，因此的确可以降低耦合关系。但是凡事都有度，虽然可以避免与非直接的类通信，但是要通信，必然会通过一个“中介”来发生联系，例如本例中，总公司就是通过分公司这个“中介”来与分公司的员工发生联系的。过分的使用迪米特原则，会产生大量这样的中介和传递类，导致系统复杂度变大。所以在采用迪米特法则时要反复权衡，既做到结构清晰，又要高内聚低耦合。</p>
+
       
     </div>
 
@@ -345,6 +522,12 @@
 
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/迪米特原则/" rel="tag"># 迪米特原则</a>
+          
+        </div>
       
 
       
@@ -410,8 +593,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -424,7 +616,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -442,7 +634,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -467,6 +659,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-问题的由来"><span class="nav-text">1 问题的由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-迪米特原则"><span class="nav-text">2 迪米特原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-举例"><span class="nav-text">3 举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-总结"><span class="nav-text">3 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>

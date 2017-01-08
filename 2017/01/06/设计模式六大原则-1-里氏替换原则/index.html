@@ -106,7 +106,7 @@
  　已经不能再通俗了，那么我们就以简单的例子更好地理解吧：
 
 这里我引用的是李天炜的例子，当初看的时候理解的很清楚，多谢">
-<meta property="og:updated_time" content="2017-01-06T04:22:22.369Z">
+<meta property="og:updated_time" content="2017-01-07T02:00:58.389Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式六大原则(1): 里氏替换原则">
 <meta name="twitter:description" content="1 问题由来　对象有三大特性：封装、继承、多态，子类在继承父类后，经常任意重写父类的方法，这时候可能会导致父类的原功能发生故障。
@@ -417,9 +417,16 @@ public class Client{
 <li>当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</li>
 <li>当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</li>
 </ul>
-<h4 id="3-1-子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。"><a href="#3-1-子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。" class="headerlink" title="3.1 子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。"></a>3.1 子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。</h4><p>　里氏替换原则的关键点在于不能覆盖父类的非抽象方法。父类中凡是已经实现好的方法，实际上是在设定一系列的规范和契约，如果子类对这些非抽象方法任意修改，就会对整个继承体系造成破坏。</p>
-<h4 id="3-2-子类中可以增加自己特有的方法。"><a href="#3-2-子类中可以增加自己特有的方法。" class="headerlink" title="3.2 子类中可以增加自己特有的方法。"></a>3.2 子类中可以增加自己特有的方法。</h4><p>　在继承父类属性和方法的同时，每个子类也都可以有自己的个性，在父类的基础上扩展自己的功能。</p>
-<h4 id="3-3-当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。"><a href="#3-3-当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。" class="headerlink" title="3.3 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。"></a>3.3 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</h4><p>　这个其实很好理解，就是入口更宽松，那么就以代码更好地理解吧！</p>
+<hr>
+<p>　<strong>子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。</strong> 
+　</p>
+<p>　里氏替换原则的关键点在于不能覆盖父类的非抽象方法。父类中凡是已经实现好的方法，实际上是在设定一系列的规范和契约，如果子类对这些非抽象方法任意修改，就会对整个继承体系造成破坏。</p>
+<hr>
+<p>　<strong>子类中可以增加自己特有的方法。</strong></p>
+<p>　在继承父类属性和方法的同时，每个子类也都可以有自己的个性，在父类的基础上扩展自己的功能。</p>
+<hr>
+<p>　<strong>当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</strong></p>
+<p>　这个其实很好理解，就是入口更宽松，那么就以代码更好地理解吧！</p>
 <pre><code>import java.util.HashMap;
 public class Father {
     public void func(HashMap m){
@@ -443,7 +450,9 @@ public class Client{
     }
 }
 </code></pre><p>　运行结果：执行父类…</p>
-<h4 id="3-4-当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。"><a href="#3-4-当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。" class="headerlink" title="3.4 当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。"></a>3.4 当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</h4><p>　这个也不难理解，就是出口更严格，那么就以代码更好地理解吧！</p>
+<hr>
+<p>　<strong>当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</strong></p>
+<p>　这个也不难理解，就是出口更严格，那么就以代码更好地理解吧！</p>
 <pre><code>import java.util.Map;
 public abstract class Father {
     public abstract Map func();
@@ -499,8 +508,8 @@ public class Client{
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/05/里氏替换原则/" rel="next" title="里氏替换原则">
-                <i class="fa fa-chevron-left"></i> 里氏替换原则
+              <a href="/2017/01/05/Java设计模式-6大原则/" rel="next" title="Java设计模式原则（个人总结）">
+                <i class="fa fa-chevron-left"></i> Java设计模式原则（个人总结）
               </a>
             
           </div>
@@ -581,7 +590,7 @@ public class Client{
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -599,7 +608,7 @@ public class Client{
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -634,7 +643,7 @@ public class Client{
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-问题由来"><span class="nav-text">1 问题由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-里氏替换原则"><span class="nav-text">2 里氏替换原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-四层含义"><span class="nav-text">3 四层含义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。"><span class="nav-text">3.1 子类可以实现父类的抽象方法，但是不能覆盖父类的非抽象方法。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-子类中可以增加自己特有的方法。"><span class="nav-text">3.2 子类中可以增加自己特有的方法。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。"><span class="nav-text">3.3 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。"><span class="nav-text">3.4 当子类的方法实现父类的抽象方法时，方法的后置条件（即方法的返回值）要比父类更严格。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-text">4 总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-问题由来"><span class="nav-text">1 问题由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-里氏替换原则"><span class="nav-text">2 里氏替换原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-四层含义"><span class="nav-text">3 四层含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-text">4 总结</span></a></li></ol></div>
             
 
           </div>
