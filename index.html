@@ -251,6 +251,890 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
+                  Java典型设计模式-观察者模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　观察者模式是类和类之间的关系，不涉及到继承。</p>
+<hr>
+<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
+<pre><code>public interface Observer {  
+    public void update();  
+}
+
+public class Observer1 implements Observer {  
+    @Override 
+    public void update() {  
+        System.out.println(&quot;observer1 has received!&quot;);  
+    }  
+}
+
+public class Observer2 implements Observer {  
+    @Override 
+    public void update() {  
+        System.out.println(&quot;observer2 has received!&quot;);  
+    }  
+}
+
+public interface Subject {  
+    /*增加观察者*/  
+    public void add(Observer observer);  
+    /*删除观察者*/  
+    public void del(Observer observer);  
+    /*通知所有的观察者*/  
+    public void notifyObservers();  
+    /*自身的操作*/ 
+    public void operation();  
+}
+
+import java.util.Enumeration;
+import java.util.Vector;
+
+public abstract class AbstractSubject implements Subject {  
+
+    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
+    @Override 
+    public void add(Observer observer) {  
+        vector.add(observer);  
+    }  
+
+    @Override 
+    public void del(Observer observer) {  
+        vector.remove(observer);  
+    }  
+
+    @Override 
+    public void notifyObservers() {  
+        Enumeration&lt;Observer&gt; enumo = vector.elements();  
+        while(enumo.hasMoreElements()){  
+            enumo.nextElement().update();  
+        }  
+    }  
+}
+
+public class MySubject extends AbstractSubject {  
+
+    @Override 
+    public void operation() {  
+        System.out.println(&quot;update self!&quot;);  
+        notifyObservers();  
+    }  
+
+}
+
+public class ObserverTest {  
+    public static void main(String[] args) {  
+        Subject sub = new MySubject();  
+        sub.add(new Observer1());  
+        sub.add(new Observer2());  
+        sub.operation();  
+    }  
+}
+运行结果：
+update self!
+observer1 has received!
+observer2 has received!
+</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-适配器模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-适配器模式/" itemprop="url">
+                  Java典型设计模式-适配器模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:03:57+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>　适配器模式主要分为三类：类的适配器模式、对象的适配器模式、接口的适配器模式。</p>
+<hr>
+<p>　适配器模式将某个类的接口转换成客户端期望的另一个接口表示，目的是消除由于接口不匹配所造成的类的兼容性问题。有点抽象，我们来看看详细的内容。</p>
+<h4 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h4><p>　类的适配器模式核心思想就是：有一个Source类，拥有一个方法，待适配，目标接口是Targetable，通过Adapter类，将Source的功能扩展到Targetable里。</p>
+<pre><code>public class Source {
+    public void method1() {  
+        System.out.println(&quot;this is original method!&quot;);  
+    }  
+}
+
+public interface Targetable {
+    /* 与原类中的方法相同 */
+    public void method1();
+    /* 新类的方法 */
+    public void method2();
+}
+
+public class Adapter extends Source implements Targetable {
+    public void method2() {
+        System.out.println(&quot;this is the targetable method!&quot;);
+    }
+}
+
+public class AdapterTest {
+    public static void main(String[] args) {
+        Targetable target = new Adapter();
+        target.method1();
+        target.method2();
+    }
+}
+AdapterTest的运行结果：
+this is original method!
+this is the targetable method!
+</code></pre><h4 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h4><p>　对象的适配器模式的基本思路和类的适配器模式相同，只是将Adapter类作修改成Wrapper，这次不继承Source类，而是持有Source类的实例，以达到解决兼容性的问题。</p>
+<pre><code>public class Wrapper implements Targetable {
+    private Source source;
+    public Wrapper(Source source) {
+        super();
+        this.source = source;
+    }
+    @Override
+    public void method2() {
+        System.out.println(&quot;this is the targetable method!&quot;);
+    }
+    @Override
+    public void method1() {
+        source.method1();
+    }
+}
+
+public class AdapterTest {
+    public static void main(String[] args) {
+        Source source = new Source();
+        Targetable target = new Wrapper(source);
+        target.method1();
+        target.method2();
+    }
+}
+AdapterTest的运行结果：
+this is original method!
+this is the targetable method!
+</code></pre><h4 id="接口的适配器模式"><a href="#接口的适配器模式" class="headerlink" title="接口的适配器模式"></a>接口的适配器模式</h4><p>　接口的适配器是这样的：有时我们写的一个接口中有多个抽象方法，当我们写该接口的实现类时，必须实现该接口的所有方法，这明显有时比较浪费，因为并不是所有的方法都是我们需要的，有时只需要某一些，此处为了解决这个问题，我们引入了接口的适配器模式，借助于一个抽象类，该抽象类实现了该接口，实现了所有的方法，而我们不和原始的接口打交道，只和该抽象类取得联系，所以我们写一个类，继承该抽象类，重写我们需要的方法就行了。</p>
+<hr>
+<p>　在实际开发中，我们也常会遇到这种接口中定义了太多的方法，以致于有时我们在一些实现类中并不是都需要。看代码：</p>
+<pre><code>public interface Sourceable {    
+    public void method1();  
+    public void method2();  
+}  
+//抽象类Wrapper2：
+public abstract class Wrapper2 implements Sourceable{  
+
+    public void method1(){}  
+    public void method2(){}  
+}  
+
+public class SourceSub1 extends Wrapper2 {  
+    public void method1(){  
+        System.out.println(&quot;the sourceable interface&apos;s first Sub1!&quot;);  
+    }  
+}  
+public class SourceSub2 extends Wrapper2 {  
+    public void method2(){  
+        System.out.println(&quot;the sourceable interface&apos;s second Sub2!&quot;);  
+    }  
+}  
+public class WrapperTest {  
+    public static void main(String[] args) {  
+        Sourceable source1 = new SourceSub1();  
+        Sourceable source2 = new SourceSub2();  
+
+        source1.method1();  
+        source1.method2();  
+        source2.method1();  
+        source2.method2();  
+    }  
+}  
+测试输出：
+the sourceable interface&apos;s first Sub1!
+the sourceable interface&apos;s second Sub2!
+</code></pre><h3 id="总结一下三种适配器模式的应用场景"><a href="#总结一下三种适配器模式的应用场景" class="headerlink" title="总结一下三种适配器模式的应用场景"></a>总结一下三种适配器模式的应用场景</h3><ul>
+<li>类的适配器模式：当希望将一个类转换成满足另一个新接口的类时，可以使用类的适配器模式，创建一个新类，继承原有的类，实现新的接口即可。</li>
+<li>对象的适配器模式：当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Wrapper类，持有原类的一个实例，在Wrapper类的方法中，调用实例的方法就行。</li>
+<li>接口的适配器模式：当不希望实现一个接口中所有的方法时，可以创建一个抽象类Wrapper，实现所有方法，我们写别的类的时候，继承抽象类即可。</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
+                  Java典型设计模式-创建性模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1-工厂方法模式"><a href="#1-工厂方法模式" class="headerlink" title="1 工厂方法模式"></a>1 工厂方法模式</h3><p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
+<h4 id="1-1-普通工厂模式"><a href="#1-1-普通工厂模式" class="headerlink" title="1.1 普通工厂模式"></a>1.1 普通工厂模式</h4><p>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+<pre><code>public interface MyInterface {
+    public void print();
+}    
+
+public class MyClassOne implements MyInterface {
+
+    @Override
+    public void print() {
+        System.out.println(&quot;MyClassOne&quot;);
+    }
+
+}
+public class MyClassTwo implements MyInterface {     
+    @Override
+    public void print() {
+        System.out.println(&quot;MyClassTwo&quot;);
+    }
+}
+
+
+public class MyFactory {
+    public MyInterface produce(String type) {  
+        if (&quot;One&quot;.equals(type)) {  
+            return new MyClassOne();  
+        } else if (&quot;Two&quot;.equals(type)) {  
+            return new MyClassTwo();  
+        } else {  
+            System.out.println(&quot;没有要找的类型&quot;);  
+            return null;  
+        }  
+    }
+
+}
+
+
+public class FactoryTest {
+    public static void main(String[] args){
+        MyFactory factory = new MyFactory();  
+        MyInterface myi = factory.produce(&quot;One&quot;);  
+        myi.print();
+    }
+
+}
+</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+<h3 id="1-2-多个工厂方法模式"><a href="#1-2-多个工厂方法模式" class="headerlink" title="1.2 多个工厂方法模式"></a>1.2 多个工厂方法模式</h3><p>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
+<pre><code>public class MyFactory {
+     public MyInterface produceOne() {
+        return new MyClassOne();
+    }
+    public MyInterface produceTwo() {
+        return new MyClassTwo();
+    }
+
+}
+
+public class FactoryTest {
+
+    public static void main(String[] args){
+        MyFactory factory = new MyFactory();  
+        MyInterface myi = factory.produceOne();
+        myi.print();
+    }
+
+}
+</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
+<h3 id="1-3-静态工厂方法模式"><a href="#1-3-静态工厂方法模式" class="headerlink" title="1.3 静态工厂方法模式"></a>1.3 静态工厂方法模式</h3><p>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
+<pre><code>public class MyFactory {
+    public static MyInterface produceOne() {
+        return new MyClassOne();
+    }
+    public static MyInterface produceTwo() {
+        return new MyClassTwo();
+    }
+}
+
+public class FactoryTest {
+    public static void main(String[] args){ 
+        MyInterface myi = MyFactory.produceOne();
+        myi.print();
+
+}
+</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
+<h3 id="2-抽象工厂模式"><a href="#2-抽象工厂模式" class="headerlink" title="2 抽象工厂模式"></a>2 抽象工厂模式</h3><p>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
+<hr>
+<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+<p>　这样就符合闭包原则了</p>
+<p>　下面来看看代码：</p>
+<p>　MyInterface、MyClassOne、MyClassTwo不变。</p>
+<p>　新增如下接口和类：</p>
+<pre><code>public interface Provider {
+    public MyInterface produce(); 
+}
+
+public class MyFactoryOne implements Provider {
+    @Override
+    public MyInterface produce() {
+        return new MyClassOne();
+    }
+}
+
+public class MyFactoryTwo implements Provider {
+    @Override
+    public MyInterface produce() {
+        return new MyClassTwo();
+    }
+}
+</code></pre><p>　修改测试类FactoryTest如下：</p>
+<pre><code>public class FactoryTest {
+    public static void main(String[] args){ 
+        Provider provider = new MyFactoryOne();
+        MyInterface myi = provider.produce();
+        myi.print();
+    }
+}
+</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+<h3 id="3-单例模式"><a href="#3-单例模式" class="headerlink" title="3 单例模式"></a>3 单例模式</h3><p>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
+<pre><code>public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {
+        if (myObject != null) {
+        } else {
+            myObject = new MyObject();
+        }
+        return myObject;
+    }
+}
+</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java设计模式-三大类/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java设计模式-三大类/" itemprop="url">
+                  Java设计模式-三大类
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T11:59:35+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　在前面的介绍中我们知道了Java设计模式的六大原则，那么基于这六大原则，前辈们总结出了23种设计模式供大家学习，那么我这里就简单说明介绍一下吧，稍后再下一篇博客在介绍4种典型的设计模式。</p>
+<hr>
+<p>　总体来说设计模式分为三大类：</p>
+<ul>
+<li>创建型模式，共五种：工厂方法模式、抽象工厂模式、单例模式、建造者模式、原型模式。</li>
+<li>结构型模式，共七种：适配器模式、装饰器模式、代理模式、外观模式、桥接模式、组合模式、享元模式。</li>
+<li>行为型模式，共十一种：策略模式、模板方法模式、观察者模式、迭代子模式、责任链模式、命令模式、备忘录模式、状态模式、访问者模式、中介者模式、解释器模式。</li>
+</ul>
+<p>　之后主要介绍工厂方法模式，抽象工厂模式，单例模式，适配器模式，观察者模式，这五个模式在Java面试中可能会问到，所以接下来详细介绍一下这五种模式。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-5-聚合-复用原则/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1598,808 +2482,6 @@ public class Client{
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/05/JVM内存回收策略/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/05/JVM内存回收策略/" itemprop="url">
-                  JVM内存回收策略
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-05T11:17:28+08:00">
-                2017-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p> 　开发人员一般情况下不需要了解内存这个概念，因为内存的开辟与回收由JVM操作，但是在学习了操作系统之后，想要了解数据在Java是如何申请内存的，总结而言就是通常的显示内存申请有如下两种：</p>
-<ol>
-<li>静态内存分配</li>
-<li>动态内存分配</li>
-</ol>
-<h4 id="1-1-静态内存分配"><a href="#1-1-静态内存分配" class="headerlink" title="1.1 静态内存分配"></a>1.1 静态内存分配</h4><p>　在Java中静态内存分配是指在Java编译时就已经能确定需要的内存空间，当程序被加载时系统把内存一次性分配给它；这些内存不会再程序执行时发生变化，直到程序执行结束时内存才会被回收。在Java的类和方法中的局部变量包括原生数据类型和对象的引用都是静态分配内存的。</p>
-<h4 id="1-2-动态内存分配和回收"><a href="#1-2-动态内存分配和回收" class="headerlink" title="1.2 动态内存分配和回收"></a>1.2 动态内存分配和回收</h4><p>　在Java中对象的内存空间是动态分配的，所谓动态分配就是在程序执行时才知道要分配的存储空间大小，而不是在编译时就能够确定的。</p>
-<hr>
-<p>　从前面的分析中可知内存的分配实在对象创建时发生的，而内存的回收是以对象不再引用为前提的，这种动态内存的分配和回收是和Java中的一些数据结构类型关联的。</p>
-<hr>
-<p>　如何确定这个对象什么时候不再被使用，如何回收，这正是JVM的垃圾收集器的工作。</p>
-<h4 id="1-3-如何检测垃圾"><a href="#1-3-如何检测垃圾" class="headerlink" title="1.3 如何检测垃圾"></a>1.3 如何检测垃圾</h4><p>　垃圾收集器的工作：</p>
-<hr>
-<ol>
-<li>正确检测出垃圾对象</li>
-<li>释放垃圾对象占用的内存空间</li>
-</ol>
-<hr>
-<p>　如何检测出垃圾是GC上的关键；从前面的分析可以总结出：只要某个对象不再被其他的活动对象引用，这个对象就可以被回收了，活动对象指的是能够被一个根对象集合到达的对象。</p>
-<hr>
-<p>　那么根对象集合中有些什么呢？</p>
-<ol>
-<li>在方法中局部变量区的引用</li>
-<li>在Java操作栈中的对象引用</li>
-<li>在常量池的对象引用</li>
-<li>在本地方法中次有的对象引用</li>
-<li>类的Class对象</li>
-</ol>
-<p>　JVM在做垃圾回收时就会检查堆中的所有对象是否都会被这些跟对象直接或间接引用，能够被引用的对象就是活动对象，否则就被GC回收。</p>
-<h4 id="1-4-基于分代的垃圾收集算法"><a href="#1-4-基于分代的垃圾收集算法" class="headerlink" title="1.4 基于分代的垃圾收集算法"></a>1.4 基于分代的垃圾收集算法</h4><p>　算法的设计思路：把对象按照寿命长短分组，分为年轻代和老年代，新创建的对象被分在年轻代，如果对象经过几次回收后仍然存活，那么把这个对象划分到老年代。老年代的收集频度不像年轻代那么频繁，这样就减少了每次垃圾收集时所要扫描的对象的数量，提高了垃圾回收效率。</p>
-<hr>
-<p>　这种设计思路是把堆划分为若干个子堆，每个子堆对应一个年龄代，如下图所示：<img src="http://i.imgur.com/VlsuW7R.png" alt=""></p>
-<p>　JVM将整个堆划分为Young区，Old区，Perm区，分别存放不同年龄的对象，这三个区存放的对象有如下区别：</p>
-<ul>
-<li>Young区分为Eden区和Survivor区，其中所有新创建的对象都在Eden区，当Eden区满后会触发minor GC将Eden区让存活的对象复制到其中一个Survivor中，另外一个Survivor区中的存活对象也复制到这个Survivor中，保证始终有一个Survivor区是空的。</li>
-<li>Old区存放的是Survivor满后触发minor GC后仍然存活的对象，当Eden区满后会将对象存放到Survivor区中，如果Survivor区中仍然存不下这些对象，GC收集器会将这些对象直接存放到Old区，如果Survivor区中的对象足够老，直接存放到Old区中，如果Old区中也满了，触发Full GC，回收整个堆内存。</li>
-<li>Perm区存放的是类的Class对象，如果一个类被频繁的加载，可能会导致Perm区满，Perm区的垃圾回收也是有Full GC触发的。</li>
-</ul>
-<h4 id="1-5-minor-GC、full-GC、major-GC区别"><a href="#1-5-minor-GC、full-GC、major-GC区别" class="headerlink" title="1.5 minor GC、full GC、major GC区别"></a>1.5 minor GC、full GC、major GC区别</h4><ul>
-<li>Minor GC 是指发生在新生代的垃圾收集动作，因为 Java 对象大多都具备朝生夕灭的特性，所以 Minor GC 非常频繁，一般回收速度也比较快。注意：除了将Eden区的非活动对象回收后，还会把一些老对象复制到Old区中。</li>
-<li>Major GC 是清理老年代。</li>
-<li>Full GC 是清理整个堆空间—包括年轻代和老年代。</li>
-</ul>
-<p>　许多 Major GC 是由 Minor GC 触发的，所以很多情况下将这两种 GC 分离是不太可能的</p>
-<h4 id="1-6-Hotspot三类垃圾收集算法"><a href="#1-6-Hotspot三类垃圾收集算法" class="headerlink" title="1.6 Hotspot三类垃圾收集算法"></a>1.6 Hotspot三类垃圾收集算法</h4><ol>
-<li>Serial Collector(单线程收集器)：是JVM在client模式下的默认GC方式，当Eden空间不足时，触发Minor GC，会先检查之前每次Minor GC晋升到Old区的对象的平均大小，如果Old区的剩余空间小于平均大小，则直接触发Full GC，如果Old区的剩余空间大于平均大小，则看HandlePromotionFailure的值。如果为true，仅触发Minor GC，否则再触发一次Full GC。<br>当Survivor区中的To Space放不下这些对象时，这些对象被放入Old区，如果Old或Perm区空间不足，将会触发Full GC。JVM的GC操作是串行的，JVM中的其他应用程序会全部停止。</li>
-<li><p>parallel GC根据Minor GC和Full GC的不同分为三种，分别是ParNewGC，ParallelGC和ParallelOldGC。</p>
-<ul>
-<li>ParNewGC：回收策略与Serial Collector相似，只是回收不是单线程的，而是多线程并行回收。</li>
-<li>ParallelGC：Server下默认的GC方式。当在Eden中申请内存发生不够的情况时，看当前申请的空间是否大于Eden的一半，如果大于则直接在Old区中分配空间，如果小于则触发Minor GC。触发Minor GC前会检查过去每次晋升Old区的平均大小是否大于Old区的剩余空间。如果大于则再次触发Full GC，在这次触发后仍会按这个规则重新检查一次，Full GC会执行两次。</li>
-<li>ParallelOldGC：与ParalelGC不同之处在于Full GC。Parallel GC的Full GC清空整个Heap堆中的垃圾对象，清除Perm区中已被卸载的类信息，并进行压缩。而ParallelOldGC清除Heap堆中的部分垃圾对象，并进行部分的空间压缩。GC程序是多线程，当同样暂停其他所有程序。</li>
-</ul>
-</li>
-<li><p>CMS Collector：既不是Minor GC，也不是Full GC，是基于两种GC之间的一种GC。触发规则是检查Old区或Prem区的使用率。触发CMS GC回收的只是Old区或Perm区的垃圾对象。与Minor GC或Full GC没有关系。这种模式下的Minor GC触发与回收规则与Serial GC基本一致。不同之处只是GC回收变成多线程而已。有两种情况触发Full GC。一种是Eden分配失败，Minor GC后分配到To Space，To Space不够再分配到Old区，Old区不够则触发Full GC。另外一种情况是，当CMS GC正在进行时先Old区申请内存失败，则会直接触发Full GC。</p>
-</li>
-</ol>
-<h4 id="1-7-三种GC优缺点对比"><a href="#1-7-三种GC优缺点对比" class="headerlink" title="1.7 三种GC优缺点对比"></a>1.7 三种GC优缺点对比</h4><table>
-<thead>
-<tr>
-<th>GC</th>
-<th>优点</th>
-<th>缺点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Serial Collector(串行)</td>
-<td>适合内存有限的情况</td>
-<td>回手收慢</td>
-</tr>
-<tr>
-<td>Parallel Collector(并行)</td>
-<td>效率高</td>
-<td>当Heap过大时，应用程序暂停时间较长</td>
-</tr>
-<tr>
-<td>CMS Collector(并发)</td>
-<td>Old区回收暂停时间短</td>
-<td>产生内存碎片，整个GC耗时较长，耗CPU</td>
-</tr>
-</tbody>
-</table>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/03/数据库访问中遇到的问题/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/03/数据库访问中遇到的问题/" itemprop="url">
-                  数据库访问中遇到的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-03T15:45:27+08:00">
-                2017-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA问题总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA问题总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：</p>
-<ol>
-<li>连接URL格式出现了问题</li>
-<li>驱动字符串出错(com.mysql.jdbc.Driver)</li>
-<li>三是Classpath中没有加入合适的mysql_jdbc驱动</li>
-</ol>
-<p>　经过我的仔细检查，出现了两次错误，总结如下：</p>
-<ol>
-<li>在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Driver”);时 不会去查找驱动的。所以本实例中我们需要把mysql-connector-java-5.1.39-bin.jar 拷贝到 tomcat 下 lib 目录。</li>
-<li>查看资料说Java1.8之后就不用写Class.forName(“com.mysql.jdbc.Driver”) ;  我就没写，后来将这句代码写上，发现成功连接数据库，下次还是写上吧。</li>
-</ol>
-<p>　那我就把自己写的DBUtil.java代码贴上吧！</p>
-<pre><code>public class DBUtil {
-    public static Connection getConnection() {
-        String username = &quot;root&quot;;
-        String password = &quot;123456&quot;;
-        String url = &quot;jdbc:mysql://localhost:3306/itat_shop&quot;;
-        Connection con = null;
-        //1.加载驱动程序
-        try {
-            Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
-            con = DriverManager.getConnection(url, username, password);
-        } catch(ClassNotFoundException |SQLException e) {
-            e.printStackTrace();
-        }
-
-        return con;
-    }
-
-    public static void close(Connection con) {
-        try {
-            if(con!=null) con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void close(java.sql.PreparedStatement ps) {
-        try {
-            if(ps!=null) ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void close(ResultSet rs) {
-        try {
-            if(rs!=null) rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2016/12/27/返回类型是接口的分析/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/27/返回类型是接口的分析/" itemprop="url">
-                  返回类型是接口的分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-27T10:36:51+08:00">
-                2016-12-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　今天在学习Servlet的过程中，书上关于DaoFactory的代码如下：</p>
-<pre><code>public class DAOFactory {
-    public static IUserDao getUserDao() {
-        return new UserDao();
-    }
-}
-</code></pre><p>　在这里IUserDao是一个接口类型，但是返回的确实一个实现类，这明显不是一个类型啊，我就带着疑问上网搜索，总结如下：</p>
-<ol>
-<li>接口虽然不能被实例化，但是接口的实现类都可以向上转型为接口；</li>
-<li>面向接口编程是指我们在编写代码时对数据参数的定义尽量写成接口，待真正实现的时候再用实际类型代替；</li>
-<li>代码的耦合性降低，在运行时我只需修改实现类类型，就可以实现不同的功能，而不必要修改接口的代码。</li>
-</ol>
-<h1 id="总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"><a href="#总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。" class="headerlink" title="　总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。"></a>　总结：接口的实现类可以向上转型为接口类，表面上返回的是接口类型，实际上返回的却是接口的实现类，如果需要取出接口的实现类，可以向下转型。</h1>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2016/12/26/Servlet技术笔记/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/26/Servlet技术笔记/" itemprop="url">
-                  Servlet技术笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-26T15:49:21+08:00">
-                2016-12-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="1-ServletAPI："><a href="#1-ServletAPI：" class="headerlink" title="1 ServletAPI："></a>1 ServletAPI：</h1><h2 id="1-1-Servlet接口的主要方法及作用："><a href="#1-1-Servlet接口的主要方法及作用：" class="headerlink" title="1.1 Servlet接口的主要方法及作用："></a>1.1 Servlet接口的主要方法及作用：</h2><ul>
-<li>init():在Servlet实例化之后，Servlet容器会调用init()方法，来初始化该对象。</li>
-<li>service():容器调用Service()方法来处理客户端的请求。</li>
-<li>destroy():容器检测到一个Servlet对象应该从服务器中被移除的时候，容器调用该对象的destroy()方法，以便Servlet对象可以释放使用的资源。</li>
-<li>getServletConfig():返回调用init()方法时传递给Servlet对象的ServletConfig对象。</li>
-</ul>
-<h2 id="1-2-ServletRequest和ServletResponse："><a href="#1-2-ServletRequest和ServletResponse：" class="headerlink" title="1.2 ServletRequest和ServletResponse："></a>1.2 ServletRequest和ServletResponse：</h2><ul>
-<li>Servlet由Servlet容器管理，当客户端请求时，容器创建一个ServletRequest对象，封装请求数据，同事创建一个ServletResponse对象，封装响应数据，这两个对象被容器作为service()方法的参数传递给Servlet。</li>
-</ul>
-<h2 id="1-3-ServletConfig"><a href="#1-3-ServletConfig" class="headerlink" title="1.3 ServletConfig:"></a>1.3 ServletConfig:</h2><ul>
-<li>Servlet容器使用ServletConfig对象在Servlet初始化期间向它传递配置信息，一个Servlet只能有一个ServletConfig对象。</li>
-</ul>
-<h2 id="1-4-简单实例"><a href="#1-4-简单实例" class="headerlink" title="1.4 简单实例"></a>1.4 简单实例</h2><ul>
-<li><p>编写HelloWorldServlet例子，源代码见<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/HelloServlet.java" target="_blank" rel="external">HelloServlet.java</a></p>
-<h2 id="1-5HttpServlet"><a href="#1-5HttpServlet" class="headerlink" title="1.5HttpServlet"></a>1.5HttpServlet</h2></li>
-<li><p>HttpServlet继承自GenericServlet，当容器收到一个针对HttpServlet对象的请求时，调用顺序如下：</p>
-<ol>
-<li>调用public 的service()方法；</li>
-<li>将参数类型转换为HttpServletRequest和HttpServletResponse，然后调用protected 的service()方法，将转换后的参数传进去；</li>
-<li><p>在protected 的service()方法中，首先调用HttpServletRequest对象的getMethod()方法，确定是get，还是post方法。然后调用相应的doGet()或者doPost()等方法。</p>
-<p>因此，在编写HttpServlet的派生类时，只许重写响应的doXXX()方法。</p>
-</li>
-</ol>
-</li>
-</ul>
-<h2 id="1-6-HttpServletRequest和HttpServletResponse"><a href="#1-6-HttpServletRequest和HttpServletResponse" class="headerlink" title="1.6 HttpServletRequest和HttpServletResponse"></a>1.6 HttpServletRequest和HttpServletResponse</h2><ul>
-<li><p>get()方法：提交的数据提交到URL中，传递给后台服务器。</p>
-</li>
-<li><p>post()方法：提交的数据作为请求正文的内容发送到服务端，在URL看不到附加的请求数据。</p>
-</li>
-</ul>
-<h1 id="2-简单实例："><a href="#2-简单实例：" class="headerlink" title="2 简单实例："></a>2 简单实例：</h1><p>OutputInfoServlet：代码见<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/OutputInfoServlet.java" target="_blank" rel="external">OutputInfoServlet.java</a>。</p>
-<p>一个登陆实例：需要编写<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/LoginServlet.java" target="_blank" rel="external">LoginServlet2.java</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/CenterServlet.java" target="_blank" rel="external">CenterServlet.java</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/WebContent/success.html" target="_blank" rel="external">success.html</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/WebContent/WEB-INF/web.xml" target="_blank" rel="external">web.xml</a>。</p>
-<h1 id="3-Servlet异常"><a href="#3-Servlet异常" class="headerlink" title="3 Servlet异常"></a>3 Servlet异常</h1><ul>
-<li><p>ServletException：可以被init()，service()，doXXX()等方法抛出。</p>
-</li>
-<li><p>UnavailableException：是ServletException的子类，用于向Servlet容器指示这个Servlet永久的或暂时的不可用。</p>
-</li>
-</ul>
-<h1 id="4-Servlet生命周期"><a href="#4-Servlet生命周期" class="headerlink" title="4 Servlet生命周期"></a>4 Servlet生命周期</h1><ul>
-<li>加载和实例化：Servlet容器负责加载和实例化Servlet，容器是通过反射机制来创建Servlet实例，调用不带参数的构造方法。</li>
-<li>初始化：调用init()方法，在处理客户端请求时完成一些初始化工作。</li>
-<li>请求处理：调用Service()方法，若执行期间有错误，可以抛出ServletException或UnavailableException异常，如果UnavailableException指示该实例永久不可用，则调用该实例的desttroy()方法。</li>
-<li>服务终止：Servlet容器检测Servlet实例应该被移除时，调用destroy()方法，释放该实例使用的资源，等待Java的垃圾回收期回收。</li>
-</ul>
-<h1 id="5-Servlet上下文"><a href="#5-Servlet上下文" class="headerlink" title="5 Servlet上下文"></a>5 Servlet上下文</h1><ul>
-<li><p>运行在Java虚拟机中的每一个Web应用程序都有一个与之相关的Servlet上下文，Servlet API提供了ServletContext接口表示上下文，接口中定义了一些方法，Servlet可以使用这些方法与它的Servlet容器践行通信。</p>
-</li>
-<li><p>编写页面访问统计的实例：一个Web应用程序只有一个ServletContext对象，而且该对象可以被Web应用程序的所有Servlet所访问，因此使用ServletContext对象保存共享信息。</p>
-</li>
-</ul>
-<ul>
-<li>源码如下：<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/CountServlet.java" target="_blank" rel="external">CountServlet.java</a></li>
-</ul>
-<p><strong>注意：不同的Web应用程序具有不同的Servlet上下文，所以不同web应用程序不能利用ServletContext来共享属性；并且访问次数在重启Tomcat服务器后，重新计数，所以为了永久保存访问次数，可以存到文件或数据库中。</strong></p>
-<h1 id="6-请求转发"><a href="#6-请求转发" class="headerlink" title="6 请求转发"></a>6 请求转发</h1><h2 id="6-1-RequestDispatcher接口"><a href="#6-1-RequestDispatcher接口" class="headerlink" title="6.1 RequestDispatcher接口"></a>6.1 RequestDispatcher接口</h2><ul>
-<li>RequestDispatcher对象由Servlet容器创建，用于封装一个路径标识的服务器资源。利用该对象，可以把请求转发给Servlet或JSP页面。</li>
-<li>forward()：用于将请求从一个Servlet传递给服务器上的另外的Servlet或JSP页面或HTML文件；这个方法必须在响应被提交给客户端之前调用，调用后，原先在响应缓存中没有提交的内容将被自动清除。</li>
-<li><p>include()：用于在响应中包含其他资源的内容。</p>
-<p>  <strong>上述两个方法区别：利用include()方法将请求转发给其他Servlet，被调用的Servlet对该请求做出的响应将并入原先的响应对象中，原先的Servlet还可以继续输出响应信息；而利用forward()方法将请求转发给其他的Servlet，将由被调用的Servlet负责对请求做出响应，而原先的Servlet的执行则终止。</strong></p>
-</li>
-</ul>
-<h2 id="6-2-得到RequestDispatcher对象"><a href="#6-2-得到RequestDispatcher对象" class="headerlink" title="6.2 得到RequestDispatcher对象"></a>6.2 得到RequestDispatcher对象</h2><ul>
-<li><p>ServletContext接口的getRequestDispatcher()方法：参数必须以/开始，被解释为相对于当前上下文根的路径。</p>
-</li>
-<li><p>ServletRequest接口的getRequestDispatcher()方法：参数不但可以是相对于上下文的路径，也可以是相对于当前Servlet的路径；例如/myServlet、myServlet均合法。</p>
-</li>
-</ul>
-<h2 id="6-3-请求转发的实例"><a href="#6-3-请求转发的实例" class="headerlink" title="6.3 请求转发的实例"></a>6.3 请求转发的实例</h2><p> <a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/CenterServlet.java" title="CenterServlet.java" target="_blank" rel="external">CenterServlet.java</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/LoginServlet2.java" title="LoginServlet2.java" target="_blank" rel="external">LoginServlet2.java</a>。</p>
-<h2 id="6-4-sendRedirect-和forward-的区别"><a href="#6-4-sendRedirect-和forward-的区别" class="headerlink" title="6.4 sendRedirect()和forward()的区别"></a>6.4 sendRedirect()和forward()的区别</h2><p><strong>HttpServletResponse接口的sendRedirect()和RequestDispatcher接口的forward()方法都可以利用另外的资源为客户端服务，但是工作原理有本质的区别。</strong>   </p>
-<p><img src="http://i.imgur.com/FITHVPK.png" alt=""></p>
-<ul>
-<li><p>上图的交互过程如下：</p>
-<ol>
-<li>浏览器访问Servlet1</li>
-<li>Servlet1让Servlet2 为客户端服务</li>
-<li>Servlet1调用SendRedirect()方法，将客户端的请求重定向到Servlet2</li>
-<li>浏览器访问Servlet2</li>
-<li>Servlet2 对客户端的请求做出响应</li>
-</ol>
-</li>
-<li><p>重定向这个过程对用户透明，浏览器会自动完成新的访问。</p>
-</li>
-</ul>
-<p><img src="http://i.imgur.com/O3MBSSD.png" alt=""></p>
-<ul>
-<li>上图的交互过程如下：<ol>
-<li>浏览器访问Servlet1</li>
-<li>Servlet1想让Servlet2对客户端进行响应，调用forward()方法，将请求转发给Servlet2进行处理</li>
-<li>Servlet2对请求做出响应</li>
-</ol>
-</li>
-<li>调用forward()方法，对浏览器来说是透明的，浏览器只知道发出一个请求。</li>
-</ul>
-<p>　<strong>还有一个重要区别：sendRidirect()方法不但可以在位于同一主机上的不同web应用程序之间的重定向，而且可以将客户端重定向到其他服务器上的web应用程序资源</strong></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2447,7 +2529,7 @@ public class Client{
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2465,7 +2547,7 @@ public class Client{
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
