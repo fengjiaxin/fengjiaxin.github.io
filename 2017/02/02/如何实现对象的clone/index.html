@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hibernate," />
+  <meta name="keywords" content="clone," />
 
 
 
@@ -84,28 +84,28 @@
 
 
 
-<meta name="description" content="之前编写了hibernate的一些相关代码，现在总结一些细节。
-问题： 在使用Hibernate时如何提高性能？
-
-延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。
-缓存技术。">
+<meta name="description" content="有两种方式：
+　1. 实现Cloneable接口并重写Object类中的clone()方法；
+　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：
+class Obj implements Cloneable{
+    private i">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hibernate如何提高性能和二级缓存的含义">
-<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/index.html">
+<meta property="og:title" content="如何实现对象的clone">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/02/如何实现对象的clone/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
-<meta property="og:description" content="之前编写了hibernate的一些相关代码，现在总结一些细节。
-问题： 在使用Hibernate时如何提高性能？
-
-延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。
-缓存技术。">
-<meta property="og:updated_time" content="2017-02-02T13:01:02.171Z">
+<meta property="og:description" content="有两种方式：
+　1. 实现Cloneable接口并重写Object类中的clone()方法；
+　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：
+class Obj implements Cloneable{
+    private i">
+<meta property="og:updated_time" content="2017-02-02T14:29:19.827Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hibernate如何提高性能和二级缓存的含义">
-<meta name="twitter:description" content="之前编写了hibernate的一些相关代码，现在总结一些细节。
-问题： 在使用Hibernate时如何提高性能？
-
-延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。
-缓存技术。">
+<meta name="twitter:title" content="如何实现对象的clone">
+<meta name="twitter:description" content="有两种方式：
+　1. 实现Cloneable接口并重写Object类中的clone()方法；
+　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：
+class Obj implements Cloneable{
+    private i">
 
 
 
@@ -133,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/"/>
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/02/如何实现对象的clone/"/>
 
 
 
 
 
-  <title> hibernate如何提高性能和二级缓存的含义 | fengjiaxin's blog </title>
+  <title> 如何实现对象的clone | fengjiaxin's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +262,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/如何实现对象的clone/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -286,7 +286,7 @@
             
             
               
-                hibernate如何提高性能和二级缓存的含义
+                如何实现对象的clone
               
             
           </h1>
@@ -301,7 +301,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T20:37:04+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T21:38:30+08:00">
                 2017-02-02
               </time>
             
@@ -359,26 +359,154 @@
       
 
       
-        <p>　之前编写了hibernate的一些相关代码，现在总结一些细节。</p>
-<p><strong>问题： 在使用Hibernate时如何提高性能？</strong></p>
-<ol>
-<li>延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。</li>
-<li>缓存技术。hibernate提供了一级缓存与二级缓存，合理的利用缓存有助于提高系统的性能，通过合理配置缓存的参数可以避免不合理的利用缓存导致内存的过度消耗降低系统的性能。</li>
-<li>优化查询语句。</li>
-</ol>
-<p>　说了这么多，那么什么是hibernate的二级缓存？</p>
-<p>　<strong>缓存的目的</strong>是为了通过减少应用程序对物理数据源访问的次数来提高程序运行的效率，<strong>原理</strong>则是把当前或接下来一段时间可能会用到的数据保存在内存中，在使用时直接从内存中读取。</p>
+        <p>有两种方式：</p>
+<p>　1. 实现Cloneable接口并重写Object类中的clone()方法；</p>
+<p>　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：</p>
+<pre><code>class Obj implements Cloneable{
+    private int aInt =0;
+    public int getInt(){
+        return aInt;
+    }
+
+    public void setAInt(int int1){
+        aInt = int1;
+    }
+
+    public void changeInt(){
+        this.aInt =1;
+    }
+
+    public Object clone(){
+        Object o = null;
+        try {
+            o = (Object)super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+}
+public class TestRef {
+    public static void main(String[] args) {
+        Obj a = new Obj();
+        Obj b = (Obj) a.clone();
+        b.changeInt();
+        System.out.println(a.getInt());//0
+        System.out.println(b.getInt());//1
+
+    }
+}
+</code></pre><p>　2. 实现Serializable接口，通过对象的序列化和反序列化实现克隆，可以实现真正的深度克隆;代码如下：</p>
+<pre><code>import java.io.Serializable;
+public class Employee implements Serializable {
+    private static final long serialVersionUID = -6470090944414208496L;
+    private String name;
+    private int id;
+    transient private int salary;
+
+    @Override
+    public String toString(){
+        return &quot;Employee{name=&quot;+name+&quot;,id=&quot;+id+&quot;,salary=&quot;+salary+&quot;}&quot;;
+    }
+
+    //getter and setter methods
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+}
+</code></pre><p>　<strong>注意</strong>：static代笔类的静态成员，transient代表对象的临时数据，因此被声明为这两种类型的数据成员是不能够被序列化的。</p>
 <hr>
-<p>　<strong>在hibernate中有一级缓存和二级缓存的概念，一级缓存由Session来管理，二级缓存由SessionFactory来管理，在使用时二级缓存可有可无，但是一级缓存必不可少。</strong></p>
-<p>　一级缓存的使用场合如下：当使用session查询数据时，首先会在Session内部查找该对象是否存在，若存在，直接返回，否则，到数据库中区查询，并将查询结果缓存起来以便后期使用；缺点是当使用Session来表示一次会话中，它的生命周期较短，并且它是线程不安全的，不能够被多个线程共享，因此在实际使用中对效率的提升并不明显。</p>
-<p>　二级缓存用来为Hibernate配置一种全局的缓存，以便实现多个线程和事物共享。在使用了二级缓存机制后，当查询数据时，会首先在内部缓存中去查找，如果不存在，接着在二级缓存中查找，最后才去数据库中查找，与一级缓存相比，二级缓存是独立于hibernate的软件部件，属于第三方的产品，hibernate3以后默认使用的产品是EhCache.</p>
-<p>　二级缓存一般适用于以下几种情况：</p>
-<ol>
-<li>数据量较小，如果数据量较大，缓存太多，大量消耗内存，造成内存资源短缺，从而降低系统的性能。</li>
-<li>对数据的修改较少，如果进行大量的修改，就需要频繁的同步，也会影响系统的性能。</li>
-<li>不会被大量的应用共享的数据，如果数据被大量线程或事物共享，多线程访问的同步机制会影响系统的性能。</li>
-<li>不是很重要的数据，如果数据非常重要，对数据的准确性要求非常高，最好不要使用二级缓存。</li>
-</ol>
+<p>　现在我们假设需要把我们的对象写入文件，之后从相同的文件中将其反序列化，因此我们需要一些工具方法，通过使用ObjectInputStream和ObjectOutputStream来达到序列化的目的。</p>
+<pre><code>import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+/**
+ * A simple class with generic serialize and deserialize method implementations
+ * 
+ * 
+ */
+public class SerializationUtil {
+
+    // deserialize to Object from given file
+    public static Object deserialize(String fileName) throws IOException,
+            ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(fileName);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object obj = ois.readObject();
+        ois.close();
+        return obj;
+    }
+
+    // serialize the given object and save it to file
+    public static void serialize(Object obj, String fileName)
+            throws IOException {
+        FileOutputStream fos = new FileOutputStream(fileName);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(obj);
+
+        fos.close();
+    }
+
+}
+</code></pre><p>　<strong>测试程序：</strong></p>
+<pre><code>import java.io.IOException;
+
+public class SerializationTest {
+
+    public static void main(String[] args) {
+        String fileName=&quot;employee.ser&quot;;
+        Employee emp = new Employee();
+        emp.setId(100);
+        emp.setName(&quot;Pankaj&quot;);
+        emp.setSalary(5000);
+
+        //serialize to file
+        try {
+            SerializationUtil.serialize(emp, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Employee empNew = null;
+        try {
+            empNew = (Employee) SerializationUtil.deserialize(fileName);
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(&quot;emp Object::&quot;+emp);
+        System.out.println(&quot;empNew Object::&quot;+empNew);
+    }
+
+}
+</code></pre><p>　运行以上测试程序，可以得到以下输出。</p>
+<pre><code>emp Object::Employee{name=Pankaj,id=100,salary=5000}
+empNew Object::Employee{name=Pankaj,id=100,salary=0}
+</code></pre><p>　<strong>由于salary是一个transient变量，它的值不会被存入文件中，因此也不会在新的对象中被恢复。类似的，静态变量的值也不会被序列化，因为他们是属于类而非对象的。</strong></p>
 
       
     </div>
@@ -402,7 +530,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hibernate/" rel="tag"># hibernate</a>
+            <a href="/tags/clone/" rel="tag"># clone</a>
           
         </div>
       
@@ -411,8 +539,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/" rel="next" title="静态嵌套类(Static Nested Class)和内部类（Inner Class）的不同">
-                <i class="fa fa-chevron-left"></i> 静态嵌套类(Static Nested Class)和内部类（Inner Class）的不同
+              <a href="/2017/02/02/hibernate如何提高性能和二级缓存的含义/" rel="next" title="hibernate如何提高性能和二级缓存的含义">
+                <i class="fa fa-chevron-left"></i> hibernate如何提高性能和二级缓存的含义
               </a>
             
           </div>
@@ -420,10 +548,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/02/如何实现对象的clone/" rel="prev" title="如何实现对象的clone">
-                如何实现对象的clone <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
