@@ -251,6 +251,166 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/hibernate如何提高性能和二级缓存的含义/" itemprop="url">
+                  hibernate如何提高性能和二级缓存的含义
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T20:37:04+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　之前编写了hibernate的一些相关代码，现在总结一些细节。</p>
+<p><strong>问题： 在使用Hibernate时如何提高性能？</strong></p>
+<ol>
+<li>延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。</li>
+<li>缓存技术。hibernate提供了一级缓存与二级缓存，合理的利用缓存有助于提高系统的性能，通过合理配置缓存的参数可以避免不合理的利用缓存导致内存的过度消耗降低系统的性能。</li>
+<li>优化查询语句。</li>
+</ol>
+<p>　说了这么多，那么什么是hibernate的二级缓存？</p>
+<p>　<strong>缓存的目的</strong>是为了通过减少应用程序对物理数据源访问的次数来提高程序运行的效率，<strong>原理</strong>则是把当前或接下来一段时间可能会用到的数据保存在内存中，在使用时直接从内存中读取。</p>
+<hr>
+<p>　<strong>在hibernate中有一级缓存和二级缓存的概念，一级缓存由Session来管理，二级缓存由SessionFactory来管理，在使用时二级缓存可有可无，但是一级缓存必不可少。</strong></p>
+<p>　一级缓存的使用场合如下：当使用session查询数据时，首先会在Session内部查找该对象是否存在，若存在，直接返回，否则，到数据库中区查询，并将查询结果缓存起来以便后期使用；缺点是当使用Session来表示一次会话中，它的生命周期较短，并且它是线程不安全的，不能够被多个线程共享，因此在实际使用中对效率的提升并不明显。</p>
+<p>　二级缓存用来为Hibernate配置一种全局的缓存，以便实现多个线程和事物共享。在使用了二级缓存机制后，当查询数据时，会首先在内部缓存中去查找，如果不存在，接着在二级缓存中查找，最后才去数据库中查找，与一级缓存相比，二级缓存是独立于hibernate的软件部件，属于第三方的产品，hibernate3以后默认使用的产品是EhCache.</p>
+<p>　二级缓存一般适用于以下几种情况：</p>
+<ol>
+<li>数据量较小，如果数据量较大，缓存太多，大量消耗内存，造成内存资源短缺，从而降低系统的性能。</li>
+<li>对数据的修改较少，如果进行大量的修改，就需要频繁的同步，也会影响系统的性能。</li>
+<li>不会被大量的应用共享的数据，如果数据被大量线程或事物共享，多线程访问的同步机制会影响系统的性能。</li>
+<li>不是很重要的数据，如果数据非常重要，对数据的准确性要求非常高，最好不要使用二级缓存。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2047,172 +2207,6 @@ public class MyFactoryTwo implements Provider {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-5-聚合-复用原则/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-5-聚合-复用原则/" itemprop="url">
-                  设计模式六大原则(5): 聚合/复用原则
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:58:37+08:00">
-                2017-01-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　在实际开发中，新建一个类可能会用到多个以前的类的方法，但是在设计时是不能轻易采用继承机制的；因为在使用继承时，需要严格遵循里氏代换原则，有效使用继承会有助于对问题的理解，降低复杂度，而滥用继承反而会增加系统构建和维护的难度以及系统的复杂度，因此需要慎重使用继承复用。</p>
-<h3 id="2-聚合-复用原则"><a href="#2-聚合-复用原则" class="headerlink" title="2 聚合/复用原则"></a>2 聚合/复用原则</h3><ul>
-<li>合成复用原则(Composite Reuse Principle, CRP)：尽量使用对象组合，而不是继承来达到复用的目的。</li>
-</ul>
-<p>　合成复用原则就是在一个新的对象里通过关联关系（包括组合关系和聚合关系）来使用一些已有的对象，使之成为新对象的一部分；新对象通过委派调用已有对象的方法达到复用功能的目的。</p>
-<hr>
-<p>　组合或聚合关系可以将成员对象纳入到新对象中，使之成为新对象的一部分，因此新对象可以调用已有对象的功能，这样做可以使得成员对象的内部实现细节对于新对象不可见。</p>
-<p>　相对继承关系而言，其耦合度相对较低，成员对象的变化对新对象的影响不大，可以在新对象中根据实际需要有选择性地调用成员对象的操作。</p>
-<hr>
-<p>　一般而言，如果两个类之间是“Has-A”的关系应使用组合或聚合，如果是“Is-A”关系可使用继承。”Is-A”是严格的分类学意义上的定义，意思是一个类是另一个类的”一种”；而”Has-A”则不同，它表示某一个角色具有某一项责任。</p>
-<h3 id="3-举例说明"><a href="#3-举例说明" class="headerlink" title="3 举例说明"></a>3 举例说明</h3><p>　在初期的CRM系统设计中，考虑到客户数量不多，系统采用MySQL作为数据库，与数据库操作有关的类如CustomerDAO类等都需要连接数据库，连接数据库的方法getConnection()封装在DBUtil类中，由于需要重用DBUtil类的getConnection()方法，设计人员将CustomerDAO作为DBUtil类的子类，初始设计方案结构如下所示：<br><img src="http://i.imgur.com/VvKP8g8.png" alt=""></p>
-<p> 　随着客户数量的增加，系统决定升级为Oracle数据库，因此需要增加一个新的OracleDBUtil类来连接Oracle数据库，由于在初始设计方案中CustomerDAO和DBUtil之间是继承关系，因此在更换数据库连接方式时需要修改CustomerDAO类的源代码，将CustomerDAO作为OracleDBUtil的子类，这将违反开闭原则。</p>
-<hr>
-<p>　现使用合成复用原则对其进行重构。在实现复用时应该多用关联，少用继承。因此在本实例中我们可以使用关联复用来取代继承复用，重构后的结构如下所示：</p>
-<p><img src="http://i.imgur.com/wpV8wbt.png" alt=""></p>
-<ul>
-<li>CustomerDAO和DBUtil之间的关系由继承关系变为关联关系，采用依赖注入的方式将DBUtil对象注入到CustomerDAO中。</li>
-<li><p>如果需要对DBUtil的功能进行扩展，可以通过其子类来实现，如通过子类OracleDBUtil来连接Oracle数据库。由于CustomerDAO针对DBUtil编程，根据里氏代换原则，DBUtil子类的对象可以覆盖DBUtil对象，只需在CustomerDAO中注入子类对象即可使用子类所扩展的方法。。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3></li>
-<li><p>在面向对象设计中，可以通过两种方法在不同的环境中复用已有的设计和实现，即通过组合/聚合关系或通过继承，但首先应该考虑使用组合/聚合，组合/聚合可以使系统更加灵活，降低类与类之间的耦合度，一个类的变化对其他类造成的影响相对较少；其次才考虑继承，在使用继承时，需要严格遵循里氏代换原则，有效使用继承会有助于对问题的理解，降低复杂度，而滥用继承反而会增加系统构建和维护的难度以及系统的复杂度。</p>
-</li>
-</ul>
-<hr>
-<ul>
-<li>通过继承来进行复用的主要问题在于继承复用会破坏系统的封装性，因为继承会将基类的实现细节暴露给子类，由于基类的内部细节通常对子类来说是可见的，所以这种复用又称“白箱”复用，如果基类发生改变，那么子类的实现也不得不发生改变；从基类继承而来的实现是静态的，不可能在运行时发生改变，没有足够的灵活性；而且继承只能在有限的环境中使用（如类没有声明为不能被继承）。</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2260,7 +2254,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
