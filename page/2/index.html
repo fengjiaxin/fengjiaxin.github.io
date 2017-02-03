@@ -251,6 +251,250 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-适配器模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-适配器模式/" itemprop="url">
+                  Java典型设计模式-适配器模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:03:57+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>　适配器模式主要分为三类：类的适配器模式、对象的适配器模式、接口的适配器模式。</p>
+<hr>
+<p>　适配器模式将某个类的接口转换成客户端期望的另一个接口表示，目的是消除由于接口不匹配所造成的类的兼容性问题。有点抽象，我们来看看详细的内容。</p>
+<h4 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h4><p>　类的适配器模式核心思想就是：有一个Source类，拥有一个方法，待适配，目标接口是Targetable，通过Adapter类，将Source的功能扩展到Targetable里。</p>
+<pre><code>public class Source {
+    public void method1() {  
+        System.out.println(&quot;this is original method!&quot;);  
+    }  
+}
+
+public interface Targetable {
+    /* 与原类中的方法相同 */
+    public void method1();
+    /* 新类的方法 */
+    public void method2();
+}
+
+public class Adapter extends Source implements Targetable {
+    public void method2() {
+        System.out.println(&quot;this is the targetable method!&quot;);
+    }
+}
+
+public class AdapterTest {
+    public static void main(String[] args) {
+        Targetable target = new Adapter();
+        target.method1();
+        target.method2();
+    }
+}
+AdapterTest的运行结果：
+this is original method!
+this is the targetable method!
+</code></pre><h4 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h4><p>　对象的适配器模式的基本思路和类的适配器模式相同，只是将Adapter类作修改成Wrapper，这次不继承Source类，而是持有Source类的实例，以达到解决兼容性的问题。</p>
+<pre><code>public class Wrapper implements Targetable {
+    private Source source;
+    public Wrapper(Source source) {
+        super();
+        this.source = source;
+    }
+    @Override
+    public void method2() {
+        System.out.println(&quot;this is the targetable method!&quot;);
+    }
+    @Override
+    public void method1() {
+        source.method1();
+    }
+}
+
+public class AdapterTest {
+    public static void main(String[] args) {
+        Source source = new Source();
+        Targetable target = new Wrapper(source);
+        target.method1();
+        target.method2();
+    }
+}
+AdapterTest的运行结果：
+this is original method!
+this is the targetable method!
+</code></pre><h4 id="接口的适配器模式"><a href="#接口的适配器模式" class="headerlink" title="接口的适配器模式"></a>接口的适配器模式</h4><p>　接口的适配器是这样的：有时我们写的一个接口中有多个抽象方法，当我们写该接口的实现类时，必须实现该接口的所有方法，这明显有时比较浪费，因为并不是所有的方法都是我们需要的，有时只需要某一些，此处为了解决这个问题，我们引入了接口的适配器模式，借助于一个抽象类，该抽象类实现了该接口，实现了所有的方法，而我们不和原始的接口打交道，只和该抽象类取得联系，所以我们写一个类，继承该抽象类，重写我们需要的方法就行了。</p>
+<hr>
+<p>　在实际开发中，我们也常会遇到这种接口中定义了太多的方法，以致于有时我们在一些实现类中并不是都需要。看代码：</p>
+<pre><code>public interface Sourceable {    
+    public void method1();  
+    public void method2();  
+}  
+//抽象类Wrapper2：
+public abstract class Wrapper2 implements Sourceable{  
+
+    public void method1(){}  
+    public void method2(){}  
+}  
+
+public class SourceSub1 extends Wrapper2 {  
+    public void method1(){  
+        System.out.println(&quot;the sourceable interface&apos;s first Sub1!&quot;);  
+    }  
+}  
+public class SourceSub2 extends Wrapper2 {  
+    public void method2(){  
+        System.out.println(&quot;the sourceable interface&apos;s second Sub2!&quot;);  
+    }  
+}  
+public class WrapperTest {  
+    public static void main(String[] args) {  
+        Sourceable source1 = new SourceSub1();  
+        Sourceable source2 = new SourceSub2();  
+
+        source1.method1();  
+        source1.method2();  
+        source2.method1();  
+        source2.method2();  
+    }  
+}  
+测试输出：
+the sourceable interface&apos;s first Sub1!
+the sourceable interface&apos;s second Sub2!
+</code></pre><h3 id="总结一下三种适配器模式的应用场景"><a href="#总结一下三种适配器模式的应用场景" class="headerlink" title="总结一下三种适配器模式的应用场景"></a>总结一下三种适配器模式的应用场景</h3><ul>
+<li>类的适配器模式：当希望将一个类转换成满足另一个新接口的类时，可以使用类的适配器模式，创建一个新类，继承原有的类，实现新的接口即可。</li>
+<li>对象的适配器模式：当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Wrapper类，持有原类的一个实例，在Wrapper类的方法中，调用实例的方法就行。</li>
+<li>接口的适配器模式：当不希望实现一个接口中所有的方法时，可以创建一个抽象类Wrapper，实现所有方法，我们写别的类的时候，继承抽象类即可。</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2240,199 +2484,6 @@ public class Client{
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/03/数据库访问中遇到的问题/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/03/数据库访问中遇到的问题/" itemprop="url">
-                  数据库访问中遇到的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-03T15:45:27+08:00">
-                2017-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA问题总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA问题总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　今天在编码中出现了No suitable driver found for jdbc，又是找遍了网上的资料，基本上都说是三个问题：</p>
-<ol>
-<li>连接URL格式出现了问题</li>
-<li>驱动字符串出错(com.mysql.jdbc.Driver)</li>
-<li>三是Classpath中没有加入合适的mysql_jdbc驱动</li>
-</ol>
-<p>　经过我的仔细检查，出现了两次错误，总结如下：</p>
-<ol>
-<li>在 java 项目中，只需要在 Eclipse 中引入 mysql-connector-java-5.1.39-bin.jar 就可以运行java项目。但是在 Eclipse web 项目中，当执行 Class.forName(“om.mysql.jdbc.Driver”);时 不会去查找驱动的。所以本实例中我们需要把mysql-connector-java-5.1.39-bin.jar 拷贝到 tomcat 下 lib 目录。</li>
-<li>查看资料说Java1.8之后就不用写Class.forName(“com.mysql.jdbc.Driver”) ;  我就没写，后来将这句代码写上，发现成功连接数据库，下次还是写上吧。</li>
-</ol>
-<p>　那我就把自己写的DBUtil.java代码贴上吧！</p>
-<pre><code>public class DBUtil {
-    public static Connection getConnection() {
-        String username = &quot;root&quot;;
-        String password = &quot;123456&quot;;
-        String url = &quot;jdbc:mysql://localhost:3306/itat_shop&quot;;
-        Connection con = null;
-        //1.加载驱动程序
-        try {
-            Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
-            con = DriverManager.getConnection(url, username, password);
-        } catch(ClassNotFoundException |SQLException e) {
-            e.printStackTrace();
-        }
-
-        return con;
-    }
-
-    public static void close(Connection con) {
-        try {
-            if(con!=null) con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void close(java.sql.PreparedStatement ps) {
-        try {
-            if(ps!=null) ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void close(ResultSet rs) {
-        try {
-            if(rs!=null) rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2480,7 +2531,7 @@ public class Client{
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2498,7 +2549,7 @@ public class Client{
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

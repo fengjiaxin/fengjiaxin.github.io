@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="String,常量池," />
+  <meta name="keywords" content="异常处理,finally代码块," />
 
 
 
@@ -84,28 +84,22 @@
 
 
 
-<meta name="description" content="今天准备总结一下String对象的存储机制
-　字符串的声明与初始化有如下两种情况：
-
-String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象
-String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符">
+<meta name="description" content="在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。
+　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？
+　解答：在Java语言的异常处理中，finally块的作用就">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java中字符串与存储的机制">
-<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/index.html">
+<meta property="og:title" content="finally块中的代码什么时候被执行">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/index.html">
 <meta property="og:site_name" content="fengjiaxin's blog">
-<meta property="og:description" content="今天准备总结一下String对象的存储机制
-　字符串的声明与初始化有如下两种情况：
-
-String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象
-String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符">
-<meta property="og:updated_time" content="2017-02-02T11:22:02.217Z">
+<meta property="og:description" content="在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。
+　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？
+　解答：在Java语言的异常处理中，finally块的作用就">
+<meta property="og:updated_time" content="2017-02-03T10:51:33.750Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java中字符串与存储的机制">
-<meta name="twitter:description" content="今天准备总结一下String对象的存储机制
-　字符串的声明与初始化有如下两种情况：
-
-String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象
-String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符">
+<meta name="twitter:title" content="finally块中的代码什么时候被执行">
+<meta name="twitter:description" content="在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。
+　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？
+　解答：在Java语言的异常处理中，finally块的作用就">
 
 
 
@@ -133,13 +127,13 @@ String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”a
 
 
 
-  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/"/>
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/"/>
 
 
 
 
 
-  <title> Java中字符串与存储的机制 | fengjiaxin's blog </title>
+  <title> finally块中的代码什么时候被执行 | fengjiaxin's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +256,7 @@ String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”a
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -286,7 +280,7 @@ String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”a
             
             
               
-                Java中字符串与存储的机制
+                finally块中的代码什么时候被执行
               
             
           </h1>
@@ -301,8 +295,8 @@ String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”a
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T18:29:28+08:00">
-                2017-02-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T18:08:53+08:00">
+                2017-02-03
               </time>
             
 
@@ -359,57 +353,109 @@ String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”a
       
 
       
-        <p><strong>今天准备总结一下String对象的存储机制</strong></p>
-<p>　字符串的声明与初始化有如下两种情况：</p>
-<ol>
-<li>String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象</li>
-<li>String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后s2指向字符串常量池中”abc”对象的首地址。</li>
-</ol>
-<p>　具体来说：</p>
-<pre><code>String s1 = &quot;abc&quot;//把&quot;abc&quot;放到常量池中，在编译时产生
-String s2 = &quot;ab&quot;+&quot;c&quot;//把&quot;ab&quot;+&quot;c&quot;转换成字符串常量&quot;abc&quot;放到常量区中
-String s3 = new String(&quot;abc&quot;)//在运行时把&quot;abc&quot;放到堆里面
-</code></pre><ul>
-<li>String对象的intern()方法会得到字符串对象在常量池中对应的版本的引用（如果常量池中有一个字符串与String对象的equals结果是true），如果常量池中没有对应的字符串，则该字符串将被添加到常量池中，然后返回常量池中字符串的引用</li>
-<li>字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象</li>
-</ul>
-<hr>
-<p>　在明白了以上两点，那么我们来做两道笔试题：</p>
-<ol>
-<li><p>什么情况下用+运算符进行字符串连接比调用StringBuffer/StringBuilder对象的append方法连接字符串性能更好？</p>
-<p> 　StringBuffer对象适用于字符串经常操作，不产生而额外内存，而String对象不可变，一旦创建不能修改，但是操作简单，效率高，所以适用于字符串较少时，操作次数少的情况下。</p>
-</li>
-<li><p>请说出下面程序的输出。</p>
-<pre><code>class StringEqualTest {
+        <p>　在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。</p>
+<p>　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？</p>
+<p>　解答：在Java语言的异常处理中，<strong>finally块的作用就是为了保证无论出现什么情况，finally中的代码一定会被执行</strong>，因此任何语句要执行都只能在return前执行（<strong>除非碰到exit函数</strong>），因此finally块中的代码在return前执行。此外，如果try-finally或catch-finally中都有return,那么<strong>finally块中的return语句将会覆盖别处的return语句</strong>，最终返回到调用者那里的是finally中的return值。</p>
+<p>　代码示例如下：</p>
+<pre><code>public class TestFinally1 {
+
+    public static int testfinally(){
+        try{
+            return 1;
+        }catch(Exception e){
+            return 0;
+        }finally{
+            System.out.println(&quot;execute finally&quot;);
+        }
+    }
+
     public static void main(String[] args) {
-        String s1 = &quot;Programming&quot;;
-        String s2 = new String(&quot;Programming&quot;);
-        String s3 = &quot;Program&quot;;
-        String s4 = &quot;ming&quot;;
-        String s5 = &quot;Program&quot; + &quot;ming&quot;;
-        String s6 = s3 + s4;
-        System.out.println(s1 == s2);
-        System.out.println(s1 == s5);
-        System.out.println(s1 == s6);
-        System.out.println(s1 == s6.intern());
-        System.out.println(s2 == s2.intern());
+
+        int result = testfinally();
+        System.out.println(result);
+
+    }
+
+}
+
+结果运行如下：
+execute finally
+1
+</code></pre><p>　从上面的例子中可以看出，在执行return语句之前确实执行了finally块中的代码；那么如果在finally块中放置return语句，会不会覆盖呢？</p>
+<p>　代码示例如下：</p>
+<pre><code>public static int testfinally2(){
+    try {
+        return 1;
+    } catch (Exception e) {
+        return 0;
+    }finally{
+        System.out.println(&quot;execute finally2&quot;);
+        return 3;
     }
 }
-</code></pre></li>
-</ol>
-<pre><code>**结果为**
 
-    System.out.println(s1==s2);//false
-    System.out.println(s1==s5);//true
-    System.out.println(s1==s6);//false
-    System.out.println(s1==s6.intern());//true
-    System.out.println(s2==s2.intern());//false
-</code></pre><p>　　<strong>解释</strong>：字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象；</p>
-<pre><code>String s6 = s3+s4//等价于
-StringBuilder temp = s3;
-temp.append(s4);
-String s6 = temp.toString();
-</code></pre><p>　所以S6是创建一个新的StringBuilder对象的toString()方法处理成String对象，因此s1==s6为false。</p>
+public static void main(String[] args) {
+
+    int result = testfinally2();
+    System.out.println(result);
+
+}
+
+结果运行如下：
+execute finally2
+3
+</code></pre><p>　<strong>从上面的例子中可以看出，当finally块中有return语句时，将会覆盖函数中其它return语句；此外，由于在一个方法体中内部定义的变量都存储在栈中，在这个函数结束后，其对应的栈会被回收，此时在其方法体中定义的变量将不存在了，因此return在返回时不是直接返回变量的值，而是复制一份，然后返回。因此，对于基本类型的数据，在finally块中改变return的值对返回值没有任何影响，而对引用类型的数据会有影响。</strong></p>
+<p>　代码示例如下：</p>
+<pre><code>public class TestReturn {
+
+    public static int testFinally1(){
+        int result =1;
+        try{
+            result =2;
+            return result;
+        }catch(Exception e){
+            return 0;
+        }finally{
+            result = 3;
+            System.out.println(&quot;excuate testFinally1&quot;);
+        }
+    }
+
+    public static StringBuffer testFinally2(){
+        StringBuffer s = new StringBuffer(&quot;hello&quot;);
+        try{
+            return s;
+        }catch(Exception e){
+            return null;
+        }finally{
+            s.append(&quot; world&quot;);
+            System.out.println(&quot;excuate testFinally2&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(testFinally1());
+        System.out.println(testFinally2());
+    }
+
+}
+
+结果运行如下：
+excuate testFinally1
+2
+excuate testFinally2
+hello world
+</code></pre><p>　解析：程序在执行return时会首先将返回值存储在一个指定的位置，其次去执行finally块，最后在返回。</p>
+<p>　在testFinally1()方法调用return前，先把result的值1存储在一个指定的位置，然后再去执行finally块中的代码，此时修改result的值将不会影响到程序的返回结果。</p>
+<p>　testFinally2()中，在调用return前先把s存储在一个指定的位置，由于s为引用类型，因此在finally块中修改s将会修改程序的返回结果。</p>
+<hr>
+<p>　写了这么多，总结的也应该比较到位，那我在网上找一道相关的面试题进行解答。</p>
+<p>　<strong>出现在Java程序中的finally块是不是一定会被执行？</strong></p>
+<p>　答:不一定，以下两种情况都不会。</p>
+<ol>
+<li>当程序在进入try{}语句块之前就出现异常，会直接结束。例如在try{}之前有语句int i= 9/0;那么会直接抛出异常，导致没有执行try{}中的代码。</li>
+<li>当程序在try{}中强制退出也不会执行。例如在try{System.exit(0)}。</li>
+</ol>
 
       
     </div>
@@ -433,9 +479,9 @@ String s6 = temp.toString();
       
         <div class="post-tags">
           
-            <a href="/tags/String/" rel="tag"># String</a>
+            <a href="/tags/异常处理/" rel="tag"># 异常处理</a>
           
-            <a href="/tags/常量池/" rel="tag"># 常量池</a>
+            <a href="/tags/finally代码块/" rel="tag"># finally代码块</a>
           
         </div>
       
@@ -444,8 +490,8 @@ String s6 = temp.toString();
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/02/Java中i++和++i的区别和理解/" rel="next" title="Java中i++和++i的区别和理解">
-                <i class="fa fa-chevron-left"></i> Java中i++和++i的区别和理解
+              <a href="/2017/02/03/Java异常机制及相关问题/" rel="next" title="Java异常机制及原理">
+                <i class="fa fa-chevron-left"></i> Java异常机制及原理
               </a>
             
           </div>
@@ -453,10 +499,6 @@ String s6 = temp.toString();
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/" rel="prev" title="抽象类（abstract class）和接口（interface）有什么异同">
-                抽象类（abstract class）和接口（interface）有什么异同 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
