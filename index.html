@@ -354,7 +354,7 @@
         
           
             <p>　<strong>编写看这么多Java代码，有时候需要对可能出现的异常进行捕捉，有时候直接抛出，懵懵懂懂，那么今天重新看一遍关于Java异常处理机制，进行系统的总结。</strong></p>
-<p>##1、异常机制概述 ##<br>　异常机制是指当程序出现错误后，程序如何处理。具体来说，异常机制提供了程序退出的安全通道。当出现错误后，程序执行的流程发生改变，程序的控制权转移到异常处理器。</p>
+<h2 id="1、异常机制概述"><a href="#1、异常机制概述" class="headerlink" title="1、异常机制概述"></a>1、异常机制概述</h2><p>　异常机制是指当程序出现错误后，程序如何处理。具体来说，异常机制提供了程序退出的安全通道。当出现错误后，程序执行的流程发生改变，程序的控制权转移到异常处理器。</p>
 <h2 id="2-、异常处理的流程"><a href="#2-、异常处理的流程" class="headerlink" title="2 、异常处理的流程"></a>2 、异常处理的流程</h2><p>　当程序中抛出一个异常后，程序从程序中导致异常的代码处跳出，java虚拟机检测寻找和try关键字匹配的处理该异常的catch块，如果找到，将控制权交到catch块中的代码，然后继续往下执行程序，try块中发生异常的代码不会被重新执行。如果没有找到处理该异常的catch块，在所有的finally块代码被执行和当前线程的所属的ThreadGroup的uncaughtException方法被调用后，遇到异常的当前线程被中止。</p>
 <h2 id="3、异常的结构"><a href="#3、异常的结构" class="headerlink" title="3、异常的结构"></a>3、异常的结构</h2><p>　异常的继承结构：Throwable为基类，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception。Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。<br><img src="http://i.imgur.com/tQtFlXu.jpg" alt=""></p>
 <h2 id="４、Error异常"><a href="#４、Error异常" class="headerlink" title="４、Error异常"></a>４、Error异常</h2><p>　Error表示程序在运行期间出现了十分严重、不可恢复的错误，在这种情况下应用程序只能中止运行，例如JAVA 虚拟机出现错误。Error是一种unchecked Exception，编译器不会检查Error是否被处理，在程序中不用捕获Error类型的异常。一般情况下，在程序中也不应该抛出Error类型的异常。</p>
