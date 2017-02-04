@@ -251,6 +251,680 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/JAVA多线程（二）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/04/JAVA多线程（二）/" itemprop="url">
+                  JAVA多线程（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T18:41:27+08:00">
+                2017-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　接着上篇博客继续，还有一些多线程的概念，我以前也没听过，正好整理学习一下，加油！！</p>
+<h2 id="1、sleep-方法与wait-方法的不同？"><a href="#1、sleep-方法与wait-方法的不同？" class="headerlink" title="1、sleep()方法与wait()方法的不同？"></a>1、sleep()方法与wait()方法的不同？</h2><p>　区别主要显示在一下几个方面：</p>
+<ol>
+<li>原理不同，sleep()方法时Thread的静态方法，是线程控制自身流程的，会让此线程暂停一段时间，把机会让给其他线程；而wait()方法时Object的方法，用于线程见的通信，这个方法会使拥有该对象锁的进程等待，直到其他线程调用notify()方法。</li>
+<li>对锁的处理机制不同，sleep()方法不涉及线程间通信，不释放锁，而wait()会释放掉它所占用的锁，从而使线程所在对象的其他synchronized数据可被别的线程使用。</li>
+<li>使用区域不同，sleep()可以在任何地方使用，而wait()方法必须放在同步控制方法或语句块中使用；除此之外，sleep()方法必须捕获异常，而wait()方法不需要，在sleep()过程中，有可能被其他对象调用它的interrupt(),产生interruptedException异常。</li>
+</ol>
+<p>　<strong>那么扩展一下：sleep()和yield()有什么区别？</strong></p>
+<ol>
+<li>sleep()给其他线程运行机会时不考虑线程的优先级，而yield()只给相同优先级或更高优先级的线程运行的机会。</li>
+<li>线程执行sleep()后转入阻塞状态，所以在休眠的时间段内肯定不会被执行；但是yield()只是使当前线程重新回到可执行状态，所以可能执行yield()后进入到可执行状态后马上又被执行。</li>
+<li>sleep()方法抛出InterruptedException，而yield()没有声明任何异常。</li>
+<li>sleep()方法比yield()有更好地可移植性（操作系统方面）。</li>
+</ol>
+<h2 id="2、终止线程的方法？"><a href="#2、终止线程的方法？" class="headerlink" title="2、终止线程的方法？"></a>2、终止线程的方法？</h2><p>　<strong>stop()和suspend()方法。</strong></p>
+<p>　stop()方法释放已经锁定的所有监视资源，suspend()不会释放锁。这两种方式都不安全，一般建议让线程自行结束进入Dead状态；在学习这个方法前，先补充一下基础知识。</p>
+<hr>
+<p>　关键字<strong>volatile</strong>,类型修饰符，系统每次用它时都是直接从内存中读取，而不是从缓存中读取。</p>
+<hr>
+<p>　那么建议方式是通过设置flag()标志来控制循环是否执行，通过这种方法来让线程离开run()方法从而终止线程。</p>
+<p>　<strong>实例代码如下：</strong></p>
+<pre><code>public class MyThreadStop implements Runnable {
+    private volatile Boolean flag;
+
+    public void stop(){
+        flag = false;
+    }
+
+    @Override
+    public void run() {
+        while(flag){
+            //执行
+        }
+    }
+
+}
+</code></pre><p>　在上例中，调用stop()虽然能够终止线程，但是，当线程处于非运行状态时，这个方法就不可用啦，此时可以使用interrupt()方法来打破阻塞的情况，当interrupt()被调用时，会抛出interruptedException异常，可以通过在run()方法中来捕获这个异常让线程安全退出。</p>
+<p>　<strong>示例代码如下：</strong></p>
+<pre><code>public class MYThread {
+
+    public static void main(String[] args) {
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println(&quot;thread go to sleep&quot;);
+
+                try {
+                    Thread.sleep(5000);
+                    System.out.println(&quot;thread end&quot;);
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                    System.out.println(&quot;thread is interupted&quot;);
+                }
+            }
+        });
+
+        thread.start();
+        thread.interrupt();
+
+    }
+
+}
+
+运行结果如下：
+thread go to sleep
+thread is interupted
+</code></pre><h2 id="3、什么是守护线程？"><a href="#3、什么是守护线程？" class="headerlink" title="3、什么是守护线程？"></a>3、什么是守护线程？</h2><p>　守护线程是指程序在运行时在后台提供一种通用服务的线程，用户线程跟守护线程的差别在：如果用户线程已经全部退出运行，只剩下守护线程存在，JVM也就退出了。</p>
+<p>　在Java中，守护线程一般具有较低的优先级，它可以由用户设置，方法就是在调用<strong>start()前</strong>调用对象的setDaemon(true)方法，注意：当在一个守护线程中产生了其他线程，那么这些新产生的线程默认还是守护线程。</p>
+<p>　<strong>说了这么多，代码实战一下更加清晰明了：</strong></p>
+<pre><code>class ThreadJoin extends Thread{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName()+&quot;:begin&quot;);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(Thread.currentThread().getName()+&quot;:end&quot;);
+    }
+
+}
+
+public class ThreadJoinDemo {
+
+    public static void main(String[] args) {
+        System.out.println(&quot;test:begin&quot;);
+        Thread t1 = new ThreadJoin();
+        t1.setDaemon(true);
+        t1.start();
+        System.out.println(&quot;test:end&quot;);
+
+    }
+
+}
+
+运行结果：
+test:begin
+test:end
+Thread-0:begin
+</code></pre><p>　其中守护线程最典型的的一个例子就是垃圾回收器，只要JVM启动，它始终在运行，实时监控和管理系统中可以被回收的资源。</p>
+<h2 id="4、join-方法的作用是什么？"><a href="#4、join-方法的作用是什么？" class="headerlink" title="4、join()方法的作用是什么？"></a>4、join()方法的作用是什么？</h2><p>　join()的作用是让调用该方法的线程在执行完run()方法后，再执行join()方法后面的代码。简单来说就是将两个线程合并，实现同步的功能；具体就是可以通过线程A的join()方法来等待线程A的结束，或者使用线程A的join(2000)方法来等待线程A的结束，但最多只等2s。</p>
+<p>　<strong>来，写个代码实例把：</strong></p>
+<pre><code>public class JoinTest {
+
+    public static void main(String[] args) {
+        Thread t = new Thread(new ThreadImp());
+        t.start();
+        try {
+            t.join(1000);
+            if(t.isAlive()){
+                System.out.println(&quot;t has not finished&quot;);
+            }else{
+                System.out.println(&quot;t has finished&quot;);
+            }
+            System.out.println(&quot;joinFinish&quot;);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}
+
+class ThreadImp implements Runnable{
+
+    @Override
+    public void run() {
+        System.out.println(&quot;ThreadImp begin:&quot;);
+        try {
+            Thread.sleep(5000);
+            System.out.println(&quot;ThreadImp end:&quot;);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+运行结果如下：
+ThreadImp begin:
+t has not finished
+joinFinish
+ThreadImp end:
+</code></pre><p>　<strong>到这里，关于线程的知识差不多整理完毕，有很多知识我也是重新学习了一遍，代码重新编写一次，写了这么多可真累，不过以后再捡起来就相对容易些了，先记录这些吧，以后再有新知识，新感悟在补充。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/JAVA多线程（一）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="fengjiaxin's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/03/JAVA多线程（一）/" itemprop="url">
+                  JAVA多线程（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T20:42:34+08:00">
+                2017-02-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　在上学期学习了操作系统的相关知识，首先学的就是进程与线程的知识概念，但是linux操作系统是用c语言编写的，并且关于线程的代码太底端，平时做题也是运用伪代码来写的，那么今天在整理Java多线程的相关知识的同时，正好与之前学习的操作系统知识相结合，那么这篇文章主要介绍一下多线程的Java实现。</p>
+<h2 id="1、线程与进程的概念"><a href="#1、线程与进程的概念" class="headerlink" title="1、线程与进程的概念"></a>1、线程与进程的概念</h2><p>　线程是指程序在执行过程中，能够执行程序代码的一个执行单元，在Java语言中有四种状态：运行、就绪、挂起、结束。</p>
+<p>　进程是指一段正在执行的程序，而线程有时成为轻量级进程，是程序执行的最小单元，一个进程可以有多个线程，各个线程之间共享程序的内存空间（代码段、数据段、堆空间）以及一些进程级的资源，但是各个线程拥有自己的栈空间。</p>
+<p>　在网上找到一个图片很合适的表现的进程与线程的对比关系，图如下：</p>
+<p><img src="http://i.imgur.com/Tv9A8OA.png" alt=""></p>
+<p>　在操作系统级别上，程序的执行都是以进程为单位，每个进程通常有多个线程互不影响并发的执行，那么为什么使用多线程呢？</p>
+<ol>
+<li>使用多线程可以减少程序的响应时间。</li>
+<li>与进程相比，线程的创建和切换开销更小。</li>
+<li>多CPU或多核计算机本身就具有执行多线程的能力。</li>
+<li>使用多线程能简化程序的结构，使程序便于理解和维护。</li>
+</ol>
+<h2 id="2、同步和异步的区别？"><a href="#2、同步和异步的区别？" class="headerlink" title="2、同步和异步的区别？"></a>2、同步和异步的区别？</h2><p>　答：如果系统中存在临界资源（资源数量少于竞争资源的线程数量的资源），例如正在写的数据以后可能被另一个线程读到，或者正在读的数据可能已经被另一个线程写过了，那么这些数据就必须进行同步存取（数据库操作中的排他锁就是最好的例子）。当应用程序在对象上调用了一个需要花费很长时间来执行的方法，并且不希望让程序等待方法的返回时，就应该使用异步编程，在很多情况下采用异步途径往往更有效率。事实上，所谓的同步就是指阻塞式操作，而异步就是非阻塞式操作。</p>
+<h2 id="3、如何实现JAVA多线程？"><a href="#3、如何实现JAVA多线程？" class="headerlink" title="3、如何实现JAVA多线程？"></a>3、如何实现JAVA多线程？</h2><p>　Java虚拟机允许应用程序并发的运行多个线程，在Java中，一共有三种实现方式，那么根据我的掌握程度，我只写前两个实现方式。</p>
+<ol>
+<li>继承Thread类，重写run()方法</li>
+<li><p>声明实现Runnable接口类，并实现run()方法。</p>
+<p> <strong>对于方式一：</strong></p>
+</li>
+</ol>
+<p>　启动线程的唯一方法就是通过Thread的start()方法。start()方法是一个本地方法，将启动一个新线程，并执行run()方法；需要注意的是：调用start()方法是使得该线程变为可运行状态，什么时候运行线程代码是由操作系统决定。</p>
+<p>　代码示例如下：</p>
+<pre><code>class Demo extends Thread    
+{  
+    private String name;  
+    Demo(String name)//构造函数  
+    {  
+        //this.name = name;  
+        super(name);  
+
+    }  
+    public void run()//复写run方法  
+    {  
+        for ( int i = 0 ; i &lt; 60  ; i++ )  
+        {  
+            System.out.println(Thread.currentThread().getName()+&quot;run=&quot;+i);  
+        }  
+    }  
+} 
+public class ThreadExtendsDemo {
+
+    public static void main(String[] args) {
+        Demo t1 = new Demo(&quot;one&quot;);//创建一个对象t1  
+        Demo t2 = new Demo(&quot;two&quot;);  
+        t1.start();// 通过调用start方法，开启多线程  
+        t2.start();  
+        run();  
+    }
+
+    private static void run() {
+        for(int i =0;i&lt;60;i++)
+            System.out.println(&quot;main&quot; +i);
+    }
+
+}
+</code></pre><p>　需要注意的是：<br>　t1.start()开启线程并执行该线程的run方法。<br>　t1.run()仅仅是对象调用方法。而线程创建了，并没有运行。还是在主线程的运行中。</p>
+<p>　　<strong>对于方式二：</strong></p>
+<p>　首先定义类实现Runnable接口，实现run()方法；然后创建Thread对象，用实现Runnable接口的对象作为参数实例化该Thread对象；最有调用Thread的start()方法。</p>
+<p>　代码示例如下：</p>
+<pre><code>class MyThread implements Runnable{
+
+    @Override
+    public void run() {
+        System.out.println(&quot;Thread Body&quot;);
+    }
+
+}
+public class ThreadImmDemo {
+
+    public static void main(String[] args) {
+        MyThread thread = new MyThread();
+        Thread t = new Thread(thread);
+        t.start();
+
+    }
+
+}
+</code></pre><p>　其实，不管是通过继承Thread类还是通过实现Runnable接口来实现多线程的方法，最终还是通过Thread对象的API来控制线程。</p>
+<p>　在学习了这两种方式实现多线程，那么有一个问题：<strong>一个类是否可以同时继承Thread类并实现Runnable接口</strong>？<br>　答案是可以的;代码示例如下：</p>
+<pre><code>public class Test extends Thread implements Runnable {
+
+    public static void main(String[] args) {
+        Thread t = new Thread(new Test());
+        t.start();
+    }
+
+}
+</code></pre><p>　上面这段代码是可以编译通过的，因为Test类从Thread类继承了run()方法，这个继承的run()方法可以被当做对RUnnable接口的实现，因此此段代码可以编译通过。</p>
+<h2 id="4、run-方法和start-方法的区别？"><a href="#4、run-方法和start-方法的区别？" class="headerlink" title="4、run()方法和start()方法的区别？"></a>4、run()方法和start()方法的区别？</h2><p>　通常，系统通过调用线程类的start()方法来启动一个线程，此时该线程处于就绪状态，而非运行状态，也就意味着这个线程可以被JVM来调度执行；在调度过程中，JVM通过调用线程类的run()方法来完成实际的操作，当run()方法结束后，此线程就会终止。</p>
+<p>　如果直接调用run()方法，这会别当做一个普通的函数调用，程序中仍然只有主线程这一个线程；<br>由此可知，只有通过调用线程类的start()方法才能真正达到多线程的目的。</p>
+<h2 id="5、多线程同步的实现方法？"><a href="#5、多线程同步的实现方法？" class="headerlink" title="5、多线程同步的实现方法？"></a>5、多线程同步的实现方法？</h2><p><strong>Java主要提供了3种实现同步机制的方法：</strong></p>
+<h3 id="1-synchronized关键字"><a href="#1-synchronized关键字" class="headerlink" title="1 synchronized关键字"></a>1 synchronized关键字</h3><p>　在Java中，每个对象都有一个对象锁与之相关联，该锁表明对象在任何时候只允许被一个线程所拥有，当一个线程调用对象的一段synchronized代码时，需要先获取这个锁，然后去执行相应的代码，执行结束后，释放锁。</p>
+<p>　synchronized关键字有两种用法：synchronized方法和synchronized块，此外，该关键字可以用作于静态方法、类、或某个实例。</p>
+<p>　讲解了这么多，我编写一个买票程序，使用两个线程买票，一个线程在同步块中，一个线程在同步函数中，代码实例如下：</p>
+<pre><code>class Ticket implements Runnable{
+    private int ticket =100;
+    boolean flag = true;
+
+    @Override
+    public void run() {
+        if(flag){
+            while(true){
+                synchronized (this) {
+                    if(ticket&gt;0){
+                        try {
+                            Thread.sleep(10);
+                            System.out.println(Thread.currentThread().getName()+&quot;runs=&quot;+ticket--);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        }
+        else{
+            show();
+        }
+    }
+
+    private synchronized void show() {
+        while(true){
+            if(ticket&gt;0){
+                try {
+                    Thread.sleep(10);
+                    System.out.println(Thread.currentThread().getName()+&quot;show =&quot;+ticket--);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+}
+
+public class TicketDemo {
+
+    public static void main(String[] args) {
+        Ticket t = new Ticket();
+        Thread t1 = new Thread(t);
+        Thread t2 = new Thread(t);
+        t1.start();
+
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        t.flag = false;
+        t2.start();
+
+    }
+
+}
+</code></pre><p>　那么如果同步函数被static修饰后，使用的锁是什么呢？我们知道静态进内存时一定没有本类对象，但一定有该类对应的字节码文件对象，即类.class,实在不行，我们创建一个对象，<strong>Object obj = new Objext()</strong>;然后利用obj锁。</p>
+<h3 id="2-wait-和notify-方法"><a href="#2-wait-和notify-方法" class="headerlink" title="2 wait()和notify()方法"></a>2 wait()和notify()方法</h3><p>　在synchronized代码被执行期间，线程可以通过调用对象的wait()方法，释放对象锁，进入等待状态，并且可以调用notify()或notifyAll()方法通知正在等待的其他线程。其中，notify()方法仅唤醒一个线程（等待队列的第一个线程），并允许它去获得锁；notifyAll()方法唤醒所有等待这个对象的线程并允许他们获得锁（让这些线程竞争获得）。</p>
+<p>　接下来编写一个生产者消费者的实例，代码实例如下：</p>
+<pre><code>public class ProducerConsumerDemo {
+
+    public static void main(String[] args) {
+        Resource res = new Resource();
+        Producer pro = new Producer(res);
+        Consumer con = new Consumer(res);
+
+        Thread t0 = new Thread(pro);
+        Thread t1 = new Thread(pro);
+        Thread t2 = new Thread(con);
+        Thread t3 = new Thread(con);
+
+        t0.start();
+        t1.start();
+        t2.start();
+        t3.start();
+
+    }
+
+}
+
+class Resource{
+    private String name ;
+    private int count =1;
+    private boolean flag = false;//true代表有产品，false代笔没有产品
+
+    //生产
+    public synchronized void set(String name){
+        while(flag){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        this.name = name;
+        System.out.println(Thread.currentThread().getName()+&quot;...生产者&quot;+this.name);
+        flag = true;
+        this.notifyAll();
+    }
+
+    //消费
+    public synchronized void out(){
+        while(!flag){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Thread.currentThread().getName()+&quot;...消费者&quot;+this.name);
+        flag = false;
+        this.notifyAll();
+
+    }
+}
+
+class Producer implements Runnable{
+    private Resource res;
+    Producer(Resource res){
+        this.res = res;
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            res.set(&quot;商品&quot;);
+        }
+    }
+
+}
+
+class Consumer implements Runnable{
+    private Resource res;
+    Consumer(Resource res){
+        this.res = res;
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            res.out();
+        }
+    }
+
+}
+</code></pre><h3 id="3-Lock"><a href="#3-Lock" class="headerlink" title="3 Lock"></a>3 Lock</h3><p>　JDK5后新增了Lock接口以及一个实现类ReentrantLock(重入锁)，我也第一次接触，好好学习一下，Lock也可以用来实现多线程的同步，它提供一些放法实现多线程的同步：</p>
+<p>　1 lock():以阻塞的方式获取锁，即如果获取到了锁，立即返回，如果别的线程持有锁，当前线程等待，直到获取锁后返回。</p>
+<p>　2 tryLock():以非阻塞的方式来获取锁，只是试探获取，如果获取到锁，立即返回true,否则返回false。</p>
+<p>　3 lockInterruptibly():如果获取到了锁，立即返回，否则，当前线程处于休眠状态，直到获得锁，注意：如果当前线程被别的线程中断，会收到InterruptedException异常。</p>
+<p>　<strong>先总结到这里，没想到写了这么多还有很多没写完，那么只好再写一篇啦。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1928,376 +2602,6 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/01/基本操作/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/01/基本操作/" itemprop="url">
-                  基本操作
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T19:51:36+08:00">
-                2017-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/备忘录/" itemprop="url" rel="index">
-                    <span itemprop="name">备忘录</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>hexo new &quot;postName&quot; #新建文章
-hexo generate #生成静态页面至public目录
-hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）
-hexo deploy #将.deploy目录部署到GitHub
-hexo help  # 查看帮助
-hexo version  #查看Hexo的版本
-</code></pre><h3 id="命令简写"><a href="#命令简写" class="headerlink" title="命令简写"></a>命令简写</h3><pre><code>hexo n == hexo new
-hexo g == hexo generate
-hexo s == hexo server
-hexo d == hexo deploy
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="fengjiaxin's blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="fengjiaxin's blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
-                  Java典型设计模式-观察者模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　观察者模式是类和类之间的关系，不涉及到继承。</p>
-<hr>
-<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
-<pre><code>public interface Observer {  
-    public void update();  
-}
-
-public class Observer1 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer1 has received!&quot;);  
-    }  
-}
-
-public class Observer2 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer2 has received!&quot;);  
-    }  
-}
-
-public interface Subject {  
-    /*增加观察者*/  
-    public void add(Observer observer);  
-    /*删除观察者*/  
-    public void del(Observer observer);  
-    /*通知所有的观察者*/  
-    public void notifyObservers();  
-    /*自身的操作*/ 
-    public void operation();  
-}
-
-import java.util.Enumeration;
-import java.util.Vector;
-
-public abstract class AbstractSubject implements Subject {  
-
-    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
-    @Override 
-    public void add(Observer observer) {  
-        vector.add(observer);  
-    }  
-
-    @Override 
-    public void del(Observer observer) {  
-        vector.remove(observer);  
-    }  
-
-    @Override 
-    public void notifyObservers() {  
-        Enumeration&lt;Observer&gt; enumo = vector.elements();  
-        while(enumo.hasMoreElements()){  
-            enumo.nextElement().update();  
-        }  
-    }  
-}
-
-public class MySubject extends AbstractSubject {  
-
-    @Override 
-    public void operation() {  
-        System.out.println(&quot;update self!&quot;);  
-        notifyObservers();  
-    }  
-
-}
-
-public class ObserverTest {  
-    public static void main(String[] args) {  
-        Subject sub = new MySubject();  
-        sub.add(new Observer1());  
-        sub.add(new Observer2());  
-        sub.operation();  
-    }  
-}
-运行结果：
-update self!
-observer1 has received!
-observer2 has received!
-</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2345,7 +2649,7 @@ observer2 has received!
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2363,7 +2667,7 @@ observer2 has received!
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
