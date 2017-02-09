@@ -1055,7 +1055,7 @@ the sourceable interface&apos;s second Sub2!
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1080,8 +1080,8 @@ the sourceable interface&apos;s second Sub2!
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
-                  Java典型设计模式-工厂方法模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
+                  Java典型设计模式-单例模式
                 </a>
               
             
@@ -1157,92 +1157,61 @@ the sourceable interface&apos;s second Sub2!
       
         
           
-            <p>###　工厂方法模式 ###</p>
-<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
-<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<pre><code>public interface MyInterface {
-    public void print();
-}    
+            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
+<pre><code>public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {
+        if (myObject != null) {
+        } else {
+            myObject = new MyObject();
+        }
+        return myObject;
+    }
+}
+</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
+<hr>
+<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：</p>
+<p>　在Java语言中实现单例模式通常有两种表现方式：</p>
+<ol>
+<li>饿汉式单例类：类加载时，就进行对象实例化。</li>
+<li>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。</li>
+</ol>
+<p>　<strong>饿汉式单例类代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//恶汉式单例
+public class Singleton1 {
 
-public class MyClassOne implements MyInterface {
+    private static Singleton1 m_instance = new Singleton1();
 
-    @Override
-    public void print() {
-        System.out.println(&quot;MyClassOne&quot;);
+    private Singleton1(){
+
+    }
+
+    public static Singleton1 getInstance(){
+        return m_instance;
+    }
+}
+</code></pre><p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。</p>
+<p>　<strong>同步懒汉式代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//懒汉式单例
+public class Singleton2 {
+    private static Singleton2 m_instance = null;
+
+    private Singleton2(){
+
+    }
+
+    public synchronized static Singleton2 getInstance(){
+        if(m_instance==null)
+            m_instance = new Singleton2();
+        return m_instance;
     }
 
 }
-public class MyClassTwo implements MyInterface {     
-    @Override
-    public void print() {
-        System.out.println(&quot;MyClassTwo&quot;);
-    }
-}
-
-
-public class MyFactory {
-    public MyInterface produce(String type) {  
-        if (&quot;One&quot;.equals(type)) {  
-            return new MyClassOne();  
-        } else if (&quot;Two&quot;.equals(type)) {  
-            return new MyClassTwo();  
-        } else {  
-            System.out.println(&quot;没有要找的类型&quot;);  
-            return null;  
-        }  
-    }
-
-}
-
-
-public class FactoryTest {
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produce(&quot;One&quot;);  
-        myi.print();
-    }
-
-}
-</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-     public MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-
-}
-
-public class FactoryTest {
-
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produceOne();
-        myi.print();
-    }
-
-}
-</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
-<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-    public static MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public static MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-}
-
-public class FactoryTest {
-    public static void main(String[] args){ 
-        MyInterface myi = MyFactory.produceOne();
-        myi.print();
-
-}
-</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
-
+</code></pre>
           
         
       
