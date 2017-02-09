@@ -251,6 +251,401 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/04/排序的Java实现/" itemprop="url">
+                  排序的Java实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T20:46:53+08:00">
+                2017-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
+<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestSelectSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,4,9,8,7,6,0,1,3,2};
+        selectSort(a);
+        show(a);
+    }
+
+    public static void selectSort(int[] a){
+        int i,j;
+        int temp =0,flag =0;
+        for(i =0;i&lt;a.length;i++){
+            temp =a[i];
+            flag =i;
+            for(j =i+1;j&lt;a.length;j++){
+                if(a[j]&lt;temp){
+                    temp= a[j];
+                    flag =j;
+                }
+            }
+            if(flag!=i){
+                a[flag] =a[i];
+                a[i] = temp;
+            }
+        }
+    }
+
+    public static void show(int[] a){
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+
+}
+</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestInsertSort {
+
+    public static void main(String[] args) {
+        int[] array = {7,3,4,9,10,6};
+        insertSort(array);
+        for(int i=0;i&lt;array.length;i++)
+            System.out.print(array[i]+&quot; &quot;);
+
+    }
+
+    public static void insertSort(int[] a){
+        if(a!=null){
+            for(int i=1;i&lt;a.length;i++){
+                int temp = a[i],j =i;
+                if(temp&lt;a[j-1]){
+                    while(j&gt;=1 &amp;&amp; temp&lt;a[j-1]){
+                        a[j] = a[j-1];
+                        j--;
+                    }
+                }
+                a[j] = temp;
+            }
+        }
+    }
+
+}
+</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestBubbleSort {
+
+    public static void main(String[] args) {
+        int[] array = {4,2,9,10,8,6};
+        BubbleSort(array);
+        for(int i=0;i&lt;array.length;i++){
+            System.out.print(array[i]+&quot; &quot;);
+        }
+
+    }
+
+    public static void BubbleSort(int[] a){
+        int i,j,temp,len = a.length;
+        for( i=0;i&lt;len-1;i++){
+            for(j =0;j&lt;len-i-1;j++){
+                if(a[j]&gt;a[j+1]){
+                    temp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = temp;
+                }
+            }
+        }
+
+    }
+
+}
+</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestMergeSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,3,4,2,9,7,6,1};
+        MergeSort(a, 0, a.length-1);
+        for(int i =0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void Merge(int[] array,int left,int middle,int right){
+        int i,j,k,n1,n2;
+        n1 = middle-left+1;
+        n2 = right-middle;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+        for(i =0,k =left;i&lt;n1;i++,k++)
+            L[i] = array[k];
+        for(j =0,k=middle+1;j&lt;n2;j++,k++)
+            R[j] = array[k];
+        for(k =left,i =0,j =0;i&lt;n1 &amp;&amp; j&lt;n2;k++){
+            if(L[i]&lt;R[j])
+                array[k] = L[i++];
+            else
+                array[k] = R[j++];
+        }
+
+        //没有再声明一个变量是因为一下两种情况只会出现一种情况。
+        if(i&lt;n1){
+            for(j =i;j&lt;n1;j++,k++)
+                array[k] =L[j];
+        }
+        if(j&lt;n2){
+            for(i =j;i&lt;n2;i++,k++)
+                array[k] =R[i];    
+        }    
+    }
+
+    public static void MergeSort(int[] array,int left,int right){
+        if(left&lt;right){
+            int middle = (left+right)/2;
+            MergeSort(array, left, middle);
+            MergeSort(array,middle+1,right);
+            Merge(array,left,middle,right);
+        }
+    }
+
+}
+</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestQuickSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,3,2,9,7,6,1};
+        quickSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void sort(int[] array,int low,int high){
+        int i,j,index;
+        if(low&gt;=high) return;
+        i =low;
+        j = high;
+        index = array[low];
+        while(i&lt;j){
+            while(i&lt;j &amp;&amp; array[j]&gt;index)
+                j--;
+            if(i&lt;j)
+                array[i++] = array[j];
+            while(i&lt;j &amp;&amp; array[i]&lt;index)
+                i++;
+            if(i&lt;j){
+                array[j--] = array[i];
+            }
+        }
+        array[i] = index;
+        sort(array,low,i-1);
+        sort(array,i+1,high);
+    }
+
+    public static void quickSort(int[] array){
+        sort(array,0,array.length-1);
+    }
+
+}
+</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestShellSort {
+
+    public static void main(String[] args) {
+
+        int[] a = {5,3,2,9,7,6,1};
+        shellSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void shellSort(int[] array){
+        int len = array.length;
+        int i,j,h;//h为步长
+        int temp;
+        for(h =len/2;h&gt;0;h/=2){
+            for(i =h;i&lt;len;i++){//从每组至少第二个元素开始遍历
+                temp = array[i];
+                for(j=i-h;j&gt;=0;j-=h){
+                    if(temp&lt;array[j])
+                        array[j+h] = array[j];
+                    else 
+                        break;
+                }
+                array[j+h] = temp;
+            }
+        }
+    }
+
+}
+</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestHeapSort {
+
+    public static void main(String[] args) {
+        int[] a = {4,3,2,7,6,5};
+        heapSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void adjustHeap(int[] a,int pos,int len){
+        int temp;
+        int child;
+        for(temp = a[pos];2*pos+1&lt;=len;pos = child){
+            child = 2*pos+1;
+            if(child&lt;len &amp;&amp; a[child+1]&gt;a[child])
+                child++;
+            if(a[child]&gt;temp)
+                a[pos] = a[child];
+            else
+                break;
+        }
+        a[pos] = temp;
+    }
+
+    public static void heapSort(int[] array){
+        int i;
+        int len = array.length;
+        for(i=len/2-1;i&gt;=0;i--)
+            adjustHeap(array, i, len-1);
+        for(i = len-1;i&gt;=0;i--){
+            int temp = array[0];
+            array[0] = array[i];
+            array[i] = temp;
+            adjustHeap(array, 0, i-1);
+        }
+    }
+
+}
+</code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/JAVA多线程（二）/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1383,294 +1778,6 @@ E public throw TimedOutException void final()
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/如何实现对象的clone/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/02/如何实现对象的clone/" itemprop="url">
-                  如何实现对象的clone
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T21:38:30+08:00">
-                2017-02-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>有两种方式：</p>
-<p>　1. 实现Cloneable接口并重写Object类中的clone()方法；</p>
-<p>　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：</p>
-<pre><code>class Obj implements Cloneable{
-    private int aInt =0;
-    public int getInt(){
-        return aInt;
-    }
-
-    public void setAInt(int int1){
-        aInt = int1;
-    }
-
-    public void changeInt(){
-        this.aInt =1;
-    }
-
-    public Object clone(){
-        Object o = null;
-        try {
-            o = (Object)super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return o;
-    }
-}
-public class TestRef {
-    public static void main(String[] args) {
-        Obj a = new Obj();
-        Obj b = (Obj) a.clone();
-        b.changeInt();
-        System.out.println(a.getInt());//0
-        System.out.println(b.getInt());//1
-
-    }
-}
-</code></pre><p>　2. 实现Serializable接口，通过对象的序列化和反序列化实现克隆，可以实现真正的深度克隆;代码如下：</p>
-<pre><code>import java.io.Serializable;
-public class Employee implements Serializable {
-    private static final long serialVersionUID = -6470090944414208496L;
-    private String name;
-    private int id;
-    transient private int salary;
-
-    @Override
-    public String toString(){
-        return &quot;Employee{name=&quot;+name+&quot;,id=&quot;+id+&quot;,salary=&quot;+salary+&quot;}&quot;;
-    }
-
-    //getter and setter methods
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getSalary() {
-        return salary;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-}
-</code></pre><p>　<strong>注意</strong>：static代笔类的静态成员，transient代表对象的临时数据，因此被声明为这两种类型的数据成员是不能够被序列化的。</p>
-<hr>
-<p>　现在我们假设需要把我们的对象写入文件，之后从相同的文件中将其反序列化，因此我们需要一些工具方法，通过使用ObjectInputStream和ObjectOutputStream来达到序列化的目的。</p>
-<pre><code>import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-/**
- * A simple class with generic serialize and deserialize method implementations
- * 
- * 
- */
-public class SerializationUtil {
-
-    // deserialize to Object from given file
-    public static Object deserialize(String fileName) throws IOException,
-            ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(fileName);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Object obj = ois.readObject();
-        ois.close();
-        return obj;
-    }
-
-    // serialize the given object and save it to file
-    public static void serialize(Object obj, String fileName)
-            throws IOException {
-        FileOutputStream fos = new FileOutputStream(fileName);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(obj);
-
-        fos.close();
-    }
-
-}
-</code></pre><p>　<strong>测试程序：</strong></p>
-<pre><code>import java.io.IOException;
-
-public class SerializationTest {
-
-    public static void main(String[] args) {
-        String fileName=&quot;employee.ser&quot;;
-        Employee emp = new Employee();
-        emp.setId(100);
-        emp.setName(&quot;Pankaj&quot;);
-        emp.setSalary(5000);
-
-        //serialize to file
-        try {
-            SerializationUtil.serialize(emp, fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Employee empNew = null;
-        try {
-            empNew = (Employee) SerializationUtil.deserialize(fileName);
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(&quot;emp Object::&quot;+emp);
-        System.out.println(&quot;empNew Object::&quot;+empNew);
-    }
-
-}
-</code></pre><p>　运行以上测试程序，可以得到以下输出。</p>
-<pre><code>emp Object::Employee{name=Pankaj,id=100,salary=5000}
-empNew Object::Employee{name=Pankaj,id=100,salary=0}
-</code></pre><p>　<strong>由于salary是一个transient变量，它的值不会被存入文件中，因此也不会在新的对象中被恢复。类似的，静态变量的值也不会被序列化，因为他们是属于类而非对象的。</strong></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1718,7 +1825,7 @@ empNew Object::Employee{name=Pankaj,id=100,salary=0}
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1736,7 +1843,7 @@ empNew Object::Employee{name=Pankaj,id=100,salary=0}
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

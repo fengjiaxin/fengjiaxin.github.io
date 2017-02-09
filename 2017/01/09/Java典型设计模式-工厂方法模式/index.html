@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="创建型模式,工厂方法模式,抽象工厂模式,单例模式," />
+  <meta name="keywords" content="创建型模式," />
 
 
 
@@ -84,34 +84,37 @@
 
 
 
-<meta name="description" content="1 工厂方法模式　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。
-1.1 普通工厂模式　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。
+<meta name="description" content="###　工厂方法模式 ###
+　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。
+####　1 普通工厂模式 ####　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。
 public interface MyInterface {
     public void print();
 }    
 
-public class MyClassOne implements MyInterf">
+public class MyClassOne impl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java典型设计模式-创建性模式">
+<meta property="og:title" content="Java典型设计模式-工厂方法模式">
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/index.html">
 <meta property="og:site_name" content="冯佳欣的博客">
-<meta property="og:description" content="1 工厂方法模式　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。
-1.1 普通工厂模式　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。
+<meta property="og:description" content="###　工厂方法模式 ###
+　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。
+####　1 普通工厂模式 ####　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。
 public interface MyInterface {
     public void print();
 }    
 
-public class MyClassOne implements MyInterf">
-<meta property="og:updated_time" content="2017-01-09T04:27:36.177Z">
+public class MyClassOne impl">
+<meta property="og:updated_time" content="2017-02-09T07:38:25.119Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java典型设计模式-创建性模式">
-<meta name="twitter:description" content="1 工厂方法模式　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。
-1.1 普通工厂模式　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。
+<meta name="twitter:title" content="Java典型设计模式-工厂方法模式">
+<meta name="twitter:description" content="###　工厂方法模式 ###
+　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。
+####　1 普通工厂模式 ####　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。
 public interface MyInterface {
     public void print();
 }    
 
-public class MyClassOne implements MyInterf">
+public class MyClassOne impl">
 
 
 
@@ -145,7 +148,7 @@ public class MyClassOne implements MyInterf">
 
 
 
-  <title> Java典型设计模式-创建性模式 | 冯佳欣的博客 </title>
+  <title> Java典型设计模式-工厂方法模式 | 冯佳欣的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +295,7 @@ public class MyClassOne implements MyInterf">
             
             
               
-                Java典型设计模式-创建性模式
+                Java典型设计模式-工厂方法模式
               
             
           </h1>
@@ -365,8 +368,9 @@ public class MyClassOne implements MyInterf">
       
 
       
-        <h3 id="1-工厂方法模式"><a href="#1-工厂方法模式" class="headerlink" title="1 工厂方法模式"></a>1 工厂方法模式</h3><p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
-<h4 id="1-1-普通工厂模式"><a href="#1-1-普通工厂模式" class="headerlink" title="1.1 普通工厂模式"></a>1.1 普通工厂模式</h4><p>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+        <p>###　工厂方法模式 ###</p>
+<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
+<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
 <pre><code>public interface MyInterface {
     public void print();
 }    
@@ -411,7 +415,7 @@ public class FactoryTest {
 
 }
 </code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<h3 id="1-2-多个工厂方法模式"><a href="#1-2-多个工厂方法模式" class="headerlink" title="1.2 多个工厂方法模式"></a>1.2 多个工厂方法模式</h3><p>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
+<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
 <pre><code>public class MyFactory {
      public MyInterface produceOne() {
         return new MyClassOne();
@@ -432,7 +436,7 @@ public class FactoryTest {
 
 }
 </code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
-<h3 id="1-3-静态工厂方法模式"><a href="#1-3-静态工厂方法模式" class="headerlink" title="1.3 静态工厂方法模式"></a>1.3 静态工厂方法模式</h3><p>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
+<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
 <pre><code>public class MyFactory {
     public static MyInterface produceOne() {
         return new MyClassOne();
@@ -449,53 +453,6 @@ public class FactoryTest {
 
 }
 </code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
-<h3 id="2-抽象工厂模式"><a href="#2-抽象工厂模式" class="headerlink" title="2 抽象工厂模式"></a>2 抽象工厂模式</h3><p>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
-<hr>
-<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
-<p>　这样就符合闭包原则了</p>
-<p>　下面来看看代码：</p>
-<p>　MyInterface、MyClassOne、MyClassTwo不变。</p>
-<p>　新增如下接口和类：</p>
-<pre><code>public interface Provider {
-    public MyInterface produce(); 
-}
-
-public class MyFactoryOne implements Provider {
-    @Override
-    public MyInterface produce() {
-        return new MyClassOne();
-    }
-}
-
-public class MyFactoryTwo implements Provider {
-    @Override
-    public MyInterface produce() {
-        return new MyClassTwo();
-    }
-}
-</code></pre><p>　修改测试类FactoryTest如下：</p>
-<pre><code>public class FactoryTest {
-    public static void main(String[] args){ 
-        Provider provider = new MyFactoryOne();
-        MyInterface myi = provider.produce();
-        myi.print();
-    }
-}
-</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
-<h3 id="3-单例模式"><a href="#3-单例模式" class="headerlink" title="3 单例模式"></a>3 单例模式</h3><p>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
-<pre><code>public class MyObject {
-    private static MyObject myObject;
-    private MyObject() {
-    }
-    public static MyObject getInstance() {
-        if (myObject != null) {
-        } else {
-            myObject = new MyObject();
-        }
-        return myObject;
-    }
-}
-</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
 
       
     </div>
@@ -521,12 +478,6 @@ public class MyFactoryTwo implements Provider {
           
             <a href="/tags/创建型模式/" rel="tag"># 创建型模式</a>
           
-            <a href="/tags/工厂方法模式/" rel="tag"># 工厂方法模式</a>
-          
-            <a href="/tags/抽象工厂模式/" rel="tag"># 抽象工厂模式</a>
-          
-            <a href="/tags/单例模式/" rel="tag"># 单例模式</a>
-          
         </div>
       
 
@@ -534,8 +485,8 @@ public class MyFactoryTwo implements Provider {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/09/Java设计模式-三大类/" rel="next" title="Java设计模式-三大类">
-                <i class="fa fa-chevron-left"></i> Java设计模式-三大类
+              <a href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" rel="next" title="Java典型设计模式-抽象工厂方法模式">
+                <i class="fa fa-chevron-left"></i> Java典型设计模式-抽象工厂方法模式
               </a>
             
           </div>
@@ -593,17 +544,8 @@ public class MyFactoryTwo implements Provider {
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -616,7 +558,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -634,7 +576,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -659,22 +601,6 @@ public class MyFactoryTwo implements Provider {
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-工厂方法模式"><span class="nav-text">1 工厂方法模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-普通工厂模式"><span class="nav-text">1.1 普通工厂模式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-多个工厂方法模式"><span class="nav-text">1.2 多个工厂方法模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-静态工厂方法模式"><span class="nav-text">1.3 静态工厂方法模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-抽象工厂模式"><span class="nav-text">2 抽象工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-单例模式"><span class="nav-text">3 单例模式</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>

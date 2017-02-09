@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="6大原则," />
+  <meta name="keywords" content="创建型模式," />
 
 
 
@@ -84,34 +84,31 @@
 
 
 
-<meta name="description" content="这学期学习了软件工程课程，对Java语言的理解更近一步，但是不足还是那么多，在设计系统的过程中其实我就一直在思考设计模式的问题，都说了解了设计模式的程序员才能更好地设计出系统，那么今天我就本着执着的精神总结一下关于ava设计模式的的基本原则。
-
-　
-设计模式原则　书上总结有六大原则，首先就简单说明一下这六大原则。
-
-开闭原则（Open Close Principle）
- 开闭原则就是说对扩展开放">
+<meta name="description" content="###　单例模式 ###　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：
+public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java设计模式原则（个人总结）">
-<meta property="og:url" content="https://fengjiaxin.github.io/2017/01/05/Java设计模式-6大原则/index.html">
+<meta property="og:title" content="Java典型设计模式-单例模式">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/index.html">
 <meta property="og:site_name" content="冯佳欣的博客">
-<meta property="og:description" content="这学期学习了软件工程课程，对Java语言的理解更近一步，但是不足还是那么多，在设计系统的过程中其实我就一直在思考设计模式的问题，都说了解了设计模式的程序员才能更好地设计出系统，那么今天我就本着执着的精神总结一下关于ava设计模式的的基本原则。
-
-　
-设计模式原则　书上总结有六大原则，首先就简单说明一下这六大原则。
-
-开闭原则（Open Close Principle）
- 开闭原则就是说对扩展开放">
-<meta property="og:updated_time" content="2017-01-05T14:26:40.921Z">
+<meta property="og:description" content="###　单例模式 ###　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：
+public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {">
+<meta property="og:updated_time" content="2017-02-09T07:49:14.410Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java设计模式原则（个人总结）">
-<meta name="twitter:description" content="这学期学习了软件工程课程，对Java语言的理解更近一步，但是不足还是那么多，在设计系统的过程中其实我就一直在思考设计模式的问题，都说了解了设计模式的程序员才能更好地设计出系统，那么今天我就本着执着的精神总结一下关于ava设计模式的的基本原则。
-
-　
-设计模式原则　书上总结有六大原则，首先就简单说明一下这六大原则。
-
-开闭原则（Open Close Principle）
- 开闭原则就是说对扩展开放">
+<meta name="twitter:title" content="Java典型设计模式-单例模式">
+<meta name="twitter:description" content="###　单例模式 ###　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：
+public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {">
 
 
 
@@ -139,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="https://fengjiaxin.github.io/2017/01/05/Java设计模式-6大原则/"/>
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/"/>
 
 
 
 
 
-  <title> Java设计模式原则（个人总结） | 冯佳欣的博客 </title>
+  <title> Java典型设计模式-单例模式 | 冯佳欣的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +265,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/05/Java设计模式-6大原则/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -292,7 +289,7 @@
             
             
               
-                Java设计模式原则（个人总结）
+                Java典型设计模式-单例模式
               
             
           </h1>
@@ -307,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-05T22:06:21+08:00">
-                2017-01-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+                2017-01-09
               </time>
             
 
@@ -365,37 +362,61 @@
       
 
       
-        <p>　这学期学习了软件工程课程，对Java语言的理解更近一步，但是不足还是那么多，在设计系统的过程中其实我就一直在思考设计模式的问题，都说了解了设计模式的程序员才能更好地设计出系统，那么今天我就本着执着的精神总结一下关于ava设计模式的的基本原则。</p>
+        <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
+<pre><code>public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {
+        if (myObject != null) {
+        } else {
+            myObject = new MyObject();
+        }
+        return myObject;
+    }
+}
+</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
 <hr>
-<p>　</p>
-<h3 id="设计模式原则"><a href="#设计模式原则" class="headerlink" title="设计模式原则"></a>设计模式原则</h3><p>　书上总结有六大原则，首先就简单说明一下这六大原则。</p>
+<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：</p>
+<p>　在Java语言中实现单例模式通常有两种表现方式：</p>
 <ol>
-<li><p>开闭原则（Open Close Principle）</p>
-<p> 开闭原则就是说对扩展开放，对修改关闭。在程序需要进行拓展的时候，不能去修改原有的代码，实现一个热插拔的效果。</p>
-</li>
-<li><p>里氏代换原则（Liskov Substitution Principle）</p>
-<ul>
-<li>子类的能力必须大于等于父类，即父类可以使用的方法，子类都可以使用</li>
-<li>子类返回值的能力是比父类小的</li>
-<li>任何子类方法可以声明抛出父类方法声明异常的子类；而不能声明抛出父类没有声明的异常。</li>
-</ul>
-</li>
-<li><p>依赖倒转原则（Dependence Inversion Principle）</p>
-<p> 是开闭原则的基础，具体内容：面向接口编程，依赖于抽象而不依赖于具体。</p>
-</li>
-<li><p>接口隔离原则（Interface Segregation Principle）</p>
-<p> 使用多个隔离的接口，比使用单个接口要好</p>
-</li>
-<li><p>迪米特法则（最少知道原则）（Demeter Principle）</p>
-<p> 一个实体应当尽量少的与其他实体之间发生相互作用，使得系统功能模块相对独立。</p>
-</li>
-<li><p>合成复用原则（Composite Reuse Principle）</p>
-<p> 原则是尽量使用合成/聚合的方式，而不是使用继承。</p>
-</li>
+<li>饿汉式单例类：类加载时，就进行对象实例化。</li>
+<li>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。</li>
 </ol>
-<hr>
-<p>　到这里，相信都被概念弄蒙了，其实意思很好理解，就是降低耦合性，提高内聚性，那么下一篇就以代码举例详解设计模式原则，敬请期待！</p>
+<p>　<strong>饿汉式单例类代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//恶汉式单例
+public class Singleton1 {
 
+    private static Singleton1 m_instance = new Singleton1();
+
+    private Singleton1(){
+
+    }
+
+    public static Singleton1 getInstance(){
+        return m_instance;
+    }
+}
+</code></pre><p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。</p>
+<p>　<strong>同步懒汉式代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//懒汉式单例
+public class Singleton2 {
+    private static Singleton2 m_instance = null;
+
+    private Singleton2(){
+
+    }
+
+    public synchronized static Singleton2 getInstance(){
+        if(m_instance==null)
+            m_instance = new Singleton2();
+        return m_instance;
+    }
+
+}
+</code></pre>
       
     </div>
 
@@ -418,7 +439,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/6大原则/" rel="tag"># 6大原则</a>
+            <a href="/tags/创建型模式/" rel="tag"># 创建型模式</a>
           
         </div>
       
@@ -427,8 +448,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/05/JVM内存回收策略/" rel="next" title="JVM内存回收策略">
-                <i class="fa fa-chevron-left"></i> JVM内存回收策略
+              <a href="/2017/01/06/设计模式六大原则-5-聚合-复用原则/" rel="next" title="设计模式六大原则(5): 聚合/复用原则">
+                <i class="fa fa-chevron-left"></i> 设计模式六大原则(5): 聚合/复用原则
               </a>
             
           </div>
@@ -437,8 +458,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/06/设计模式六大原则-1-里氏替换原则/" rel="prev" title="设计模式六大原则(1): 里氏替换原则">
-                设计模式六大原则(1): 里氏替换原则 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" rel="prev" title="Java典型设计模式-抽象工厂方法模式">
+                Java典型设计模式-抽象工厂方法模式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -486,17 +507,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -509,7 +521,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -527,7 +539,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -552,22 +564,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#设计模式原则"><span class="nav-text">设计模式原则</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>

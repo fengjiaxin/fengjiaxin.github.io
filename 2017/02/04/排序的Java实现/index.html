@@ -1,0 +1,936 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。
+1、选择排序　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="排序的Java实现">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/index.html">
+<meta property="og:site_name" content="冯佳欣的博客">
+<meta property="og:description" content="数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。
+1、选择排序　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得">
+<meta property="og:image" content="http://i.imgur.com/R5XdooQ.png">
+<meta property="og:updated_time" content="2017-02-09T08:37:43.018Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="排序的Java实现">
+<meta name="twitter:description" content="数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。
+1、选择排序　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得">
+<meta name="twitter:image" content="http://i.imgur.com/R5XdooQ.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/"/>
+
+
+
+
+
+  <title> 排序的Java实现 | 冯佳欣的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">冯佳欣的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">滴水穿石</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                排序的Java实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T20:46:53+08:00">
+                2017-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
+<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestSelectSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,4,9,8,7,6,0,1,3,2};
+        selectSort(a);
+        show(a);
+    }
+
+    public static void selectSort(int[] a){
+        int i,j;
+        int temp =0,flag =0;
+        for(i =0;i&lt;a.length;i++){
+            temp =a[i];
+            flag =i;
+            for(j =i+1;j&lt;a.length;j++){
+                if(a[j]&lt;temp){
+                    temp= a[j];
+                    flag =j;
+                }
+            }
+            if(flag!=i){
+                a[flag] =a[i];
+                a[i] = temp;
+            }
+        }
+    }
+
+    public static void show(int[] a){
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+
+}
+</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestInsertSort {
+
+    public static void main(String[] args) {
+        int[] array = {7,3,4,9,10,6};
+        insertSort(array);
+        for(int i=0;i&lt;array.length;i++)
+            System.out.print(array[i]+&quot; &quot;);
+
+    }
+
+    public static void insertSort(int[] a){
+        if(a!=null){
+            for(int i=1;i&lt;a.length;i++){
+                int temp = a[i],j =i;
+                if(temp&lt;a[j-1]){
+                    while(j&gt;=1 &amp;&amp; temp&lt;a[j-1]){
+                        a[j] = a[j-1];
+                        j--;
+                    }
+                }
+                a[j] = temp;
+            }
+        }
+    }
+
+}
+</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestBubbleSort {
+
+    public static void main(String[] args) {
+        int[] array = {4,2,9,10,8,6};
+        BubbleSort(array);
+        for(int i=0;i&lt;array.length;i++){
+            System.out.print(array[i]+&quot; &quot;);
+        }
+
+    }
+
+    public static void BubbleSort(int[] a){
+        int i,j,temp,len = a.length;
+        for( i=0;i&lt;len-1;i++){
+            for(j =0;j&lt;len-i-1;j++){
+                if(a[j]&gt;a[j+1]){
+                    temp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = temp;
+                }
+            }
+        }
+
+    }
+
+}
+</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestMergeSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,3,4,2,9,7,6,1};
+        MergeSort(a, 0, a.length-1);
+        for(int i =0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void Merge(int[] array,int left,int middle,int right){
+        int i,j,k,n1,n2;
+        n1 = middle-left+1;
+        n2 = right-middle;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+        for(i =0,k =left;i&lt;n1;i++,k++)
+            L[i] = array[k];
+        for(j =0,k=middle+1;j&lt;n2;j++,k++)
+            R[j] = array[k];
+        for(k =left,i =0,j =0;i&lt;n1 &amp;&amp; j&lt;n2;k++){
+            if(L[i]&lt;R[j])
+                array[k] = L[i++];
+            else
+                array[k] = R[j++];
+        }
+
+        //没有再声明一个变量是因为一下两种情况只会出现一种情况。
+        if(i&lt;n1){
+            for(j =i;j&lt;n1;j++,k++)
+                array[k] =L[j];
+        }
+        if(j&lt;n2){
+            for(i =j;i&lt;n2;i++,k++)
+                array[k] =R[i];    
+        }    
+    }
+
+    public static void MergeSort(int[] array,int left,int right){
+        if(left&lt;right){
+            int middle = (left+right)/2;
+            MergeSort(array, left, middle);
+            MergeSort(array,middle+1,right);
+            Merge(array,left,middle,right);
+        }
+    }
+
+}
+</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestQuickSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,3,2,9,7,6,1};
+        quickSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void sort(int[] array,int low,int high){
+        int i,j,index;
+        if(low&gt;=high) return;
+        i =low;
+        j = high;
+        index = array[low];
+        while(i&lt;j){
+            while(i&lt;j &amp;&amp; array[j]&gt;index)
+                j--;
+            if(i&lt;j)
+                array[i++] = array[j];
+            while(i&lt;j &amp;&amp; array[i]&lt;index)
+                i++;
+            if(i&lt;j){
+                array[j--] = array[i];
+            }
+        }
+        array[i] = index;
+        sort(array,low,i-1);
+        sort(array,i+1,high);
+    }
+
+    public static void quickSort(int[] array){
+        sort(array,0,array.length-1);
+    }
+
+}
+</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestShellSort {
+
+    public static void main(String[] args) {
+
+        int[] a = {5,3,2,9,7,6,1};
+        shellSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void shellSort(int[] array){
+        int len = array.length;
+        int i,j,h;//h为步长
+        int temp;
+        for(h =len/2;h&gt;0;h/=2){
+            for(i =h;i&lt;len;i++){//从每组至少第二个元素开始遍历
+                temp = array[i];
+                for(j=i-h;j&gt;=0;j-=h){
+                    if(temp&lt;array[j])
+                        array[j+h] = array[j];
+                    else 
+                        break;
+                }
+                array[j+h] = temp;
+            }
+        }
+    }
+
+}
+</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。</p>
+<p>　具体实现：</p>
+<pre><code>public class TestHeapSort {
+
+    public static void main(String[] args) {
+        int[] a = {4,3,2,7,6,5};
+        heapSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+
+    }
+
+    public static void adjustHeap(int[] a,int pos,int len){
+        int temp;
+        int child;
+        for(temp = a[pos];2*pos+1&lt;=len;pos = child){
+            child = 2*pos+1;
+            if(child&lt;len &amp;&amp; a[child+1]&gt;a[child])
+                child++;
+            if(a[child]&gt;temp)
+                a[pos] = a[child];
+            else
+                break;
+        }
+        a[pos] = temp;
+    }
+
+    public static void heapSort(int[] array){
+        int i;
+        int len = array.length;
+        for(i=len/2-1;i&gt;=0;i--)
+            adjustHeap(array, i, len-1);
+        for(i = len-1;i&gt;=0;i--){
+            int temp = array[0];
+            array[0] = array[i];
+            array[i] = temp;
+            adjustHeap(array, 0, i-1);
+        }
+    }
+
+}
+</code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/04/JAVA多线程（二）/" rel="next" title="JAVA多线程（二）">
+                <i class="fa fa-chevron-left"></i> JAVA多线程（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="冯佳欣" />
+          <p class="site-author-name" itemprop="name">冯佳欣</p>
+          <p class="site-description motion-element" itemprop="description">记录一点一滴</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、选择排序"><span class="nav-text">1、选择排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、插入排序："><span class="nav-text">2、插入排序：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、冒泡排序"><span class="nav-text">3、冒泡排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、归并排序"><span class="nav-text">4、归并排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、快速排序"><span class="nav-text">5、快速排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、希尔排序"><span class="nav-text">6、希尔排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、堆排序"><span class="nav-text">7、堆排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8、这7种排序算法的比较"><span class="nav-text">8、这7种排序算法的比较</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冯佳欣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
