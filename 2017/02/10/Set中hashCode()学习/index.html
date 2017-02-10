@@ -85,22 +85,22 @@
 
 
 <meta name="description" content="我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的hashCode()方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。
-#Hash表： #
-　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关">
+#Hash表：#
+　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Set中hashCode学习">
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/02/10/Set中hashCode()学习/index.html">
 <meta property="og:site_name" content="冯佳欣的博客">
 <meta property="og:description" content="我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的hashCode()方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。
-#Hash表： #
-　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关">
+#Hash表：#
+　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键">
 <meta property="og:image" content="http://i.imgur.com/NSBvkHx.jpg">
-<meta property="og:updated_time" content="2017-02-10T01:38:30.685Z">
+<meta property="og:updated_time" content="2017-02-10T01:50:07.967Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Set中hashCode学习">
 <meta name="twitter:description" content="我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的hashCode()方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。
-#Hash表： #
-　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关">
+#Hash表：#
+　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键">
 <meta name="twitter:image" content="http://i.imgur.com/NSBvkHx.jpg">
 
 
@@ -356,16 +356,15 @@
 
       
         <p>　我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的<strong>hashCode()</strong>方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。</p>
-<p>#Hash表： #</p>
+<p>#Hash表：#</p>
 <p>　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键字进行比较来进行查找。这个源于Hash表设计的特殊性，它采用了函数映射的思想将记录的存储位置与记录的关键字关联起来，从而能够很快速地进行查找。</p>
-<p>##1.设计思想： ##</p>
+<p>##1.设计思想：##</p>
 <p>　Hash表采用一个映射函数 f : key —&gt; address 将关键字映射到该记录在表中的存储位置，从而在想要查找该记录时，可以直接根据关键字和映射关系计算出该记录在表中的存储位置，通常情况下，这种映射关系称作为Hash函数，而通过Hash函数和关键字计算出来的存储位置(注意这里的存储位置只是表中的存储位置，并不是实际的物理地址)称作为Hash地址。</p>
-<p>##2.构造方法： ##</p>
+<p>##2.构造方法：##</p>
 <h3 id="1-直接定址法"><a href="#1-直接定址法" class="headerlink" title="1)直接定址法"></a>1)直接定址法</h3><p>　取关键字或者关键字的某个线性函数为Hash地址，即address(key)=a*key+b;如知道学生的学号从2000开始，最大为4000，则可以将address(key)=key-2000作为Hash地址。</p>
 <h3 id="2-平方取中法"><a href="#2-平方取中法" class="headerlink" title="2)平方取中法"></a>2)平方取中法</h3><p>　对关键字进行平方运算，然后取结果的中间几位作为Hash地址。假如有以下关键字序列{421，423，436}，平方之后的结果为{177241，178929，190096}，那么可以取{72，89，00}作为Hash地址。</p>
 <h3 id="3-折叠法"><a href="#3-折叠法" class="headerlink" title="3)折叠法"></a>3)折叠法</h3><p>　将关键字拆分成几部分，然后将这几部分组合在一起，以特定的方式进行转化形成Hash地址。假如知道图书的ISBN号为8903-241-23，可以将address(key)=89+03+24+12+3作为Hash地址。</p>
-<h3 id="4-除留取余法"><a href="#4-除留取余法" class="headerlink" title="4)除留取余法"></a>4)除留取余法</h3><p>　如果知道Hash表的最大长度为m，可以取不大于m的最大质数p，然后对关键字进行取余运算，address(key)=key%p。</p>
-<p>　在这里p的选取非常关键，p选择的好的话，能够最大程度地减少冲突，p一般取不大于m的最大质数。</p>
+<h3 id="4-除留取余法"><a href="#4-除留取余法" class="headerlink" title="4)除留取余法"></a>4)除留取余法</h3><p>　如果知道Hash表的最大长度为m，可以取不大于m的最大质数p，然后对关键字进行取余运算，address(key)=key%p。在这里p的选取非常关键，p选择的好的话，能够最大程度地减少冲突，p一般取不大于m的最大质数。</p>
 <h2 id="3-Hash表大小的确定"><a href="#3-Hash表大小的确定" class="headerlink" title="3.Hash表大小的确定"></a>3.Hash表大小的确定</h2><p>　Hash表大小的确定也非常关键，如果Hash表的空间远远大于最后实际存储的记录个数，则造成了很大的空间浪费，如果选取小了的话，则容易造成冲突。在实际情况中，一般需要根据最终记录存储个数和关键字的分布特点来确定Hash表的大小。还有一种情况时可能事先不知道最终需要存储的记录个数，则需要动态维护Hash表的容量，此时可能需要重新计算Hash地址。</p>
 <h2 id="4-冲突的解决"><a href="#4-冲突的解决" class="headerlink" title="4.冲突的解决"></a>4.冲突的解决</h2><p>　在上述例子中，发生了冲突现象，因此需要办法来解决，否则记录无法进行正确的存储。通常情况下有2种解决办法：</p>
 <h3 id="1-开放定址法"><a href="#1-开放定址法" class="headerlink" title="1)开放定址法"></a>1)开放定址法</h3><p>　即当一个关键字和另一个关键字发生冲突时，使用某种探测技术在Hash表中形成一个探测序列，然后沿着这个探测序列依次查找下去，当碰到一个空的单元时，则插入其中。比较常用的探测方法有线性探测法；</p>
