@@ -715,7 +715,7 @@ the sourceable interface&apos;s second Sub2!
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-抽象工厂方法模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -740,8 +740,8 @@ the sourceable interface&apos;s second Sub2!
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" itemprop="url">
-                  Java典型设计模式-抽象工厂方法模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
+                  Java典型设计模式-单例模式
                 </a>
               
             
@@ -817,40 +817,61 @@ the sourceable interface&apos;s second Sub2!
       
         
           
-            <p>###　抽象工厂模式 ###<br>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
+            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
+<pre><code>public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {
+        if (myObject != null) {
+        } else {
+            myObject = new MyObject();
+        }
+        return myObject;
+    }
+}
+</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
 <hr>
-<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
-<p>　这样就符合闭包原则了</p>
-<p>　下面来看看代码：</p>
-<p>　MyInterface、MyClassOne、MyClassTwo不变。</p>
-<p>　新增如下接口和类：</p>
-<pre><code>public interface Provider {
-    public MyInterface produce(); 
-}
+<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：</p>
+<p>　在Java语言中实现单例模式通常有两种表现方式：</p>
+<ol>
+<li>饿汉式单例类：类加载时，就进行对象实例化。</li>
+<li>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。</li>
+</ol>
+<p>　<strong>饿汉式单例类代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//恶汉式单例
+public class Singleton1 {
 
-public class MyFactoryOne implements Provider {
-    @Override
-    public MyInterface produce() {
-        return new MyClassOne();
+    private static Singleton1 m_instance = new Singleton1();
+
+    private Singleton1(){
+
+    }
+
+    public static Singleton1 getInstance(){
+        return m_instance;
     }
 }
+</code></pre><p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。</p>
+<p>　<strong>同步懒汉式代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//懒汉式单例
+public class Singleton2 {
+    private static Singleton2 m_instance = null;
 
-public class MyFactoryTwo implements Provider {
-    @Override
-    public MyInterface produce() {
-        return new MyClassTwo();
-    }
-}
-</code></pre><p>　修改测试类FactoryTest如下：</p>
-<pre><code>public class FactoryTest {
-    public static void main(String[] args){ 
-        Provider provider = new MyFactoryOne();
-        MyInterface myi = provider.produce();
-        myi.print();
-    }
-}
-</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+    private Singleton2(){
 
+    }
+
+    public synchronized static Singleton2 getInstance(){
+        if(m_instance==null)
+            m_instance = new Singleton2();
+        return m_instance;
+    }
+
+}
+</code></pre>
           
         
       
@@ -1113,7 +1134,7 @@ public class FactoryTest {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-抽象工厂方法模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1138,8 +1159,8 @@ public class FactoryTest {
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
-                  Java典型设计模式-单例模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" itemprop="url">
+                  Java典型设计模式-抽象工厂方法模式
                 </a>
               
             
@@ -1215,61 +1236,40 @@ public class FactoryTest {
       
         
           
-            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
-<pre><code>public class MyObject {
-    private static MyObject myObject;
-    private MyObject() {
-    }
-    public static MyObject getInstance() {
-        if (myObject != null) {
-        } else {
-            myObject = new MyObject();
-        }
-        return myObject;
-    }
-}
-</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
+            <p>###　抽象工厂模式 ###<br>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
 <hr>
-<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：</p>
-<p>　在Java语言中实现单例模式通常有两种表现方式：</p>
-<ol>
-<li>饿汉式单例类：类加载时，就进行对象实例化。</li>
-<li>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。</li>
-</ol>
-<p>　<strong>饿汉式单例类代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//恶汉式单例
-public class Singleton1 {
+<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+<p>　这样就符合闭包原则了</p>
+<p>　下面来看看代码：</p>
+<p>　MyInterface、MyClassOne、MyClassTwo不变。</p>
+<p>　新增如下接口和类：</p>
+<pre><code>public interface Provider {
+    public MyInterface produce(); 
+}
 
-    private static Singleton1 m_instance = new Singleton1();
-
-    private Singleton1(){
-
-    }
-
-    public static Singleton1 getInstance(){
-        return m_instance;
+public class MyFactoryOne implements Provider {
+    @Override
+    public MyInterface produce() {
+        return new MyClassOne();
     }
 }
-</code></pre><p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。</p>
-<p>　<strong>同步懒汉式代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//懒汉式单例
-public class Singleton2 {
-    private static Singleton2 m_instance = null;
 
-    private Singleton2(){
-
+public class MyFactoryTwo implements Provider {
+    @Override
+    public MyInterface produce() {
+        return new MyClassTwo();
     }
-
-    public synchronized static Singleton2 getInstance(){
-        if(m_instance==null)
-            m_instance = new Singleton2();
-        return m_instance;
-    }
-
 }
-</code></pre>
+</code></pre><p>　修改测试类FactoryTest如下：</p>
+<pre><code>public class FactoryTest {
+    public static void main(String[] args){ 
+        Provider provider = new MyFactoryOne();
+        MyInterface myi = provider.produce();
+        myi.print();
+    }
+}
+</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+
           
         
       
