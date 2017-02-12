@@ -362,54 +362,32 @@
 <h3 id="4-除留取余法"><a href="#4-除留取余法" class="headerlink" title="4)除留取余法"></a>4)除留取余法</h3><p>　如果知道Hash表的最大长度为m，可以取不大于m的最大质数p，然后对关键字进行取余运算，address(key)=key%p。在这里p的选取非常关键，p选择的好的话，能够最大程度地减少冲突，p一般取不大于m的最大质数。</p>
 <h2 id="3-Hash表大小的确定"><a href="#3-Hash表大小的确定" class="headerlink" title="3.Hash表大小的确定"></a>3.Hash表大小的确定</h2><p>　Hash表大小的确定也非常关键，如果Hash表的空间远远大于最后实际存储的记录个数，则造成了很大的空间浪费，如果选取小了的话，则容易造成冲突。在实际情况中，一般需要根据最终记录存储个数和关键字的分布特点来确定Hash表的大小。还有一种情况时可能事先不知道最终需要存储的记录个数，则需要动态维护Hash表的容量，此时可能需要重新计算Hash地址。</p>
 <h2 id="4-冲突的解决"><a href="#4-冲突的解决" class="headerlink" title="4.冲突的解决"></a>4.冲突的解决</h2><p>　在上述例子中，发生了冲突现象，因此需要办法来解决，否则记录无法进行正确的存储。通常情况下有2种解决办法：</p>
-<h3 id="1-开放定址法"><a href="#1-开放定址法" class="headerlink" title="1)开放定址法"></a>1)开放定址法</h3><p>　即当一个关键字和另一个关键字发生冲突时，使用某种探测技术在Hash表中形成一个探测序列，然后沿着这个探测序列依次查找下去，当碰到一个空的单元时，则插入其中。比较常用的探测方法有线性探测法；</p>
-<p>　比如有一组关键字{12，13，25，23，38，34，6，84，91}，Hash表长为14，Hash函数为address(key)=key%11，当插入12，13，25时可以直接插入，而当插入23时，地址1被占用了，因此沿着地址1依次往下探测(探测步长可以根据情况而定)，直到探测到地址4，发现为空，则将23插入其中。</p>
+<h3 id="1-开放定址法"><a href="#1-开放定址法" class="headerlink" title="1)开放定址法"></a>1)开放定址法</h3><p>　即当一个关键字和另一个关键字发生冲突时，使用某种探测技术在Hash表中形成一个探测序列，然后沿着这个探测序列依次查找下去，当碰到一个空的单元时，则插入其中。比较常用的探测方法有线性探测法；<br>　比如有一组关键字{12，13，25，23，38，34，6，84，91}，Hash表长为14，Hash函数为address(key)=key%11，当插入12，13，25时可以直接插入，而当插入23时，地址1被占用了，因此沿着地址1依次往下探测(探测步长可以根据情况而定)，直到探测到地址4，发现为空，则将23插入其中。</p>
 <h3 id="2-链地址法"><a href="#2-链地址法" class="headerlink" title="2)链地址法"></a>2)链地址法</h3><p>　采用数组和链表相结合的办法，将Hash地址相同的记录存储在一张线性表中，而每张表的表头的序号即为计算得到的Hash地址。如上述例子中，采用链地址法形成的Hash表存储表示为：<br><img src="http://i.imgur.com/NSBvkHx.jpg" alt=""></p>
 <p>　虽然能够采用一些办法去减少冲突，但是冲突是无法完全避免的。因此需要根据实际情况选取解决冲突的办法。</p>
-<h2 id="5-Hash表的平均查找长度"><a href="#5-Hash表的平均查找长度" class="headerlink" title="5.Hash表的平均查找长度"></a>5.Hash表的平均查找长度</h2><p>　　Hash表的平均查找长度包括查找成功时的平均查找长度和查找失败时的平均查找长度。</p>
-<p>　　查找成功时的平均查找长度=表中每个元素查找成功时的比较次数之和/表中元素个数；</p>
-<p>　　查找不成功时的平均查找长度相当于在表中查找元素不成功时的平均比较次数，可以理解为向表中插入某个元素，该元素在每个位置都有可能，然后计算出在每个位置能够插入时需要比较的次数，再除以表长即为查找不成功时的平均查找长度。</p>
-<p>　　下面举个例子：</p>
-<p>　　有一组关键字{23，12，14，2，3，5}，表长为14，Hash函数为key%11，则关键字在表中的存储如下：</p>
-<p>　　地址     0     1     2     3      4     5    6   7   8    9  10   11   12    13</p>
-<p>　　关键字        23    12   14     2     3    5</p>
-<p>　　比较次数         1      2    1     3     3     2</p>
-<p>　　因此查找成功时的平均查找长度为(1+2+1+3+3+2)/6=11/6；</p>
-<p>　　查找失败时的平均查找长度为(1+7+6+5+4+3+2+1+1+1+1+1+1+1)/14=38/14；</p>
-<p>　　这里有一个概念装填因子=表中的记录数/哈希表的长度，如果装填因子越小，表明表中还有很多的空单元，则发生冲突的可能性越小；而装填因子越大，则发生冲突的可能性就越大，在查找时所耗费的时间就越多。因此，Hash表的平均查找长度和装填因子有关。</p>
+<h2 id="5-Hash表的平均查找长度"><a href="#5-Hash表的平均查找长度" class="headerlink" title="5.Hash表的平均查找长度"></a>5.Hash表的平均查找长度</h2><p>　　Hash表的平均查找长度包括查找成功时的平均查找长度和查找失败时的平均查找长度。<br>　　查找成功时的平均查找长度=表中每个元素查找成功时的比较次数之和/表中元素个数；<br>　　查找不成功时的平均查找长度相当于在表中查找元素不成功时的平均比较次数，可以理解为向表中插入某个元素，该元素在每个位置都有可能，然后计算出在每个位置能够插入时需要比较的次数，再除以表长即为查找不成功时的平均查找长度。<br>　　下面举个例子：<br>　　有一组关键字{23，12，14，2，3，5}，表长为14，Hash函数为key%11，则关键字在表中的存储如下：<br>　　地址     0     1     2     3      4     5    6   7   8    9  10   11   12    13<br>　　关键字        23    12   14     2     3    5<br>　　比较次数         1      2    1     3     3     2<br>　　因此查找成功时的平均查找长度为(1+2+1+3+3+2)/6=11/6；<br>　　查找失败时的平均查找长度为(1+7+6+5+4+3+2+1+1+1+1+1+1+1)/14=38/14；<br>　　这里有一个概念装填因子=表中的记录数/哈希表的长度，如果装填因子越小，表明表中还有很多的空单元，则发生冲突的可能性越小；而装填因子越大，则发生冲突的可能性就越大，在查找时所耗费的时间就越多。因此，Hash表的平均查找长度和装填因子有关。</p>
 <h2 id="6-Hash表的优缺点"><a href="#6-Hash表的优缺点" class="headerlink" title="6.Hash表的优缺点"></a>6.Hash表的优缺点</h2><p>　Hash表存在的优点显而易见，能够在常数级的时间复杂度上进行查找，并且插入数据和删除数据比较容易。但是它也有某些缺点，比如不支持排序，一般比用线性表存储需要更多的空间，并且记录的关键字不能重复。</p>
 <hr>
 <p>　<strong>到这里Hash表我也复习的差不多，那我开始分析Object对象的hashCode()方法和set中的HashCode()方法：</strong></p>
-<h1 id="一、java对象的比较"><a href="#一、java对象的比较" class="headerlink" title="一、java对象的比较"></a>一、java对象的比较</h1><p>　<strong>等号(==)：</strong><br>对比对象实例的内存地址（也即对象实例的ID），来判断是否是同一对象实例；又可以说是判断对象实例是否物理相等；</p>
-<p>　<strong>equals()：</strong><br>对比两个对象实例是否相等；当对象所属的类没有重写根类Object的equals()方法时，equals()判断的是对象实例的ID（内存地址），是否是同一对象实例；该方法就是使用的等号(==)的判断结果。</p>
-<p>　当对象所属的类重写equals()方法（可能因为需要自己特有的“逻辑相等”概念)时，equals()判断的根据就因具体实现而异，有些类是需要比较对象的某些指或内容，如String类重写equals()来判断字符串的值是否相等。判断逻辑相等。</p>
-<p>　<strong>hashCode():</strong></p>
-<p>　计算出对象实例的哈希码，并返回哈希码，又称为散列函数。根类Object的hashCode()方法的计算依赖于对象实例的D（内存地址），故每个Object对象的hashCode都是唯一的；当然，当对象所对应的类重写了hashCode()方法时，结果就截然不同了。</p>
-<p>　<strong>查看Object类中的hashCode()方法源代码：</strong></p>
+<h1 id="一、java对象的比较"><a href="#一、java对象的比较" class="headerlink" title="一、java对象的比较"></a>一、java对象的比较</h1><p>　<strong>等号(==)：</strong><br>对比对象实例的内存地址（也即对象实例的ID），来判断是否是同一对象实例；又可以说是判断对象实例是否物理相等；<br>　<strong>equals()：</strong><br>对比两个对象实例是否相等；当对象所属的类没有重写根类Object的equals()方法时，equals()判断的是对象实例的ID（内存地址），是否是同一对象实例；该方法就是使用的等号(==)的判断结果。<br>　当对象所属的类重写equals()方法（可能因为需要自己特有的“逻辑相等”概念)时，equals()判断的根据就因具体实现而异，有些类是需要比较对象的某些指或内容，如String类重写equals()来判断字符串的值是否相等。判断逻辑相等。<br>　<strong>hashCode():</strong><br>　计算出对象实例的哈希码，并返回哈希码，又称为散列函数。根类Object的hashCode()方法的计算依赖于对象实例的D（内存地址），故每个Object对象的hashCode都是唯一的；当然，当对象所对应的类重写了hashCode()方法时，结果就截然不同了。<br>　<strong>查看Object类中的hashCode()方法源代码：</strong></p>
 <pre><code>public native int hashCode();
-</code></pre><p>　使用<strong>native</strong>关键字说明这个方法是原生函数，也就是这个方法是用C/C++语言实现的，并且被编译成了DLL，由java去调用。</p>
-<p>　这些函数的实现体在DLL中，JDK的源代码中并不包含的。对于不同的平台它们也是不同的。这也是java的底层机制，实际上java就是在不同的平台上调用不同的native方法实现对操作系统的访问的；所以native关键字的函数都是操作系统实现的，java只能调用。</p>
-<p>　<strong>默认情况下，Object中的hashCode() 返回对象的32位jvm内存地址。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</strong></p>
+</code></pre><p>　使用<strong>native</strong>关键字说明这个方法是原生函数，也就是这个方法是用C/C++语言实现的，并且被编译成了DLL，由java去调用。<br>　这些函数的实现体在DLL中，JDK的源代码中并不包含的。对于不同的平台它们也是不同的。这也是java的底层机制，实际上java就是在不同的平台上调用不同的native方法实现对操作系统的访问的；所以native关键字的函数都是操作系统实现的，java只能调用。<br>　<strong>默认情况下，Object中的hashCode() 返回对象的32位jvm内存地址。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</strong></p>
 <h1 id="二、hashCode的作用"><a href="#二、hashCode的作用" class="headerlink" title="二、hashCode的作用"></a>二、hashCode的作用</h1><ul>
 <li>Java中的集合（Collection）有两类，一类是List，再有一类是Set。后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复，可两个元素是否重复应该依据什么来判断呢？</li>
 <li>这就是 Object.equals方法了。但是，如果每增加一个元素就检查一次，那么当元素很多时，后添加到集合中的元素比较的次数就非常多了。也就是说，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，它就要调用1000次equals方法。这显然会大大降低效率。</li>
-<li>Java采用了哈希表的原理，当集合要添加新的元素时，将对象通过哈希算法计算得到哈希值，然后将哈希值和集合长度进行&amp;运算，得到该对象在该数组存放的位置索引。如果这个位置上没有元素，它就可以直接存储在这个位置；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存，不相同就表示发生冲突，散列表对于冲突有具体的解决办法，但最终还会将新元素保存在适当的位置。</li>
+<li>Java采用了哈希表的原理，当集合要添加新的元素时，将对象通过哈希算法计算得到哈希值，然后将哈希值和集合长度进行&amp;运算，得到该对象在该数组存放的位置索引。如果这个位置上没有元素，它就可以直接存储在这个位置；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存，不相同就表示发生冲突，散列表对于冲突有具体的解决办法，但最终还会将新元素保存在适当的位置。<br>　这样一来，实际调用equals方法比较的次数就大大降低了，几乎只需要一两次。简而言之，在集合查找时，hashcode能大大降低对象比较次数，提高查找效率！</li>
 </ul>
-<p>　这样一来，实际调用equals方法比较的次数就大大降低了，几乎只需要一两次。简而言之，在集合查找时，hashcode能大大降低对象比较次数，提高查找效率！</p>
-<h1 id="三、Java-对象的equal方法和hashCode方法的关系"><a href="#三、Java-对象的equal方法和hashCode方法的关系" class="headerlink" title="三、Java  对象的equal方法和hashCode方法的关系"></a>三、Java  对象的equal方法和hashCode方法的关系</h1><p>　Java对象相同指的是两个对象通过eqauls方法判断的结果为true</p>
-<p>　<strong>Java对象的eqauls方法和hashCode方法是这样规定的：</strong></p>
+<h1 id="三、Java-对象的equal方法和hashCode方法的关系"><a href="#三、Java-对象的equal方法和hashCode方法的关系" class="headerlink" title="三、Java  对象的equal方法和hashCode方法的关系"></a>三、Java  对象的equal方法和hashCode方法的关系</h1><p>　Java对象相同指的是两个对象通过eqauls方法判断的结果为true<br>　<strong>Java对象的eqauls方法和hashCode方法是这样规定的：</strong></p>
 <ol>
 <li>相等的对象必须具有相等的哈希码（或者散列码）。</li>
-<li>如果两个对象的hashCode相同，它们并不一定相同。</li>
+<li>如果两个对象的hashCode相同，它们并不一定相同。  </li>
 </ol>
 <ul>
-<li><strong>关于第一点，相等（相同）的对象必须具有相等的哈希码（或者散列码），为什么？</strong></li>
+<li><p><strong>关于第一点，相等（相同）的对象必须具有相等的哈希码（或者散列码），为什么？</strong><br>　想象一下，假如两个Java对象A和B，A和B相等（eqauls结果为true），但A和B的哈希码不同，则A和B存入HashMap时的哈希码计算得到的HashMap内部数组位置索引可能不同，那么A和B很有可能允许同时存入HashMap，显然相等/相同的元素是不允许同时存入HashMap，HashMap不允许存放重复元素。</p>
+</li>
+<li><p><strong>关于第二点，两个对象的hashCode相同，它们并不一定相同</strong><br>　也就是说，不同对象的hashCode可能相同；假如两个Java对象A和B，A和B不相等（eqauls结果为false），但A和B的哈希码相等，将A和B都存入HashMap时会发生哈希冲突，也就是A和B存放在HashMap内部数组的位置索引相同这时HashMap会在该位置建立一个链接表，将A和B串起来放在该位置，显然，该情况不违反HashMap的使用原则，是允许的。当然，哈希冲突越少越好，尽量采用好的哈希算法以避免哈希冲突。</p>
+</li>
 </ul>
-<p>　想象一下，假如两个Java对象A和B，A和B相等（eqauls结果为true），但A和B的哈希码不同，则A和B存入HashMap时的哈希码计算得到的HashMap内部数组位置索引可能不同，那么A和B很有可能允许同时存入HashMap，显然相等/相同的元素是不允许同时存入HashMap，HashMap不允许存放重复元素。</p>
-<ul>
-<li><strong>关于第二点，两个对象的hashCode相同，它们并不一定相同</strong></li>
-</ul>
-<p>　也就是说，不同对象的hashCode可能相同；假如两个Java对象A和B，A和B不相等（eqauls结果为false），但A和B的哈希码相等，将A和B都存入HashMap时会发生哈希冲突，也就是A和B存放在HashMap内部数组的位置索引相同这时HashMap会在该位置建立一个链接表，将A和B串起来放在该位置，显然，该情况不违反HashMap的使用原则，是允许的。当然，哈希冲突越少越好，尽量采用好的哈希算法以避免哈希冲突。</p>
 <h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ol>
 <li><strong>绑定：</strong>当equals方法被重写时，通常有必要重写 hashCode 方法，以维护 hashCode 方法的常规协定，该协定声明相等对象必须具有相等的哈希码。</li>
 <li><strong>绑定原因：</strong>Hashtable实现一个哈希表，为了成功地在哈希表中存储和检索对象，用作键的对象必须实现 hashCode 方法和 equals 方法。同(1)，必须保证equals相等的对象，hashCode 也相等。因为哈希表通过hashCode检索对象。</li>
@@ -562,8 +540,7 @@
           
             <p>　<strong>在总结之前，我先复习一下有关String对象的知识。</strong></p>
 <p>#　String类 #</p>
-<p>　String类是<strong>final</strong>类型的，所以<strong>不能被被继承，方法不能被覆盖</strong>。它是一个引用数据类型，它的对象是一个字符串，程序中用” “标示的都是字符串。字符串是一个特殊的对象，字符串对象最大的特点是<strong>它为一个常量，一经初始化，永远不会改变</strong>，这是它跟其它引用数据类型最大的不同之处。</p>
-<p>　常见的操作方法：</p>
+<p>　String类是<strong>final</strong>类型的，所以<strong>不能被被继承，方法不能被覆盖</strong>。它是一个引用数据类型，它的对象是一个字符串，程序中用” “标示的都是字符串。字符串是一个特殊的对象，字符串对象最大的特点是<strong>它为一个常量，一经初始化，永远不会改变</strong>，这是它跟其它引用数据类型最大的不同之处。<br>　常见的操作方法：  </p>
 <h2 id="1、获取"><a href="#1、获取" class="headerlink" title="1、获取"></a>1、获取</h2><p>1.1 字符串中的包含的字符数，也就是字符串的长度；</p>
 <pre><code>int length（）:获取长度。  （跟数组length的区别）
 </code></pre><p>1.2 根据位置获取位置上某个字符。</p>
@@ -614,26 +591,7 @@ String toLowerCase();
 </code></pre><p>7.3 对两个字符串进行自然顺序的比较。</p>
 <pre><code>Int compareTo(string );
 </code></pre><p>#　接下来就是笔试题： #</p>
-<p>　扑克牌游戏大家应该都比较熟悉了，一副牌由54张组成，含3~A，2各4张，小王1张，大王1张。牌面从小到大用如下字符和字符串表示（其中，小写joker表示小王，大写JOKER表示大王）:)<br>3 4 5 6 7 8 9 10 J Q K A 2 joker JOKER<br>输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如：4 4 4 4-joker JOKER<br>请比较两手牌大小，输出较大的牌，如果不存在比较关系则输出ERROR</p>
-<p>　基本规则：</p>
-<p>（1）输入每手牌可能是个子，对子，顺子（连续5张），三个，炸弹（四个）和对王中的一种，不存在其他情况，由输入保证两手牌都是合法的，顺子已经从小到大排列；</p>
-<p>（2）除了炸弹和对王可以和所有牌比较之外，其他类型的牌只能跟相同类型的存在比较关系（如，对子跟对子比较，三个跟三个比较），不考虑拆牌情况（如：将对子拆分成个子）</p>
-<p>（3）大小规则跟大家平时了解的常见规则相同，个子，对子，三个比较牌面大小；顺子比较最小牌大小；炸弹大于前面所有的牌，炸弹之间比较牌面大小；对王是最大的牌；</p>
-<p>（4）输入的两手牌不会出现相等的情况。</p>
-<p>　答案提示：</p>
-<p>（1）除了炸弹和对王之外，其他必须同类型比较。</p>
-<p>（2）输入已经保证合法性，不用检查输入是否是合法的牌。</p>
-<p>（3）输入的顺子已经经过从小到大排序，因此不用再排序了.</p>
-<p>　输入描述:</p>
-<p>　输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如4 4 4 4-joker JOKER。</p>
-<p>　输出描述:</p>
-<p>　输出两手牌中较大的那手，不含连接符，扑克牌顺序不变，仍以空格隔开；如果不存在比较关系则输出ERROR。</p>
-<p>　输入例子:</p>
-<p>　4 4 4 4-joker JOKER</p>
-<p>　输出例子:</p>
-<p>　joker JOKER</p>
-<p>　<strong>注意：本道题目的输入规定是4 4 4 4-joker JOKER<br>要想获取两组字符串</strong></p>
-<p><strong>正确做法是：</strong></p>
+<p>　扑克牌游戏大家应该都比较熟悉了，一副牌由54张组成，含3~A，2各4张，小王1张，大王1张。牌面从小到大用如下字符和字符串表示（其中，小写joker表示小王，大写JOKER表示大王）:)<br>3 4 5 6 7 8 9 10 J Q K A 2 joker JOKER<br>输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如：4 4 4 4-joker JOKER<br>请比较两手牌大小，输出较大的牌，如果不存在比较关系则输出ERROR<br>　基本规则：<br>（1）输入每手牌可能是个子，对子，顺子（连续5张），三个，炸弹（四个）和对王中的一种，不存在其他情况，由输入保证两手牌都是合法的，顺子已经从小到大排列；<br>（2）除了炸弹和对王可以和所有牌比较之外，其他类型的牌只能跟相同类型的存在比较关系（如，对子跟对子比较，三个跟三个比较），不考虑拆牌情况（如：将对子拆分成个子）<br>（3）大小规则跟大家平时了解的常见规则相同，个子，对子，三个比较牌面大小；顺子比较最小牌大小；炸弹大于前面所有的牌，炸弹之间比较牌面大小；对王是最大的牌；<br>（4）输入的两手牌不会出现相等的情况。<br>　答案提示：<br>（1）除了炸弹和对王之外，其他必须同类型比较。<br>（2）输入已经保证合法性，不用检查输入是否是合法的牌。<br>（3）输入的顺子已经经过从小到大排序，因此不用再排序了.<br>　输入描述:<br>　输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如4 4 4 4-joker JOKER。<br>　输出描述:<br>　输出两手牌中较大的那手，不含连接符，扑克牌顺序不变，仍以空格隔开；如果不存在比较关系则输出ERROR。<br>　输入例子:<br>　4 4 4 4-joker JOKER<br>　输出例子:<br>　joker JOKER<br>　<strong>注意：本道题目的输入规定是4 4 4 4-joker JOKER<br>要想获取两组字符串</strong><br><strong>正确做法是：</strong></p>
 <pre><code>Scanner sc = new Scanner(System.in);
 String[] left,right;
 String[] line;
@@ -831,18 +789,10 @@ public class Main{
           
             <p>　<strong>在总结之前，我得自身反省一下，明明想法其实已经想的差不多了，但是总差一些细节，尤其关于Scanner类，这个类非常重要，方法一定要记住。</strong></p>
 <p>##　Scanner类##<br>　在源码中应该包括下句：</p>
-<pre><code>import java.util.Scanner;
+<pre><code>import java.util.Scanner;  
 </code></pre><p>　Scanner是新增的一个简易文本扫描器，在 JDK 5.0之前，是没有的。</p>
-<p>　<strong>构造方法：</strong></p>
-<p>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
-<p>　<strong>方法：</strong></p>
-<p>　public void close()    //关闭 </p>
-<p>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代</p>
-<p>　public boolean hasNext() //检测输入中，是否，还有单词</p>
-<p>　public boolean hasNextInt() //检测输入中，是否，还有单词</p>
-<p>　public String next()   //读取下一个单词，默认把空格作为分隔符</p>
-<p>　public int hasNextInt();查看是否有int类型的token的分割段</p>
-<p>　public String nextLine()  //读行 </p>
+<p>　<strong>构造方法：</strong><br>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
+<p>　<strong>方法：</strong><br>　public void close()    //关闭<br>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代<br>　public boolean hasNext() //检测输入中，是否，还有单词<br>　public boolean hasNextInt() //检测输入中，是否，还有单词<br>　public String next()   //读取下一个单词，默认把空格作为分隔符<br>　public int hasNextInt();查看是否有int类型的token的分割段<br>　public String nextLine()  //读行   </p>
 <p>　<strong>读取键盘输入</strong></p>
 <pre><code>Scanner sc = new Scanner(System.in);
 while(sc.hasNext())
@@ -903,7 +853,7 @@ public class Main{
 
 
 }
-</code></pre><p>　<strong><em>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</em></strong></p>
+</code></pre><p>　<strong>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</strong></p>
 
           
         
@@ -1045,8 +995,7 @@ public class Main{
         
           
             <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
-<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。</p>
-<p>　具体实现：</p>
+<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。<br>　具体实现：</p>
 <pre><code>public class TestSelectSort {
 
     public static void main(String[] args) {
@@ -1080,10 +1029,8 @@ public class Main{
     }
 
 }
-</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。<br>　具体实现：</p>
 <pre><code>public class TestInsertSort {
-
     public static void main(String[] args) {
         int[] array = {7,3,4,9,10,6};
         insertSort(array);
@@ -1091,7 +1038,6 @@ public class Main{
             System.out.print(array[i]+&quot; &quot;);
 
     }
-
     public static void insertSort(int[] a){
         if(a!=null){
             for(int i=1;i&lt;a.length;i++){
@@ -1106,21 +1052,16 @@ public class Main{
             }
         }
     }
-
 }
-</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。<br>　具体实现：</p>
 <pre><code>public class TestBubbleSort {
-
     public static void main(String[] args) {
         int[] array = {4,2,9,10,8,6};
         BubbleSort(array);
         for(int i=0;i&lt;array.length;i++){
             System.out.print(array[i]+&quot; &quot;);
         }
-
     }
-
     public static void BubbleSort(int[] a){
         int i,j,temp,len = a.length;
         for( i=0;i&lt;len-1;i++){
@@ -1132,22 +1073,16 @@ public class Main{
                 }
             }
         }
-
     }
-
 }
-</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。<br>　具体实现：</p>
 <pre><code>public class TestMergeSort {
-
     public static void main(String[] args) {
         int[] a = {5,3,4,2,9,7,6,1};
         MergeSort(a, 0, a.length-1);
         for(int i =0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void Merge(int[] array,int left,int middle,int right){
         int i,j,k,n1,n2;
         n1 = middle-left+1;
@@ -1164,7 +1099,6 @@ public class Main{
             else
                 array[k] = R[j++];
         }
-
         //没有再声明一个变量是因为一下两种情况只会出现一种情况。
         if(i&lt;n1){
             for(j =i;j&lt;n1;j++,k++)
@@ -1184,20 +1118,15 @@ public class Main{
             Merge(array,left,middle,right);
         }
     }
-
 }
-</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。<br>　具体实现：</p>
 <pre><code>public class TestQuickSort {
-
     public static void main(String[] args) {
         int[] a = {5,3,2,9,7,6,1};
         quickSort(a);
         for(int i=0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void sort(int[] array,int low,int high){
         int i,j,index;
         if(low&gt;=high) return;
@@ -1219,25 +1148,18 @@ public class Main{
         sort(array,low,i-1);
         sort(array,i+1,high);
     }
-
     public static void quickSort(int[] array){
         sort(array,0,array.length-1);
     }
-
 }
-</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。</p>
-<p>　具体实现：</p>
-<pre><code>public class TestShellSort {
-
-    public static void main(String[] args) {
-
+</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。<br>　具体实现：</p>
+<pre><code>public class TestShellSort {    
+    public static void main(String[] args) {    
         int[] a = {5,3,2,9,7,6,1};
         shellSort(a);
         for(int i=0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void shellSort(int[] array){
         int len = array.length;
         int i,j,h;//h为步长
@@ -1255,20 +1177,15 @@ public class Main{
             }
         }
     }
-
 }
-</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。<br>　具体实现：</p>
 <pre><code>public class TestHeapSort {
-
     public static void main(String[] args) {
         int[] a = {4,3,2,7,6,5};
         heapSort(a);
         for(int i=0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void adjustHeap(int[] a,int pos,int len){
         int temp;
         int child;
@@ -1283,7 +1200,6 @@ public class Main{
         }
         a[pos] = temp;
     }
-
     public static void heapSort(int[] array){
         int i;
         int len = array.length;
@@ -1296,7 +1212,6 @@ public class Main{
             adjustHeap(array, 0, i-1);
         }
     }
-
 }
 </code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
 
@@ -1618,7 +1533,7 @@ ThreadImp end:
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1661,7 +1576,7 @@ ThreadImp end:
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

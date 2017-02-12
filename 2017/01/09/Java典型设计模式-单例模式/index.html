@@ -100,7 +100,7 @@ public class MyObject {
     private MyObject() {
     }
     public static MyObject getInstance() {">
-<meta property="og:updated_time" content="2017-02-09T07:49:14.410Z">
+<meta property="og:updated_time" content="2017-02-12T09:31:09.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java典型设计模式-单例模式">
 <meta name="twitter:description" content="###　单例模式 ###　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：
@@ -377,29 +377,24 @@ public class MyObject {
 }
 </code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
 <hr>
-<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：</p>
-<p>　在Java语言中实现单例模式通常有两种表现方式：</p>
+<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：<br>　在Java语言中实现单例模式通常有两种表现方式：  </p>
 <ol>
-<li>饿汉式单例类：类加载时，就进行对象实例化。</li>
-<li>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。</li>
-</ol>
-<p>　<strong>饿汉式单例类代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//恶汉式单例
-public class Singleton1 {
+<li>饿汉式单例类：类加载时，就进行对象实例化。  </li>
+<li><p>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。<br>　<strong>饿汉式单例类代码如下：</strong>  </p>
+<p> package Design.Creational.Singleton;<br> //恶汉式单例<br> public class Singleton1 {</p>
+<pre><code>private static Singleton1 m_instance = new Singleton1();
 
-    private static Singleton1 m_instance = new Singleton1();
+private Singleton1(){
 
-    private Singleton1(){
-
-    }
-
-    public static Singleton1 getInstance(){
-        return m_instance;
-    }
 }
-</code></pre><p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。</p>
-<p>　<strong>同步懒汉式代码如下：</strong></p>
+
+public static Singleton1 getInstance(){
+    return m_instance;
+}
+</code></pre><p> }</p>
+</li>
+</ol>
+<p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。<br>　<strong>同步懒汉式代码如下：</strong></p>
 <pre><code>package Design.Creational.Singleton;
 //懒汉式单例
 public class Singleton2 {
@@ -448,8 +443,8 @@ public class Singleton2 {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/09/Java典型设计模式-工厂方法模式/" rel="next" title="Java典型设计模式-工厂方法模式">
-                <i class="fa fa-chevron-left"></i> Java典型设计模式-工厂方法模式
+              <a href="/2017/01/06/设计模式六大原则-5-聚合-复用原则/" rel="next" title="设计模式六大原则(5): 聚合/复用原则">
+                <i class="fa fa-chevron-left"></i> 设计模式六大原则(5): 聚合/复用原则
               </a>
             
           </div>
@@ -458,8 +453,8 @@ public class Singleton2 {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/09/Java典型设计模式-适配器模式/" rel="prev" title="Java典型设计模式-适配器模式">
-                Java典型设计模式-适配器模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" rel="prev" title="Java典型设计模式-抽象工厂方法模式">
+                Java典型设计模式-抽象工厂方法模式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -521,7 +516,7 @@ public class Singleton2 {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-装饰模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
-                  Java典型设计模式-观察者模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-装饰模式/" itemprop="url">
+                  Java典型设计模式-装饰模式
                 </a>
               
             
@@ -353,524 +353,80 @@
       
         
           
-            <p>　观察者模式是类和类之间的关系，不涉及到继承。</p>
+            <p>　最近在复习I/O,发现很多类都是通过装饰模式进行修饰，将原来的类修饰的更强大，那么今天就来总结一下装饰模式。</p>
 <hr>
-<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
-<pre><code>public interface Observer {  
-    public void update();  
-}
-
-public class Observer1 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer1 has received!&quot;);  
-    }  
-}
-
-public class Observer2 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer2 has received!&quot;);  
-    }  
-}
-
-public interface Subject {  
-    /*增加观察者*/  
-    public void add(Observer observer);  
-    /*删除观察者*/  
-    public void del(Observer observer);  
-    /*通知所有的观察者*/  
-    public void notifyObservers();  
-    /*自身的操作*/ 
-    public void operation();  
-}
-
-import java.util.Enumeration;
-import java.util.Vector;
-
-public abstract class AbstractSubject implements Subject {  
-
-    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
-    @Override 
-    public void add(Observer observer) {  
-        vector.add(observer);  
-    }  
-
-    @Override 
-    public void del(Observer observer) {  
-        vector.remove(observer);  
-    }  
-
-    @Override 
-    public void notifyObservers() {  
-        Enumeration&lt;Observer&gt; enumo = vector.elements();  
-        while(enumo.hasMoreElements()){  
-            enumo.nextElement().update();  
-        }  
-    }  
-}
-
-public class MySubject extends AbstractSubject {  
-
-    @Override 
-    public void operation() {  
-        System.out.println(&quot;update self!&quot;);  
-        notifyObservers();  
-    }  
-
-}
-
-public class ObserverTest {  
-    public static void main(String[] args) {  
-        Subject sub = new MySubject();  
-        sub.add(new Observer1());  
-        sub.add(new Observer2());  
-        sub.operation();  
-    }  
-}
-运行结果：
-update self!
-observer1 has received!
-observer2 has received!
-</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-适配器模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-适配器模式/" itemprop="url">
-                  Java典型设计模式-适配器模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:03:57+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>　适配器模式主要分为三类：类的适配器模式、对象的适配器模式、接口的适配器模式。</p>
-<hr>
-<p>　适配器模式将某个类的接口转换成客户端期望的另一个接口表示，目的是消除由于接口不匹配所造成的类的兼容性问题。有点抽象，我们来看看详细的内容。</p>
-<h4 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h4><p>　类的适配器模式核心思想就是：有一个Source类，拥有一个方法，待适配，目标接口是Targetable，通过Adapter类，将Source的功能扩展到Targetable里。</p>
-<pre><code>public class Source {
-    public void method1() {  
-        System.out.println(&quot;this is original method!&quot;);  
-    }  
-}
-
-public interface Targetable {
-    /* 与原类中的方法相同 */
-    public void method1();
-    /* 新类的方法 */
-    public void method2();
-}
-
-public class Adapter extends Source implements Targetable {
-    public void method2() {
-        System.out.println(&quot;this is the targetable method!&quot;);
-    }
-}
-
-public class AdapterTest {
-    public static void main(String[] args) {
-        Targetable target = new Adapter();
-        target.method1();
-        target.method2();
-    }
-}
-AdapterTest的运行结果：
-this is original method!
-this is the targetable method!
-</code></pre><h4 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h4><p>　对象的适配器模式的基本思路和类的适配器模式相同，只是将Adapter类作修改成Wrapper，这次不继承Source类，而是持有Source类的实例，以达到解决兼容性的问题。</p>
-<pre><code>public class Wrapper implements Targetable {
-    private Source source;
-    public Wrapper(Source source) {
-        super();
-        this.source = source;
-    }
-    @Override
-    public void method2() {
-        System.out.println(&quot;this is the targetable method!&quot;);
-    }
-    @Override
-    public void method1() {
-        source.method1();
-    }
-}
-
-public class AdapterTest {
-    public static void main(String[] args) {
-        Source source = new Source();
-        Targetable target = new Wrapper(source);
-        target.method1();
-        target.method2();
-    }
-}
-AdapterTest的运行结果：
-this is original method!
-this is the targetable method!
-</code></pre><h4 id="接口的适配器模式"><a href="#接口的适配器模式" class="headerlink" title="接口的适配器模式"></a>接口的适配器模式</h4><p>　接口的适配器是这样的：有时我们写的一个接口中有多个抽象方法，当我们写该接口的实现类时，必须实现该接口的所有方法，这明显有时比较浪费，因为并不是所有的方法都是我们需要的，有时只需要某一些，此处为了解决这个问题，我们引入了接口的适配器模式，借助于一个抽象类，该抽象类实现了该接口，实现了所有的方法，而我们不和原始的接口打交道，只和该抽象类取得联系，所以我们写一个类，继承该抽象类，重写我们需要的方法就行了。</p>
-<hr>
-<p>　在实际开发中，我们也常会遇到这种接口中定义了太多的方法，以致于有时我们在一些实现类中并不是都需要。看代码：</p>
-<pre><code>public interface Sourceable {    
-    public void method1();  
-    public void method2();  
-}  
-//抽象类Wrapper2：
-public abstract class Wrapper2 implements Sourceable{  
-
-    public void method1(){}  
-    public void method2(){}  
-}  
-
-public class SourceSub1 extends Wrapper2 {  
-    public void method1(){  
-        System.out.println(&quot;the sourceable interface&apos;s first Sub1!&quot;);  
-    }  
-}  
-public class SourceSub2 extends Wrapper2 {  
-    public void method2(){  
-        System.out.println(&quot;the sourceable interface&apos;s second Sub2!&quot;);  
-    }  
-}  
-public class WrapperTest {  
-    public static void main(String[] args) {  
-        Sourceable source1 = new SourceSub1();  
-        Sourceable source2 = new SourceSub2();  
-
-        source1.method1();  
-        source1.method2();  
-        source2.method1();  
-        source2.method2();  
-    }  
-}  
-测试输出：
-the sourceable interface&apos;s first Sub1!
-the sourceable interface&apos;s second Sub2!
-</code></pre><h3 id="总结一下三种适配器模式的应用场景"><a href="#总结一下三种适配器模式的应用场景" class="headerlink" title="总结一下三种适配器模式的应用场景"></a>总结一下三种适配器模式的应用场景</h3><ul>
-<li>类的适配器模式：当希望将一个类转换成满足另一个新接口的类时，可以使用类的适配器模式，创建一个新类，继承原有的类，实现新的接口即可。</li>
-<li>对象的适配器模式：当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Wrapper类，持有原类的一个实例，在Wrapper类的方法中，调用实例的方法就行。</li>
-<li>接口的适配器模式：当不希望实现一个接口中所有的方法时，可以创建一个抽象类Wrapper，实现所有方法，我们写别的类的时候，继承抽象类即可。</li>
+<p>　<strong>装饰模式：动态地给一个对象添加一些额外的职责，就增加功能来说，装饰模式比生成子类更为灵活。</strong><br>装饰模式有以下四个角色：</p>
+<ul>
+<li>抽象构件角色：用于规范需要装饰的对象。</li>
+<li>具体构件角色：用于实现抽象构件接口，定义一个需要装饰的原始类。</li>
+<li>装饰角色：该角色持有一个构件对象的实例，并定义一个与抽象构件接口一致的接口。</li>
+<li>具体装饰角色：该角色负责对构件对象进行装饰</li>
 </ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
-                  Java典型设计模式-单例模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
-<pre><code>public class MyObject {
-    private static MyObject myObject;
-    private MyObject() {
-    }
-    public static MyObject getInstance() {
-        if (myObject != null) {
-        } else {
-            myObject = new MyObject();
-        }
-        return myObject;
-    }
-}
-</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
-<hr>
-<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：</p>
-<p>　在Java语言中实现单例模式通常有两种表现方式：</p>
+<p>装饰模式类图如下：<br><img src="http://i.imgur.com/aIQFA1A.png" alt=""> </p>
+<p>装饰模式的优点：</p>
 <ol>
-<li>饿汉式单例类：类加载时，就进行对象实例化。</li>
-<li>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。</li>
+<li>装饰类和被装饰类可以独立发展，而不会相互耦合。</li>
+<li>装饰模式是继承关系的一个替代方式，装饰类Decorator，不管装饰多少层，返回的对象还是Component。</li>
+<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
 </ol>
-<p>　<strong>饿汉式单例类代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//恶汉式单例
-public class Singleton1 {
-
-    private static Singleton1 m_instance = new Singleton1();
-
-    private Singleton1(){
-
-    }
-
-    public static Singleton1 getInstance(){
-        return m_instance;
+<p>装饰模式的使用场景：</p>
+<ol>
+<li>需要扩展一个类的功能，或给一个类增加附加功能。</li>
+<li>需要动态地给一个对象增加功能，这些功能可以在动态地撤销。</li>
+<li>需要为一批类进行改装或加装功能。</li>
+</ol>
+<hr>
+<p>　通过对裸车进行装饰的过程演示装饰模式的应用：<br>　Car接口：  </p>
+<pre><code>public interface Car {
+    public void show();
+}
+</code></pre><p>　Benz实现IGamePlayer接口中的方法：</p>
+<pre><code>public class Benz implements Car {
+    @Override
+    public void show() {
+        System.out.println(&quot;奔驰车默认是黑色&quot;);
     }
 }
-</code></pre><p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。</p>
-<p>　<strong>同步懒汉式代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//懒汉式单例
-public class Singleton2 {
-    private static Singleton2 m_instance = null;
-
-    private Singleton2(){
-
+</code></pre><p>　汽车修饰类CarDecorator：</p>
+<pre><code>public abstract class CarDecorator {
+    private Car car = null;
+    public CarDecorator(Car car){
+    this.car = car;
     }
-
-    public synchronized static Singleton2 getInstance(){
-        if(m_instance==null)
-            m_instance = new Singleton2();
-        return m_instance;
+    public void show(){
+        this.car.show();
     }
-
 }
+</code></pre><p>　汽车修饰实现类ConcreteCarDecorator：</p>
+<pre><code>public class ConcreteCarDecorator extends CarDecorator {
+    public ConcreteCarDecorator(Car car) {
+        super(car);
+    }
+
+    public void print(){
+        System.out.println(&quot;彩绘喷漆&quot;);
+    }
+    public void setGps(){
+        System.out.println(&quot;安装GPS&quot;);
+    }
+    public void show(){
+        super.show();
+        this.print();
+        this.setGps();
+    }
+}
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
+    public static void main(String[] args) {
+        Car car = new Benz();
+        CarDecorator cd = new ConcreteCarDecorator(car);
+        cd.show();
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>奔驰车默认是黑色
+彩绘喷漆
+安装GPS
 </code></pre>
           
         
@@ -909,7 +465,7 @@ public class Singleton2 {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-代理模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -934,8 +490,8 @@ public class Singleton2 {
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
-                  Java典型设计模式-工厂方法模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-代理模式/" itemprop="url">
+                  Java典型设计模式-代理模式
                 </a>
               
             
@@ -951,7 +507,7 @@ public class Singleton2 {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
                 2017-01-09
               </time>
             
@@ -1011,92 +567,91 @@ public class Singleton2 {
       
         
           
-            <p>###　工厂方法模式 ###</p>
-<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
-<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<pre><code>public interface MyInterface {
-    public void print();
-}    
+            <p>　最近在学习Spring，Spring的两个核心是依赖注入和面向切面编程，其中面向切面编程就是在一个方法的前后位置加入其余的方法以更好地实现，那么在SpringAOP中是采用JDK动态代理实现的，动态代理就是采用代理模式技术实现的，关于JDK动态代理我稍后总结，今天就用静态代理的例子好好学习代理模式。</p>
+<hr>
+<p>　<strong>代理模式：为其他对象提供一种代理以控制对这个对象的访问。</strong><br>　代理模式有一下优点：  </p>
+<ol>
+<li>职责清晰：真实的角色实现实际的业务逻辑，不用关心其他非本职的事务，通过后期的代理完成附加的事务，附带的结果就是编程简洁清晰。    </li>
+<li>高扩展性：具体主题角色随需求的不同可能有很多种，但只要实现了接口，代理类就完全可以在不做任何修改的情况下代理各种真实主题角色。  </li>
+<li>智能化：代理类介意在运行时才确定去代理的真实主题（动态代理）。  </li>
+</ol>
+<hr>
+<p>　通过游戏代练的过程演示代理模式的应用，其类图如下所示：<br><img src="http://i.imgur.com/Q6N61ev.png" alt=""><br>　IGamePlayer接口：  </p>
+<pre><code>public interface IGamePlayer {
+    public void killBoss();
+    public void upGrade();
 
-public class MyClassOne implements MyInterface {
+}
+</code></pre><p>　GamePlayer实现IGamePlayer接口中的方法：</p>
+<pre><code>public class GamePlayer implements IGamePlayer {
+    private String name =&quot;&quot;;
+
+
+    public GamePlayer(String name) {
+        super();
+        this.name = name;
+    }
 
     @Override
-    public void print() {
-        System.out.println(&quot;MyClassOne&quot;);
+    public void killBoss() {
+        System.out.println(this.name+&quot;在打怪！！！！&quot;);
     }
 
-}
-public class MyClassTwo implements MyInterface {     
     @Override
-    public void print() {
-        System.out.println(&quot;MyClassTwo&quot;);
-    }
-}
-
-
-public class MyFactory {
-    public MyInterface produce(String type) {  
-        if (&quot;One&quot;.equals(type)) {  
-            return new MyClassOne();  
-        } else if (&quot;Two&quot;.equals(type)) {  
-            return new MyClassTwo();  
-        } else {  
-            System.out.println(&quot;没有要找的类型&quot;);  
-            return null;  
-        }  
+    public void upGrade() {
+        System.out.println(this.name+&quot;成功升1级！！！！&quot;);
     }
 
 }
+</code></pre><p>　GamePlayerProxy是代理类：</p>
+<pre><code>public class GamePlayerProxy implements IGamePlayer {
+    private IGamePlayer player = null;
 
 
-public class FactoryTest {
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produce(&quot;One&quot;);  
-        myi.print();
+    public GamePlayerProxy(IGamePlayer player) {
+        super();
+        this.player = player;
+    }
+
+    @Override
+    public void killBoss() {
+        this.log();
+        player.killBoss();
+    }
+
+    @Override
+    public void upGrade() {
+        player.upGrade();
+        this.count();
+    }
+
+    private void log(){
+        System.out.println(&quot;打怪时间&quot;+new Date().toString());
+    }
+
+    private void count(){
+        System.out.println(&quot;升一级耗费50小时&quot;);
     }
 
 }
-</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-     public MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
 
-}
+    public static void main(String[] args) {
+        IGamePlayer player = new GamePlayer(&quot;冯佳欣&quot;);
+        IGamePlayer proxy = new GamePlayerProxy(player);
+        proxy.killBoss();
+        proxy.upGrade();
 
-public class FactoryTest {
-
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produceOne();
-        myi.print();
     }
 
 }
-</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
-<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-    public static MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public static MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-}
-
-public class FactoryTest {
-    public static void main(String[] args){ 
-        MyInterface myi = MyFactory.produceOne();
-        myi.print();
-
-}
-</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
-
+</code></pre><p>　程序运行结果：</p>
+<pre><code>打怪时间Sun Feb 12 17:23:41 CST 2017
+冯佳欣在打怪！！！！
+冯佳欣成功升1级！！！！
+升一级耗费50小时
+</code></pre>
           
         
       
@@ -1134,7 +689,7 @@ public class FactoryTest {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-抽象工厂方法模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-责任链模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1159,8 +714,8 @@ public class FactoryTest {
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" itemprop="url">
-                  Java典型设计模式-抽象工厂方法模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-责任链模式/" itemprop="url">
+                  Java典型设计模式-责任链模式
                 </a>
               
             
@@ -1176,7 +731,7 @@ public class FactoryTest {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
                 2017-01-09
               </time>
             
@@ -1236,40 +791,567 @@ public class FactoryTest {
       
         
           
-            <p>###　抽象工厂模式 ###<br>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
+            <p>　最近在学习Tomcat,Tomcat中最容易发现的设计模式就是责任链设计模式，这个设计模式也是在Tomcat中Container设计的基础，整个容器就是通过一个链连接在一起的，这个链一直将请求正确地传递给最终处理请求的Servlet，那么就学习一下责任链设计模式。</p>
 <hr>
-<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
-<p>　这样就符合闭包原则了</p>
-<p>　下面来看看代码：</p>
-<p>　MyInterface、MyClassOne、MyClassTwo不变。</p>
-<p>　新增如下接口和类：</p>
-<pre><code>public interface Provider {
-    public MyInterface produce(); 
+<p>　<strong>责任链模式：使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理为止。</strong><br>　责任链模式有以下两个角色：  </p>
+<ul>
+<li>抽象处理者角色：该角色对请求进行抽象，并定义一个方法以设定和返回对下一个处理者的引用。</li>
+<li>具体处理者角色：该角色接到请求后，可以选择将请求处理掉，或者将请求传给下一个处理者。</li>
+</ul>
+<p>　责任链模式类图如下：<br><img src="http://i.imgur.com/4jm2jrS.png" alt=""></p>
+<p>　责任链模式的优点：</p>
+<ol>
+<li>责任链模式将请求和处理分开，请求者不知道是谁处理的，处理者可以不用知道请求的全貌。</li>
+<li>提高系统的灵活性。</li>
+</ol>
+<p>　责任链模式的缺点：</p>
+<ol>
+<li>降低程序的性能，每个请求都是从链头遍历到链尾，当链比较长的时候，性能会大幅下降。</li>
+<li>不易于调试，由于采用类似递归的方式，调试的时候逻辑比较复杂。<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</li>
+</ol>
+<p>　责任链模式的使用场景：</p>
+<ol>
+<li>一个请求需要一系列的处理工作。</li>
+<li>业务流的处理。</li>
+<li>对系统进行补充扩展。</li>
+</ol>
+<hr>
+<p>　<strong>击鼓传花演示责任链模式板例子：</strong></p>
+<p>　Player.java：    </p>
+<pre><code>public abstract class Player {
+    private Player successor;
+    public abstract void handle(int i);
+    protected void setSuccessor(Player aSuccessor){
+        this.successor = aSuccessor;
+    }
+    //传给下一个
+    public void next(int index){
+        if(successor!=null)
+            successor.handle(index);
+        else
+            System.out.println(&quot;游戏结束&quot;);
+    }
 }
-
-public class MyFactoryOne implements Provider {
+</code></pre><p>　PlayerAjava：</p>
+<pre><code>public class PlayerA extends Player {
+    public PlayerA(Player successor){
+        this.setSuccessor(successor);
+    }
     @Override
-    public MyInterface produce() {
-        return new MyClassOne();
+    public void handle(int i) {
+        if(i==1)
+            System.out.println(&quot;PlayerA喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerA把花向下传&quot;);
+            next(i);
+        }
     }
 }
-
-public class MyFactoryTwo implements Provider {
+</code></pre><p>　PlayerB.java：</p>
+<pre><code>public class PlayerB extends Player {
+    public PlayerB(Player successor){
+        this.setSuccessor(successor);
+    }
     @Override
-    public MyInterface produce() {
-        return new MyClassTwo();
+    public void handle(int i) {
+        if(i==2)
+            System.out.println(&quot;PlayerB喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerB把花向下传&quot;);
+            next(i);
+        }
     }
 }
-</code></pre><p>　修改测试类FactoryTest如下：</p>
-<pre><code>public class FactoryTest {
-    public static void main(String[] args){ 
-        Provider provider = new MyFactoryOne();
-        MyInterface myi = provider.produce();
-        myi.print();
+</code></pre><p>　PlayerC.java：</p>
+<pre><code>public class PlayerC extends Player {
+    public PlayerC(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==3)
+            System.out.println(&quot;PlayerC喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerC把花向下传&quot;);
+            next(i);
+        }
     }
 }
-</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+</code></pre><p>　PlayerD.java：</p>
+<pre><code>public class PlayerD extends Player {
+    public PlayerD(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==4)
+            System.out.println(&quot;PlayerD喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerD把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　DrumBeater.java：</p>
+<pre><code>public class DrumBeater {
+    public static void main(String[] args) {
+        Player player = new PlayerA(new PlayerB(new PlayerC(new PlayerD(null))));
+        player.handle(3);
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>PlayerA把花向下传
+PlayerB把花向下传
+PlayerC喝酒
+</code></pre>
+          
+        
+      
+    </div>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-策略模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-策略模式/" itemprop="url">
+                  Java典型设计模式-策略模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在学习Spring，在Spring中有多个地方使用策略模式，如Bean定义对象的创建和代理对象的创建等，那今天学习一下策略模式。</p>
+<hr>
+<p>　<strong>策略模式：针对一组算法，将每一个算法封装到具有共同接口的的独立类中，从而使得他们可以相互替换，使得算法可以在不影响客户端的情况下发生变化。</strong>  </p>
+<p>　策略模式有以下三个角色：  </p>
+<ul>
+<li>环境角色：该角色也叫上下文角色，起到承上启下的作用，屏蔽高层模块对策略、算法的直接访问，它持有一个Strategy的引用。</li>
+<li>抽象策略角色：该角色对策略、算法进行抽象，通常定义每个策略或算法必须具有的方法和属性。</li>
+<li>具体策略角色：该角色实现抽象策略中的具体操作，含有具体的算法。</li>
+</ul>
+<p>　策略模式类图如下：<br><img src="http://i.imgur.com/lLTa3AF.png" alt=""></p>
+<p>　策略式有以下优点：  </p>
+<ol>
+<li>策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族，恰当的使用继承可以把公共的代码移到父类中，从而避免代码重复。</li>
+<li>策略模式提供了可以替换继承关系的办法，继承可以处理多种算法或行为，如果不适用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为，但是这样算法或行为的使用者和算法本身混在一起，从而不可能在独立演化。</li>
+<li>使用策略模式可以避免使用多重条件转移语句。</li>
+</ol>
+<p>　策略模式的缺点：</p>
+<ol>
+<li>客户端必须知道所有的策略类，并自行决定使用哪一个策略类。</li>
+<li>策略模式造成很多的策略类。</li>
+</ol>
+<p>　策略模式的使用场景：</p>
+<ol>
+<li>多个类只是在算法或行为上稍有不同的场景。</li>
+<li>算法需要自由切换的场景。</li>
+<li>需要屏蔽算法规则的场景。</li>
+</ol>
+<hr>
+<p>　通过图书销售中不同折扣算法演示策略模式。<br>　DiscountStrategy.java</p>
+<pre><code>public abstract class DiscountStrategy {
+    private double price = 0;
+    private int number =0;
+    public DiscountStrategy(double price, int number) {
+        super();
+        this.price = price;
+        this.number = number;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public int getNumber() {
+        return number;
+    }
+    public abstract double calculateDiscount();
+}
+</code></pre><p>　NoDiscountStrategy.java</p>
+<pre><code>public class NoDiscountStrategy extends DiscountStrategy {
+    public NoDiscountStrategy(double price, int number) {
+        super(price, number);
+
+    }
+    @Override
+    public double calculateDiscount() {
+        return 0;
+    }
+}
+</code></pre><p>　FixDiscountStrategy.java</p>
+<pre><code>public class FixDiscountStrategy extends DiscountStrategy {
+    public FixDiscountStrategy(double price, int number) {
+        super(price, number);
+    }
+    @Override
+    public double calculateDiscount() {
+        return getNumber()+1;
+    }
+}
+</code></pre><p>　PercentageDiscountStrategy.java</p>
+<pre><code>public class PercentageDiscountStrategy extends DiscountStrategy {
+    public PercentageDiscountStrategy(double price, int number) {
+        super(price, number);
+    }
+    @Override
+    public double calculateDiscount() {
+        return getPrice()*getNumber()*0.15;
+    }
+}
+</code></pre><p>　ContextClient.java</p>
+<pre><code>public class ContextClient {
+    private DiscountStrategy ds = null;
+    public ContextClient(DiscountStrategy ds) {
+        super();
+        this.ds = ds;
+    }
+    public double contextCalDisc(){
+        return this.ds.calculateDiscount();
+    }
+    public static void main(String[] args) {
+        ContextClient context0 = new ContextClient(new NoDiscountStrategy(48.5, 20));
+        System.out.println(&quot;0折扣&quot;+context0.contextCalDisc());
+
+        ContextClient context1 = new ContextClient(new FixDiscountStrategy(48.5, 20));
+        System.out.println(&quot;固定折扣&quot;+context1.contextCalDisc());
+
+        ContextClient context2 = new ContextClient(new PercentageDiscountStrategy(48.5, 20));
+        System.out.println(&quot;15%折扣&quot;+context2.contextCalDisc());
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>0折扣0.0
+固定折扣21.0
+15%折扣145.5
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-命令模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-命令模式/" itemprop="url">
+                  Java典型设计模式-命令模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在学习Tomcat,Tomcat中的Connector组件是通过命令模式调用Container的，那么今天就来学习一下命令模式。</p>
+<hr>
+<p>　<strong>命令模式：将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以听、提供命令的撤销和恢复功能。</strong><br>　命令模式有以下两个角色：  </p>
+<ul>
+<li>命令角色：该角色声明一个给所有具体命令类的抽象接口，定义需要执行的命令。</li>
+<li>具体命令角色：该角色定义一个接受者和行为者之间的若耦合，实现命令方法，并调用接受者的相应操作。</li>
+<li>调用者角色：该角色负责调用命令对象执行请求。</li>
+<li>接受者角色：该角色负责具体实施和执行一个请求。</li>
+</ul>
+<p>　命令模式类图如下：<br><img src="http://i.imgur.com/OUd8uRD.png" alt=""></p>
+<p>　命令模式的优点：</p>
+<ol>
+<li>类间解耦：调用者角色与接收者角色之间没有任何依赖关系，调用者实现功能只需要调用Command中的execute()方法，不需要了解是哪个接受者执行。</li>
+<li>可扩展性：Command的子类可以非常容易的扩展，而调用者用Invoker和更高层次的模块Client不产生严重的代码耦合。</li>
+<li>命令模式结合其他模式更优秀。</li>
+</ol>
+<p>　命令模式的缺点：<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</p>
+<hr>
+<p>　<strong>命令模式模板例子：</strong></p>
+<p>　Command.java：    </p>
+<pre><code>public interface Command {
+    public void execute();
+
+}
+</code></pre><p>　ComcreteCommand.java：</p>
+<pre><code>public class ComcreteCommand implements Command {
+    private Receiver receiver;
+
+    public ComcreteCommand(Receiver receiver) {
+        super();
+        this.receiver = receiver;
+    }
+
+    @Override
+    public void execute() {
+        this.receiver.action();
+    }
+}
+</code></pre><p>　Receiver.java：</p>
+<pre><code>public class Receiver {
+    public void action(){
+        System.out.println(&quot;执行动作&quot;);
+    }
+}
+</code></pre><p>　Invoker.java：</p>
+<pre><code>public class Invoker {
+    private Command command;
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+    public void action(){
+        this.command.execute();
+    }
+}
+</code></pre><p>　Client.java：</p>
+<pre><code>public class Client {
+    public static void main(String[] args) {
+        Invoker invoker = new Invoker();
+        Receiver receiver = new Receiver();
+        Command command = new ComcreteCommand(receiver);
+        invoker.setCommand(command);
+        invoker.action();
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>执行动作
+</code></pre>
           
         
       
@@ -1302,7 +1384,7 @@ public class MyFactoryTwo implements Provider {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1345,7 +1427,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -93,7 +93,7 @@
 <meta property="og:description" content="数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。
 1、选择排序　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得">
 <meta property="og:image" content="http://i.imgur.com/R5XdooQ.png">
-<meta property="og:updated_time" content="2017-02-09T08:37:43.018Z">
+<meta property="og:updated_time" content="2017-02-12T12:55:12.116Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序的Java实现">
 <meta name="twitter:description" content="数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。
@@ -353,8 +353,7 @@
 
       
         <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
-<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。</p>
-<p>　具体实现：</p>
+<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。<br>　具体实现：</p>
 <pre><code>public class TestSelectSort {
 
     public static void main(String[] args) {
@@ -388,10 +387,8 @@
     }
 
 }
-</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。<br>　具体实现：</p>
 <pre><code>public class TestInsertSort {
-
     public static void main(String[] args) {
         int[] array = {7,3,4,9,10,6};
         insertSort(array);
@@ -399,7 +396,6 @@
             System.out.print(array[i]+&quot; &quot;);
 
     }
-
     public static void insertSort(int[] a){
         if(a!=null){
             for(int i=1;i&lt;a.length;i++){
@@ -414,21 +410,16 @@
             }
         }
     }
-
 }
-</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。<br>　具体实现：</p>
 <pre><code>public class TestBubbleSort {
-
     public static void main(String[] args) {
         int[] array = {4,2,9,10,8,6};
         BubbleSort(array);
         for(int i=0;i&lt;array.length;i++){
             System.out.print(array[i]+&quot; &quot;);
         }
-
     }
-
     public static void BubbleSort(int[] a){
         int i,j,temp,len = a.length;
         for( i=0;i&lt;len-1;i++){
@@ -440,22 +431,16 @@
                 }
             }
         }
-
     }
-
 }
-</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。<br>　具体实现：</p>
 <pre><code>public class TestMergeSort {
-
     public static void main(String[] args) {
         int[] a = {5,3,4,2,9,7,6,1};
         MergeSort(a, 0, a.length-1);
         for(int i =0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void Merge(int[] array,int left,int middle,int right){
         int i,j,k,n1,n2;
         n1 = middle-left+1;
@@ -472,7 +457,6 @@
             else
                 array[k] = R[j++];
         }
-
         //没有再声明一个变量是因为一下两种情况只会出现一种情况。
         if(i&lt;n1){
             for(j =i;j&lt;n1;j++,k++)
@@ -492,20 +476,15 @@
             Merge(array,left,middle,right);
         }
     }
-
 }
-</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。<br>　具体实现：</p>
 <pre><code>public class TestQuickSort {
-
     public static void main(String[] args) {
         int[] a = {5,3,2,9,7,6,1};
         quickSort(a);
         for(int i=0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void sort(int[] array,int low,int high){
         int i,j,index;
         if(low&gt;=high) return;
@@ -527,25 +506,18 @@
         sort(array,low,i-1);
         sort(array,i+1,high);
     }
-
     public static void quickSort(int[] array){
         sort(array,0,array.length-1);
     }
-
 }
-</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。</p>
-<p>　具体实现：</p>
-<pre><code>public class TestShellSort {
-
-    public static void main(String[] args) {
-
+</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。<br>　具体实现：</p>
+<pre><code>public class TestShellSort {    
+    public static void main(String[] args) {    
         int[] a = {5,3,2,9,7,6,1};
         shellSort(a);
         for(int i=0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void shellSort(int[] array){
         int len = array.length;
         int i,j,h;//h为步长
@@ -563,20 +535,15 @@
             }
         }
     }
-
 }
-</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。</p>
-<p>　具体实现：</p>
+</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。<br>　具体实现：</p>
 <pre><code>public class TestHeapSort {
-
     public static void main(String[] args) {
         int[] a = {4,3,2,7,6,5};
         heapSort(a);
         for(int i=0;i&lt;a.length;i++)
             System.out.print(a[i]+&quot; &quot;);
-
     }
-
     public static void adjustHeap(int[] a,int pos,int len){
         int temp;
         int child;
@@ -591,7 +558,6 @@
         }
         a[pos] = temp;
     }
-
     public static void heapSort(int[] array){
         int i;
         int len = array.length;
@@ -604,7 +570,6 @@
             adjustHeap(array, 0, i-1);
         }
     }
-
 }
 </code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
 
@@ -715,7 +680,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

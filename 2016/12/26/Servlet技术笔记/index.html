@@ -98,7 +98,7 @@ service():容器调用Service()方法来处理客户端的请求。
 destroy():容器检测到一个Servlet对象应该从服务器中被移除的时候，容器调用该对象的destroy()方法，以便Servlet对象可以释放使用">
 <meta property="og:image" content="http://i.imgur.com/FITHVPK.png">
 <meta property="og:image" content="http://i.imgur.com/O3MBSSD.png">
-<meta property="og:updated_time" content="2017-02-09T09:06:06.242Z">
+<meta property="og:updated_time" content="2017-02-12T13:03:54.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Servlet技术笔记">
 <meta name="twitter:description" content="1 ServletAPI：1.1 Servlet接口的主要方法及作用：
@@ -378,25 +378,20 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 <ol>
 <li>调用public 的service()方法；</li>
 <li>将参数类型转换为HttpServletRequest和HttpServletResponse，然后调用protected 的service()方法，将转换后的参数传进去；</li>
-<li><p>在protected 的service()方法中，首先调用HttpServletRequest对象的getMethod()方法，确定是get，还是post方法。然后调用相应的doGet()或者doPost()等方法。</p>
-<p>因此，在编写HttpServlet的派生类时，只许重写响应的doXXX()方法。</p>
-</li>
+<li>在protected 的service()方法中，首先调用HttpServletRequest对象的getMethod()方法，确定是get，还是post方法。然后调用相应的doGet()或者doPost()等方法。  </li>
 </ol>
 </li>
 </ul>
+<p>　因此，在编写HttpServlet的派生类时，只许重写响应的doXXX()方法。</p>
 <h2 id="1-6-HttpServletRequest和HttpServletResponse"><a href="#1-6-HttpServletRequest和HttpServletResponse" class="headerlink" title="1.6 HttpServletRequest和HttpServletResponse"></a>1.6 HttpServletRequest和HttpServletResponse</h2><ul>
-<li><p>get()方法：提交的数据提交到URL中，传递给后台服务器。</p>
-</li>
-<li><p>post()方法：提交的数据作为请求正文的内容发送到服务端，在URL看不到附加的请求数据。</p>
-</li>
+<li>get()方法：提交的数据提交到URL中，传递给后台服务器。　　</li>
+<li>post()方法：提交的数据作为请求正文的内容发送到服务端，在URL看不到附加的请求数据。</li>
 </ul>
-<h1 id="2-简单实例："><a href="#2-简单实例：" class="headerlink" title="2 简单实例："></a>2 简单实例：</h1><p>OutputInfoServlet：代码见<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/OutputInfoServlet.java" target="_blank" rel="external">OutputInfoServlet.java</a>。</p>
+<h1 id="2-简单实例："><a href="#2-简单实例：" class="headerlink" title="2 简单实例："></a>2 简单实例：</h1><p>OutputInfoServlet：代码见<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/OutputInfoServlet.java" target="_blank" rel="external">OutputInfoServlet.java</a>。　　</p>
 <p>一个登陆实例：需要编写<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/LoginServlet.java" target="_blank" rel="external">LoginServlet2.java</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/CenterServlet.java" target="_blank" rel="external">CenterServlet.java</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/WebContent/success.html" target="_blank" rel="external">success.html</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/WebContent/WEB-INF/web.xml" target="_blank" rel="external">web.xml</a>。</p>
 <h1 id="3-Servlet异常"><a href="#3-Servlet异常" class="headerlink" title="3 Servlet异常"></a>3 Servlet异常</h1><ul>
-<li><p>ServletException：可以被init()，service()，doXXX()等方法抛出。</p>
-</li>
-<li><p>UnavailableException：是ServletException的子类，用于向Servlet容器指示这个Servlet永久的或暂时的不可用。</p>
-</li>
+<li>ServletException：可以被init()，service()，doXXX()等方法抛出。</li>
+<li>UnavailableException：是ServletException的子类，用于向Servlet容器指示这个Servlet永久的或暂时的不可用。</li>
 </ul>
 <h1 id="4-Servlet生命周期"><a href="#4-Servlet生命周期" class="headerlink" title="4 Servlet生命周期"></a>4 Servlet生命周期</h1><ul>
 <li>加载和实例化：Servlet容器负责加载和实例化Servlet，容器是通过反射机制来创建Servlet实例，调用不带参数的构造方法。</li>
@@ -405,15 +400,11 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 <li>服务终止：Servlet容器检测Servlet实例应该被移除时，调用destroy()方法，释放该实例使用的资源，等待Java的垃圾回收期回收。</li>
 </ul>
 <h1 id="5-Servlet上下文"><a href="#5-Servlet上下文" class="headerlink" title="5 Servlet上下文"></a>5 Servlet上下文</h1><ul>
-<li><p>运行在Java虚拟机中的每一个Web应用程序都有一个与之相关的Servlet上下文，Servlet API提供了ServletContext接口表示上下文，接口中定义了一些方法，Servlet可以使用这些方法与它的Servlet容器践行通信。</p>
-</li>
-<li><p>编写页面访问统计的实例：一个Web应用程序只有一个ServletContext对象，而且该对象可以被Web应用程序的所有Servlet所访问，因此使用ServletContext对象保存共享信息。</p>
-</li>
-</ul>
-<ul>
+<li>运行在Java虚拟机中的每一个Web应用程序都有一个与之相关的Servlet上下文，Servlet API提供了ServletContext接口表示上下文，接口中定义了一些方法，Servlet可以使用这些方法与它的Servlet容器践行通信。</li>
+<li>编写页面访问统计的实例：一个Web应用程序只有一个ServletContext对象，而且该对象可以被Web应用程序的所有Servlet所访问，因此使用ServletContext对象保存共享信息。</li>
 <li>源码如下：<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/CountServlet.java" target="_blank" rel="external">CountServlet.java</a></li>
 </ul>
-<p><strong>注意：不同的Web应用程序具有不同的Servlet上下文，所以不同web应用程序不能利用ServletContext来共享属性；并且访问次数在重启Tomcat服务器后，重新计数，所以为了永久保存访问次数，可以存到文件或数据库中。</strong></p>
+<p>　<strong>注意：不同的Web应用程序具有不同的Servlet上下文，所以不同web应用程序不能利用ServletContext来共享属性；并且访问次数在重启Tomcat服务器后，重新计数，所以为了永久保存访问次数，可以存到文件或数据库中。</strong></p>
 <h1 id="6-请求转发"><a href="#6-请求转发" class="headerlink" title="6 请求转发"></a>6 请求转发</h1><h2 id="6-1-RequestDispatcher接口"><a href="#6-1-RequestDispatcher接口" class="headerlink" title="6.1 RequestDispatcher接口"></a>6.1 RequestDispatcher接口</h2><ul>
 <li>RequestDispatcher对象由Servlet容器创建，用于封装一个路径标识的服务器资源。利用该对象，可以把请求转发给Servlet或JSP页面。</li>
 <li>forward()：用于将请求从一个Servlet传递给服务器上的另外的Servlet或JSP页面或HTML文件；这个方法必须在响应被提交给客户端之前调用，调用后，原先在响应缓存中没有提交的内容将被自动清除。</li>
@@ -422,13 +413,11 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
 </li>
 </ul>
 <h2 id="6-2-得到RequestDispatcher对象"><a href="#6-2-得到RequestDispatcher对象" class="headerlink" title="6.2 得到RequestDispatcher对象"></a>6.2 得到RequestDispatcher对象</h2><ul>
-<li><p>ServletContext接口的getRequestDispatcher()方法：参数必须以/开始，被解释为相对于当前上下文根的路径。</p>
-</li>
-<li><p>ServletRequest接口的getRequestDispatcher()方法：参数不但可以是相对于上下文的路径，也可以是相对于当前Servlet的路径；例如/myServlet、myServlet均合法。</p>
-</li>
+<li>ServletContext接口的getRequestDispatcher()方法：参数必须以/开始，被解释为相对于当前上下文根的路径。</li>
+<li>ServletRequest接口的getRequestDispatcher()方法：参数不但可以是相对于上下文的路径，也可以是相对于当前Servlet的路径；例如/myServlet、myServlet均合法。</li>
 </ul>
 <h2 id="6-3-请求转发的实例"><a href="#6-3-请求转发的实例" class="headerlink" title="6.3 请求转发的实例"></a>6.3 请求转发的实例</h2><p> <a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/CenterServlet.java" title="CenterServlet.java" target="_blank" rel="external">CenterServlet.java</a>，<a href="https://github.com/fengjiaxin/Servlet_02/blob/master/src/org/feng/servlet/LoginServlet2.java" title="LoginServlet2.java" target="_blank" rel="external">LoginServlet2.java</a>。</p>
-<h2 id="6-4-sendRedirect-和forward-的区别"><a href="#6-4-sendRedirect-和forward-的区别" class="headerlink" title="6.4 sendRedirect()和forward()的区别"></a>6.4 sendRedirect()和forward()的区别</h2><p><strong>HttpServletResponse接口的sendRedirect()和RequestDispatcher接口的forward()方法都可以利用另外的资源为客户端服务，但是工作原理有本质的区别。</strong>   </p>
+<h2 id="6-4-sendRedirect-和forward-的区别"><a href="#6-4-sendRedirect-和forward-的区别" class="headerlink" title="6.4 sendRedirect()和forward()的区别"></a>6.4 sendRedirect()和forward()的区别</h2><p>　<strong>HttpServletResponse接口的sendRedirect()和RequestDispatcher接口的forward()方法都可以利用另外的资源为客户端服务，但是工作原理有本质的区别。</strong>   </p>
 <p><img src="http://i.imgur.com/FITHVPK.png" alt=""></p>
 <ul>
 <li><p>上图的交互过程如下：</p>
@@ -568,7 +557,7 @@ destroy():容器检测到一个Servlet对象应该从服务器中被移除的时
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
