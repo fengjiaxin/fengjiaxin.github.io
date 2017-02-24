@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-命令模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
-                  Java典型设计模式-单例模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-命令模式/" itemprop="url">
+                  Java典型设计模式-命令模式
                 </a>
               
             
@@ -293,7 +293,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
                 2017-01-09
               </time>
             
@@ -353,55 +353,73 @@
       
         
           
-            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
-<pre><code>public class MyObject {
-    private static MyObject myObject;
-    private MyObject() {
-    }
-    public static MyObject getInstance() {
-        if (myObject != null) {
-        } else {
-            myObject = new MyObject();
-        }
-        return myObject;
-    }
-}
-</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
+            <p>　最近在学习Tomcat,Tomcat中的Connector组件是通过命令模式调用Container的，那么今天就来学习一下命令模式。</p>
 <hr>
-<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：<br>　在Java语言中实现单例模式通常有两种表现方式：  </p>
+<p>　<strong>命令模式：将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以听、提供命令的撤销和恢复功能。</strong><br>　命令模式有以下两个角色：  </p>
+<ul>
+<li>命令角色：该角色声明一个给所有具体命令类的抽象接口，定义需要执行的命令。</li>
+<li>具体命令角色：该角色定义一个接受者和行为者之间的若耦合，实现命令方法，并调用接受者的相应操作。</li>
+<li>调用者角色：该角色负责调用命令对象执行请求。</li>
+<li>接受者角色：该角色负责具体实施和执行一个请求。</li>
+</ul>
+<p>　命令模式类图如下：<br><img src="http://i.imgur.com/OUd8uRD.png" alt=""></p>
+<p>　命令模式的优点：</p>
 <ol>
-<li>饿汉式单例类：类加载时，就进行对象实例化。  </li>
-<li><p>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。<br>　<strong>饿汉式单例类代码如下：</strong>  </p>
-<p> package Design.Creational.Singleton;<br> //恶汉式单例<br> public class Singleton1 {</p>
-<pre><code>private static Singleton1 m_instance = new Singleton1();
-
-private Singleton1(){
-
-}
-
-public static Singleton1 getInstance(){
-    return m_instance;
-}
-</code></pre><p> }</p>
-</li>
+<li>类间解耦：调用者角色与接收者角色之间没有任何依赖关系，调用者实现功能只需要调用Command中的execute()方法，不需要了解是哪个接受者执行。</li>
+<li>可扩展性：Command的子类可以非常容易的扩展，而调用者用Invoker和更高层次的模块Client不产生严重的代码耦合。</li>
+<li>命令模式结合其他模式更优秀。</li>
 </ol>
-<p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。<br>　<strong>同步懒汉式代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//懒汉式单例
-public class Singleton2 {
-    private static Singleton2 m_instance = null;
-
-    private Singleton2(){
-
-    }
-
-    public synchronized static Singleton2 getInstance(){
-        if(m_instance==null)
-            m_instance = new Singleton2();
-        return m_instance;
-    }
+<p>　命令模式的缺点：<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</p>
+<hr>
+<p>　<strong>命令模式模板例子：</strong></p>
+<p>　Command.java：    </p>
+<pre><code>public interface Command {
+    public void execute();
 
 }
+</code></pre><p>　ComcreteCommand.java：</p>
+<pre><code>public class ComcreteCommand implements Command {
+    private Receiver receiver;
+
+    public ComcreteCommand(Receiver receiver) {
+        super();
+        this.receiver = receiver;
+    }
+
+    @Override
+    public void execute() {
+        this.receiver.action();
+    }
+}
+</code></pre><p>　Receiver.java：</p>
+<pre><code>public class Receiver {
+    public void action(){
+        System.out.println(&quot;执行动作&quot;);
+    }
+}
+</code></pre><p>　Invoker.java：</p>
+<pre><code>public class Invoker {
+    private Command command;
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+    public void action(){
+        this.command.execute();
+    }
+}
+</code></pre><p>　Client.java：</p>
+<pre><code>public class Client {
+    public static void main(String[] args) {
+        Invoker invoker = new Invoker();
+        Receiver receiver = new Receiver();
+        Command command = new ComcreteCommand(receiver);
+        invoker.setCommand(command);
+        invoker.action();
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>执行动作
 </code></pre>
           
         
@@ -440,7 +458,7 @@ public class Singleton2 {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-5-聚合-复用原则/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-装饰模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -465,8 +483,8 @@ public class Singleton2 {
             
               
                 
-                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-5-聚合-复用原则/" itemprop="url">
-                  设计模式六大原则(5): 聚合/复用原则
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-装饰模式/" itemprop="url">
+                  Java典型设计模式-装饰模式
                 </a>
               
             
@@ -482,8 +500,8 @@ public class Singleton2 {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:58:37+08:00">
-                2017-01-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
               </time>
             
 
@@ -542,27 +560,81 @@ public class Singleton2 {
       
         
           
-            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　在实际开发中，新建一个类可能会用到多个以前的类的方法，但是在设计时是不能轻易采用继承机制的；因为在使用继承时，需要严格遵循里氏代换原则，有效使用继承会有助于对问题的理解，降低复杂度，而滥用继承反而会增加系统构建和维护的难度以及系统的复杂度，因此需要慎重使用继承复用。</p>
-<h3 id="2-聚合-复用原则"><a href="#2-聚合-复用原则" class="headerlink" title="2 聚合/复用原则"></a>2 聚合/复用原则</h3><p>　合成复用原则(Composite Reuse Principle, CRP)：尽量使用对象组合，而不是继承来达到复用的目的。<br>　合成复用原则就是在一个新的对象里通过关联关系（包括组合关系和聚合关系）来使用一些已有的对象，使之成为新对象的一部分；新对象通过委派调用已有对象的方法达到复用功能的目的。</p>
+            <p>　最近在复习I/O,发现很多类都是通过装饰模式进行修饰，将原来的类修饰的更强大，那么今天就来总结一下装饰模式。</p>
 <hr>
-<p>　组合或聚合关系可以将成员对象纳入到新对象中，使之成为新对象的一部分，因此新对象可以调用已有对象的功能，这样做可以使得成员对象的内部实现细节对于新对象不可见。<br>　相对继承关系而言，其耦合度相对较低，成员对象的变化对新对象的影响不大，可以在新对象中根据实际需要有选择性地调用成员对象的操作。</p>
-<hr>
-<p>　一般而言，如果两个类之间是“Has-A”的关系应使用组合或聚合，如果是“Is-A”关系可使用继承。”Is-A”是严格的分类学意义上的定义，意思是一个类是另一个类的”一种”；而”Has-A”则不同，它表示某一个角色具有某一项责任。</p>
-<h3 id="3-举例说明"><a href="#3-举例说明" class="headerlink" title="3 举例说明"></a>3 举例说明</h3><p>　在初期的CRM系统设计中，考虑到客户数量不多，系统采用MySQL作为数据库，与数据库操作有关的类如CustomerDAO类等都需要连接数据库，连接数据库的方法getConnection()封装在DBUtil类中，由于需要重用DBUtil类的getConnection()方法，设计人员将CustomerDAO作为DBUtil类的子类，初始设计方案结构如下所示：</p>
-<p><img src="http://i.imgur.com/VvKP8g8.png" alt=""></p>
-<p> 　随着客户数量的增加，系统决定升级为Oracle数据库，因此需要增加一个新的OracleDBUtil类来连接Oracle数据库，由于在初始设计方案中CustomerDAO和DBUtil之间是继承关系，因此在更换数据库连接方式时需要修改CustomerDAO类的源代码，将CustomerDAO作为OracleDBUtil的子类，这将违反开闭原则。</p>
-<hr>
-<p>　现使用合成复用原则对其进行重构。在实现复用时应该多用关联，少用继承。因此在本实例中我们可以使用关联复用来取代继承复用，重构后的结构如下所示：</p>
-<p><img src="http://i.imgur.com/wpV8wbt.png" alt=""></p>
+<p>　<strong>装饰模式：动态地给一个对象添加一些额外的职责，就增加功能来说，装饰模式比生成子类更为灵活。</strong><br>装饰模式有以下四个角色：</p>
 <ul>
-<li>CustomerDAO和DBUtil之间的关系由继承关系变为关联关系，采用依赖注入的方式将DBUtil对象注入到CustomerDAO中。</li>
-<li><p>如果需要对DBUtil的功能进行扩展，可以通过其子类来实现，如通过子类OracleDBUtil来连接Oracle数据库。由于CustomerDAO针对DBUtil编程，根据里氏代换原则，DBUtil子类的对象可以覆盖DBUtil对象，只需在CustomerDAO中注入子类对象即可使用子类所扩展的方法。。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3></li>
-<li><p>在面向对象设计中，可以通过两种方法在不同的环境中复用已有的设计和实现，即通过组合/聚合关系或通过继承，但首先应该考虑使用组合/聚合，组合/聚合可以使系统更加灵活，降低类与类之间的耦合度，一个类的变化对其他类造成的影响相对较少；其次才考虑继承，在使用继承时，需要严格遵循里氏代换原则，有效使用继承会有助于对问题的理解，降低复杂度，而滥用继承反而会增加系统构建和维护的难度以及系统的复杂度。</p>
-</li>
-<li>通过继承来进行复用的主要问题在于继承复用会破坏系统的封装性，因为继承会将基类的实现细节暴露给子类，由于基类的内部细节通常对子类来说是可见的，所以这种复用又称“白箱”复用，如果基类发生改变，那么子类的实现也不得不发生改变；从基类继承而来的实现是静态的，不可能在运行时发生改变，没有足够的灵活性；而且继承只能在有限的环境中使用（如类没有声明为不能被继承）。</li>
+<li>抽象构件角色：用于规范需要装饰的对象。</li>
+<li>具体构件角色：用于实现抽象构件接口，定义一个需要装饰的原始类。</li>
+<li>装饰角色：该角色持有一个构件对象的实例，并定义一个与抽象构件接口一致的接口。</li>
+<li>具体装饰角色：该角色负责对构件对象进行装饰</li>
 </ul>
+<p>装饰模式类图如下：<br><img src="http://i.imgur.com/aIQFA1A.png" alt=""> </p>
+<p>装饰模式的优点：</p>
+<ol>
+<li>装饰类和被装饰类可以独立发展，而不会相互耦合。</li>
+<li>装饰模式是继承关系的一个替代方式，装饰类Decorator，不管装饰多少层，返回的对象还是Component。</li>
+<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
+</ol>
+<p>装饰模式的使用场景：</p>
+<ol>
+<li>需要扩展一个类的功能，或给一个类增加附加功能。</li>
+<li>需要动态地给一个对象增加功能，这些功能可以在动态地撤销。</li>
+<li>需要为一批类进行改装或加装功能。</li>
+</ol>
+<hr>
+<p>　通过对裸车进行装饰的过程演示装饰模式的应用：<br>　Car接口：  </p>
+<pre><code>public interface Car {
+    public void show();
+}
+</code></pre><p>　Benz实现IGamePlayer接口中的方法：</p>
+<pre><code>public class Benz implements Car {
+    @Override
+    public void show() {
+        System.out.println(&quot;奔驰车默认是黑色&quot;);
+    }
+}
+</code></pre><p>　汽车修饰类CarDecorator：</p>
+<pre><code>public abstract class CarDecorator {
+    private Car car = null;
+    public CarDecorator(Car car){
+    this.car = car;
+    }
+    public void show(){
+        this.car.show();
+    }
+}
+</code></pre><p>　汽车修饰实现类ConcreteCarDecorator：</p>
+<pre><code>public class ConcreteCarDecorator extends CarDecorator {
+    public ConcreteCarDecorator(Car car) {
+        super(car);
+    }
 
+    public void print(){
+        System.out.println(&quot;彩绘喷漆&quot;);
+    }
+    public void setGps(){
+        System.out.println(&quot;安装GPS&quot;);
+    }
+    public void show(){
+        super.show();
+        this.print();
+        this.setGps();
+    }
+}
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
+    public static void main(String[] args) {
+        Car car = new Benz();
+        CarDecorator cd = new ConcreteCarDecorator(car);
+        cd.show();
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>奔驰车默认是黑色
+彩绘喷漆
+安装GPS
+</code></pre>
           
         
       
@@ -600,7 +672,7 @@ public class Singleton2 {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-4-迪米特原则/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-代理模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -625,8 +697,8 @@ public class Singleton2 {
             
               
                 
-                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-4-迪米特原则/" itemprop="url">
-                  设计模式六大原则(4): 迪米特原则
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-代理模式/" itemprop="url">
+                  Java典型设计模式-代理模式
                 </a>
               
             
@@ -642,8 +714,8 @@ public class Singleton2 {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:58:12+08:00">
-                2017-01-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
               </time>
             
 
@@ -702,126 +774,91 @@ public class Singleton2 {
       
         
           
-            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　类与类之间的关系越密切，耦合度越大，当一个类发生改变时，对另一个类的影响也越大。</p>
-<h3 id="2-迪米特原则"><a href="#2-迪米特原则" class="headerlink" title="2 迪米特原则"></a>2 迪米特原则</h3><p>　通俗的来讲：就是一个类对自己依赖的类知道的越少越好。<br>　对于被依赖的类来说，无论逻辑多么复杂，都尽量地的将逻辑封装在类的内部，对外除了提供的public方法，不对外泄漏任何信息。<br>　更简单的定义：只与直接的朋友通信。</p>
+            <p>　最近在学习Spring，Spring的两个核心是依赖注入和面向切面编程，其中面向切面编程就是在一个方法的前后位置加入其余的方法以更好地实现，那么在SpringAOP中是采用JDK动态代理实现的，动态代理就是采用代理模式技术实现的，关于JDK动态代理我稍后总结，今天就用静态代理的例子好好学习代理模式。</p>
 <hr>
-<p>　<strong>那么什么是直接的朋友？？？</strong></p>
-<p>　直接的朋友：每个对象都会与其他对象有耦合关系，只要两个对象之间有耦合关系，我们就说这两个对象之间是朋友关系。耦合的方式很多，依赖、关联、组合、聚合等。<br>　出现成员变量、方法参数、方法返回值中的类为直接的朋友；<br>　出现在局部变量中的类则不是直接的朋友。</p>
+<p>　<strong>代理模式：为其他对象提供一种代理以控制对这个对象的访问。</strong><br>　代理模式有一下优点：  </p>
+<ol>
+<li>职责清晰：真实的角色实现实际的业务逻辑，不用关心其他非本职的事务，通过后期的代理完成附加的事务，附带的结果就是编程简洁清晰。    </li>
+<li>高扩展性：具体主题角色随需求的不同可能有很多种，但只要实现了接口，代理类就完全可以在不做任何修改的情况下代理各种真实主题角色。  </li>
+<li>智能化：代理类介意在运行时才确定去代理的真实主题（动态代理）。  </li>
+</ol>
 <hr>
-<p>　也就是说，陌生的类最好不要作为局部变量的形式出现在类的内部。</p>
-<h3 id="3-举例"><a href="#3-举例" class="headerlink" title="3 举例"></a>3 举例</h3><p>　举一个代码例子：有一个集团公司，下属单位有分公司和直属部门，现在要求打印出所有下属单位的员工ID。</p>
-<p>　<strong>先看一个错误的例子</strong></p>
-<pre><code>//总公司员工  
-class Employee{  
-    private String id;  
-    public void setId(String id){  
-        this.id = id;  
-    }  
-    public String getId(){  
-        return id;  
-    }  
-}  
+<p>　通过游戏代练的过程演示代理模式的应用，其类图如下所示：<br><img src="http://i.imgur.com/Q6N61ev.png" alt=""><br>　IGamePlayer接口：  </p>
+<pre><code>public interface IGamePlayer {
+    public void killBoss();
+    public void upGrade();
 
-//分公司员工  
-class SubEmployee{  
-    private String id;  
-    public void setId(String id){  
-        this.id = id;  
-    }  
-    public String getId(){  
-        return id;  
-    }  
-}  
-//分公司管理
-class SubCompanyManager{  
-    public List&lt;SubEmployee&gt; getAllEmployee(){  
-        List&lt;SubEmployee&gt; list = new ArrayList&lt;SubEmployee&gt;();  
-        for(int i=0; i&lt;100; i++){  
-            SubEmployee emp = new SubEmployee();  
-            //为分公司人员按顺序分配一个ID  
-            emp.setId(&quot;分公司&quot;+i);  
-            list.add(emp);  
-        }  
-        return list;  
-    }  
-}  
-//总公司管理
-class CompanyManager{  
-    public List&lt;Employee&gt; getAllEmployee(){  
-        List&lt;Employee&gt; list = new ArrayList&lt;Employee&gt;();  
-        for(int i=0; i&lt;30; i++){  
-            Employee emp = new Employee();  
-            //为总公司人员按顺序分配一个ID  
-            emp.setId(&quot;总公司&quot;+i);  
-            list.add(emp);  
-        }  
-        return list;  
-    }  
+}
+</code></pre><p>　GamePlayer实现IGamePlayer接口中的方法：</p>
+<pre><code>public class GamePlayer implements IGamePlayer {
+    private String name =&quot;&quot;;
 
-    public void printAllEmployee(SubCompanyManager sub){  
-        List&lt;SubEmployee&gt; list1 = sub.getAllEmployee();  
-        for(SubEmployee e:list1){  
-            System.out.println(e.getId());  
-        }  
 
-        List&lt;Employee&gt; list2 = this.getAllEmployee();  
-        for(Employee e:list2){  
-            System.out.println(e.getId());  
-        }  
-    }  
-}  
+    public GamePlayer(String name) {
+        super();
+        this.name = name;
+    }
 
-public class Client{  
-    public static void main(String[] args){  
-        CompanyManager e = new CompanyManager();  
-        e.printAllEmployee(new SubCompanyManager());  
-    }  
-}  
-</code></pre><p>　主要问题出在CompanyManager中，根据迪米特法则，只与直接的朋友发生通信，而SubEmployee类并不是CompanyManager类的直接朋友（以局部变量出现的耦合不属于直接朋友），从逻辑上讲总公司只与他的分公司耦合就行了，与分公司的员工并没有任何联系，这样设计显然是增加了不必要的耦合。按照迪米特法则，应该避免类中出现这样非直接朋友关系的耦合。</p>
-<hr>
-<p>　<strong>修改后的代码</strong></p>
-<pre><code>class SubCompanyManager{  
-    public List&lt;SubEmployee&gt; getAllEmployee(){  
-        List&lt;SubEmployee&gt; list = new ArrayList&lt;SubEmployee&gt;();  
-        for(int i=0; i&lt;100; i++){  
-            SubEmployee emp = new SubEmployee();  
-            //为分公司人员按顺序分配一个ID  
-            emp.setId(&quot;分公司&quot;+i);  
-            list.add(emp);  
-        }  
-        return list;  
-    }  
-    public void printEmployee(){  
-        List&lt;SubEmployee&gt; list = this.getAllEmployee();  
-        for(SubEmployee e:list){  
-            System.out.println(e.getId());  
-        }  
-    }  
-}  
+    @Override
+    public void killBoss() {
+        System.out.println(this.name+&quot;在打怪！！！！&quot;);
+    }
 
-class CompanyManager{  
-    public List&lt;Employee&gt; getAllEmployee(){  
-        List&lt;Employee&gt; list = new ArrayList&lt;Employee&gt;();  
-        for(int i=0; i&lt;30; i++){  
-            Employee emp = new Employee();  
-            //为总公司人员按顺序分配一个ID  
-            emp.setId(&quot;总公司&quot;+i);  
-            list.add(emp);  
-        }  
-        return list;  
-    }  
+    @Override
+    public void upGrade() {
+        System.out.println(this.name+&quot;成功升1级！！！！&quot;);
+    }
 
-    public void printAllEmployee(SubCompanyManager sub){  
-        sub.printEmployee();  
-        List&lt;Employee&gt; list2 = this.getAllEmployee();  
-        for(Employee e:list2){  
-            System.out.println(e.getId());  
-        }  
-    }  
-}  
-</code></pre><p>　修改后，为分公司增加了打印人员ID的方法，总公司直接调用来打印，从而避免了与分公司的员工发生耦合。</p>
-<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><p>　迪米特法则的初衷是降低类之间的耦合，由于每个类都减少了不必要的依赖，因此的确可以降低耦合关系。但是凡事都有度，虽然可以避免与非直接的类通信，但是要通信，必然会通过一个“中介”来发生联系，例如本例中，总公司就是通过分公司这个“中介”来与分公司的员工发生联系的。过分的使用迪米特原则，会产生大量这样的中介和传递类，导致系统复杂度变大。所以在采用迪米特法则时要反复权衡，既做到结构清晰，又要高内聚低耦合。</p>
+}
+</code></pre><p>　GamePlayerProxy是代理类：</p>
+<pre><code>public class GamePlayerProxy implements IGamePlayer {
+    private IGamePlayer player = null;
 
+
+    public GamePlayerProxy(IGamePlayer player) {
+        super();
+        this.player = player;
+    }
+
+    @Override
+    public void killBoss() {
+        this.log();
+        player.killBoss();
+    }
+
+    @Override
+    public void upGrade() {
+        player.upGrade();
+        this.count();
+    }
+
+    private void log(){
+        System.out.println(&quot;打怪时间&quot;+new Date().toString());
+    }
+
+    private void count(){
+        System.out.println(&quot;升一级耗费50小时&quot;);
+    }
+
+}
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
+
+    public static void main(String[] args) {
+        IGamePlayer player = new GamePlayer(&quot;冯佳欣&quot;);
+        IGamePlayer proxy = new GamePlayerProxy(player);
+        proxy.killBoss();
+        proxy.upGrade();
+
+    }
+
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>打怪时间Sun Feb 12 17:23:41 CST 2017
+冯佳欣在打怪！！！！
+冯佳欣成功升1级！！！！
+升一级耗费50小时
+</code></pre>
           
         
       
@@ -859,7 +896,7 @@ class CompanyManager{
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-3-接口隔离原则/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-策略模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -884,8 +921,8 @@ class CompanyManager{
             
               
                 
-                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-3-接口隔离原则/" itemprop="url">
-                  设计模式六大原则(3): 接口隔离原则
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-策略模式/" itemprop="url">
+                  Java典型设计模式-策略模式
                 </a>
               
             
@@ -901,8 +938,8 @@ class CompanyManager{
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:57:45+08:00">
-                2017-01-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
               </time>
             
 
@@ -961,108 +998,108 @@ class CompanyManager{
       
         
           
-            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　类A通过接口I依赖类B，类C通过接口I依赖类D，如果接口I对于类B和类D来说不是最小接口，则类B和类D必须去实现他们不需要的方法。</p>
-<h3 id="2-接口隔离原则"><a href="#2-接口隔离原则" class="headerlink" title="2 接口隔离原则"></a>2 接口隔离原则</h3><ul>
-<li><strong>客户端不应该依赖它不需要的接口</strong><br>  意思就是说客户端只要依赖它需要的接口，它需要什么接口，就提供什么接口，不提供多余的接口。</li>
-<li><strong>类间的依赖关系应该建立在最小的接口上</strong><br>  接口中的方法应该尽量少，不要使接口过于臃肿，不要有很多不相关的逻辑方法。</li>
-</ul>
-<p>　接下来是代码示例：</p>
-<pre><code> public interface I {
-    public void method1();
-    public void method2();
-    public void method3();
-}
-public class B implements I{
-    @Override
-    public void method1() {
-        System.out.println(&quot;类B实现了接口I的方法1&quot;);
-    }
-    @Override
-    public void method2() {
-        System.out.println(&quot;类B实现了接口I的方法2&quot;);
-    }
-    @Override
-    public void method3() {//类B并不需要接口I的方法3功能，但是由于实现接口I，所以不得不实现方法3
-        //在这里写一个空方法
-    }
-}
-public class D implements I{
-    @Override
-    public void method2() {
-        System.out.println(&quot;类D实现了接口I的方法2&quot;);
-    }
-    @Override
-    public void method3() {
-        System.out.println(&quot;类D实现了接口I的方法3&quot;);
-    }
-    @Override
-    public void method1() {//类D并不需要接口I的方法1功能，但是由于实现接口I，所以不得不实现方法1
-        //在这里写一个空方法
-    }
-}
-//类A通过接口I依赖类B
-public class A {
-    public void depend1(I i){
-        i.method1();
-    }
-}
-//类C通过接口I依赖类D
-public class C {
-    public void depend1(I i){
-        i.method3();
-    }
-}
-public class Client {
-    public static void main(String[] args) {
-        A a = new A();
-        I i1 = new B();
-        a.depend1(i1);         
-        C c = new C();
-        I i2 = new D();
-        c.depend1(i2);
-    }
-}
-运行结果：
-类B实现了接口I的方法1
-类D实现了接口I的方法3
-</code></pre><hr>
-<p>　可以看出，如果接口过于臃肿，不同业务逻辑的抽象方法都放在一个接口内，会造成它的实现类必须实现自己并不需要的方法</p>
+            <p>　最近在学习Spring，在Spring中有多个地方使用策略模式，如Bean定义对象的创建和代理对象的创建等，那今天学习一下策略模式。</p>
 <hr>
-<p>　这种设计方式显然是不妥当的。所以应该把接口I拆分成3个接口，使得实现类只需要实现自己需要的接口即可，修改代码如下：</p>
-<pre><code>public interface I1 {
-    public void method1();
-}
-public interface I2 {
-    public void method2();
-}
-public interface I3 {
-    public void method3();
-}
-public class B implements I1,I2{
-    @Override
-    public void method1() {
-        System.out.println(&quot;类B实现了接口I的方法1&quot;);
-    }
-    @Override
-    public void method2() {
-        System.out.println(&quot;类B实现了接口I的方法2&quot;);
-    }
-} 
-public class D implements I2,I3{
-    @Override
-    public void method2() {
-        System.out.println(&quot;类D实现了接口I的方法2&quot;);
-    }
-    @Override
-    public void method3() {
-        System.out.println(&quot;类D实现了接口I的方法3&quot;);
-    }
-}
-</code></pre><h3 id="3-与单一职责区别"><a href="#3-与单一职责区别" class="headerlink" title="3 与单一职责区别"></a>3 与单一职责区别</h3><ul>
-<li>单一职责原则注重的是职责；而接口隔离原则注重对接口依赖的隔离。</li>
-<li>单一职责原则主要是约束类，其次才是接口和方法，它针对的是程序中的实现和细节；而接口隔离原则主要约束接口，主要针对抽象，针对程序整体框架的构建。<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3>　对于接口隔离原则来说，接口尽量小，但是也要有限度。<br>　对接口进行细化可以提高程序设计灵活性是不争的事实，但是如果过小，则会造成接口数量过多，使设计复杂化，所以一定要适度。</li>
+<p>　<strong>策略模式：针对一组算法，将每一个算法封装到具有共同接口的的独立类中，从而使得他们可以相互替换，使得算法可以在不影响客户端的情况下发生变化。</strong>  </p>
+<p>　策略模式有以下三个角色：  </p>
+<ul>
+<li>环境角色：该角色也叫上下文角色，起到承上启下的作用，屏蔽高层模块对策略、算法的直接访问，它持有一个Strategy的引用。</li>
+<li>抽象策略角色：该角色对策略、算法进行抽象，通常定义每个策略或算法必须具有的方法和属性。</li>
+<li>具体策略角色：该角色实现抽象策略中的具体操作，含有具体的算法。</li>
 </ul>
+<p>　策略模式类图如下：<br><img src="http://i.imgur.com/lLTa3AF.png" alt=""></p>
+<p>　策略式有以下优点：  </p>
+<ol>
+<li>策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族，恰当的使用继承可以把公共的代码移到父类中，从而避免代码重复。</li>
+<li>策略模式提供了可以替换继承关系的办法，继承可以处理多种算法或行为，如果不适用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为，但是这样算法或行为的使用者和算法本身混在一起，从而不可能在独立演化。</li>
+<li>使用策略模式可以避免使用多重条件转移语句。</li>
+</ol>
+<p>　策略模式的缺点：</p>
+<ol>
+<li>客户端必须知道所有的策略类，并自行决定使用哪一个策略类。</li>
+<li>策略模式造成很多的策略类。</li>
+</ol>
+<p>　策略模式的使用场景：</p>
+<ol>
+<li>多个类只是在算法或行为上稍有不同的场景。</li>
+<li>算法需要自由切换的场景。</li>
+<li>需要屏蔽算法规则的场景。</li>
+</ol>
+<hr>
+<p>　通过图书销售中不同折扣算法演示策略模式。<br>　DiscountStrategy.java</p>
+<pre><code>public abstract class DiscountStrategy {
+    private double price = 0;
+    private int number =0;
+    public DiscountStrategy(double price, int number) {
+        super();
+        this.price = price;
+        this.number = number;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public int getNumber() {
+        return number;
+    }
+    public abstract double calculateDiscount();
+}
+</code></pre><p>　NoDiscountStrategy.java</p>
+<pre><code>public class NoDiscountStrategy extends DiscountStrategy {
+    public NoDiscountStrategy(double price, int number) {
+        super(price, number);
 
+    }
+    @Override
+    public double calculateDiscount() {
+        return 0;
+    }
+}
+</code></pre><p>　FixDiscountStrategy.java</p>
+<pre><code>public class FixDiscountStrategy extends DiscountStrategy {
+    public FixDiscountStrategy(double price, int number) {
+        super(price, number);
+    }
+    @Override
+    public double calculateDiscount() {
+        return getNumber()+1;
+    }
+}
+</code></pre><p>　PercentageDiscountStrategy.java</p>
+<pre><code>public class PercentageDiscountStrategy extends DiscountStrategy {
+    public PercentageDiscountStrategy(double price, int number) {
+        super(price, number);
+    }
+    @Override
+    public double calculateDiscount() {
+        return getPrice()*getNumber()*0.15;
+    }
+}
+</code></pre><p>　ContextClient.java</p>
+<pre><code>public class ContextClient {
+    private DiscountStrategy ds = null;
+    public ContextClient(DiscountStrategy ds) {
+        super();
+        this.ds = ds;
+    }
+    public double contextCalDisc(){
+        return this.ds.calculateDiscount();
+    }
+    public static void main(String[] args) {
+        ContextClient context0 = new ContextClient(new NoDiscountStrategy(48.5, 20));
+        System.out.println(&quot;0折扣&quot;+context0.contextCalDisc());
+
+        ContextClient context1 = new ContextClient(new FixDiscountStrategy(48.5, 20));
+        System.out.println(&quot;固定折扣&quot;+context1.contextCalDisc());
+
+        ContextClient context2 = new ContextClient(new PercentageDiscountStrategy(48.5, 20));
+        System.out.println(&quot;15%折扣&quot;+context2.contextCalDisc());
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>0折扣0.0
+固定折扣21.0
+15%折扣145.5
+</code></pre>
           
         
       
@@ -1100,7 +1137,7 @@ public class D implements I2,I3{
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-2-依赖倒置原则/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-责任链模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1125,8 +1162,8 @@ public class D implements I2,I3{
             
               
                 
-                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-2-依赖倒置原则/" itemprop="url">
-                  设计模式六大原则(2): 依赖倒置原则
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-责任链模式/" itemprop="url">
+                  Java典型设计模式-责任链模式
                 </a>
               
             
@@ -1142,8 +1179,8 @@ public class D implements I2,I3{
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:57:15+08:00">
-                2017-01-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
               </time>
             
 
@@ -1202,113 +1239,119 @@ public class D implements I2,I3{
       
         
           
-            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　类A直接依赖于类B，假如要将类A修改为依赖类C，则必须通过修改类A的代码来达成。这种场景下，类A一般是高层模块，负责复杂的业务逻辑。类B和C是底层模块，负责基本的原子操作。假如修改类A，将会给程序带来不必要的风险。</p>
-<h3 id="2-依赖倒置原则"><a href="#2-依赖倒置原则" class="headerlink" title="2 依赖倒置原则"></a>2 依赖倒置原则</h3><ul>
-<li>高层模块不应该依赖低层模块，两者都应该依赖其抽象</li>
-<li>抽象不应该依赖细节</li>
-<li>细节应该依赖抽象</li>
-<li>抽象：即抽象类或接口，两者是不能够实例化的。</li>
-<li>细节：即具体的实现类，实现接口或者继承抽象类所产生的类。</li>
-</ul>
-<blockquote>
-<pre><code>//具体Jim人类
-public class Jim {
-    public void eat(Apple apple){
-        System.out.println(&quot;Jim eat &quot; + apple.getName());
-    }
-}
-//具体苹果类
-public class Apple {
-    public String getName(){
-        return &quot;apple&quot;;
-    }
-}
-public class Client {
-    public static void main(String[] args) {
-        Jim jim = new Jim();
-        Apple apple = new Apple();
-        jim.eat(apple);
-    }
-}
-运行结果：Jim eat apple
-</code></pre></blockquote>
-<p>　其实上面这个设计很不好，如果吃香蕉的话，就要改变依赖类，怎么吃水果是人自己的选择，为什么还要修改自己的代码；并且Jim类和Apple类紧耦合，不太符合低耦合，高内聚的原则，那怎么解决这类问题呢？</p>
+            <p>　最近在学习Tomcat,Tomcat中最容易发现的设计模式就是责任链设计模式，这个设计模式也是在Tomcat中Container设计的基础，整个容器就是通过一个链连接在一起的，这个链一直将请求正确地传递给最终处理请求的Servlet，那么就学习一下责任链设计模式。</p>
 <hr>
-<p>　而根据依赖倒置原则，我们可以提取抽象的部分。首先我们提取出两个接口：People和Fruit，都提供各自必需的抽象方法，这样以后无论是增加Jim人类，还是增加Apple、Banana等各种水果，都只需要增加自己的实现类就可以了。由于遵循依赖倒置原则，只依赖于抽象，而不依赖于细节，所以增加类无需修改其他类。</p>
-<blockquote>
-<p>修改代码如下</p>
-<pre><code>//人接口
-public interface People {
-    public void eat(Fruit fruit);
-}
-//水果接口
-public interface Fruit {
-    public String getName();
-}
-//具体Jim人类
-public class Jim implements People{
-    public void eat(Fruit fruit){
-        System.out.println(&quot;Jim eat &quot; + fruit.getName());
+<p>　<strong>责任链模式：使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理为止。</strong><br>　责任链模式有以下两个角色：  </p>
+<ul>
+<li>抽象处理者角色：该角色对请求进行抽象，并定义一个方法以设定和返回对下一个处理者的引用。</li>
+<li>具体处理者角色：该角色接到请求后，可以选择将请求处理掉，或者将请求传给下一个处理者。</li>
+</ul>
+<p>　责任链模式类图如下：<br><img src="http://i.imgur.com/4jm2jrS.png" alt=""></p>
+<p>　责任链模式的优点：</p>
+<ol>
+<li>责任链模式将请求和处理分开，请求者不知道是谁处理的，处理者可以不用知道请求的全貌。</li>
+<li>提高系统的灵活性。</li>
+</ol>
+<p>　责任链模式的缺点：</p>
+<ol>
+<li>降低程序的性能，每个请求都是从链头遍历到链尾，当链比较长的时候，性能会大幅下降。</li>
+<li>不易于调试，由于采用类似递归的方式，调试的时候逻辑比较复杂。<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</li>
+</ol>
+<p>　责任链模式的使用场景：</p>
+<ol>
+<li>一个请求需要一系列的处理工作。</li>
+<li>业务流的处理。</li>
+<li>对系统进行补充扩展。</li>
+</ol>
+<hr>
+<p>　<strong>击鼓传花演示责任链模式板例子：</strong></p>
+<p>　Player.java：    </p>
+<pre><code>public abstract class Player {
+    private Player successor;
+    public abstract void handle(int i);
+    protected void setSuccessor(Player aSuccessor){
+        this.successor = aSuccessor;
+    }
+    //传给下一个
+    public void next(int index){
+        if(successor!=null)
+            successor.handle(index);
+        else
+            System.out.println(&quot;游戏结束&quot;);
     }
 }
-//具体苹果类
-public class Apple implements Fruit{
-    public String getName(){
-        return &quot;apple&quot;;
+</code></pre><p>　PlayerAjava：</p>
+<pre><code>public class PlayerA extends Player {
+    public PlayerA(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==1)
+            System.out.println(&quot;PlayerA喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerA把花向下传&quot;);
+            next(i);
+        }
     }
 }
-//具体香蕉类
-public class Banana implements Fruit{
-    public String getName(){
-        return &quot;banana&quot;;
+</code></pre><p>　PlayerB.java：</p>
+<pre><code>public class PlayerB extends Player {
+    public PlayerB(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==2)
+            System.out.println(&quot;PlayerB喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerB把花向下传&quot;);
+            next(i);
+        }
     }
 }
-public class Client {
+</code></pre><p>　PlayerC.java：</p>
+<pre><code>public class PlayerC extends Player {
+    public PlayerC(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==3)
+            System.out.println(&quot;PlayerC喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerC把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　PlayerD.java：</p>
+<pre><code>public class PlayerD extends Player {
+    public PlayerD(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==4)
+            System.out.println(&quot;PlayerD喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerD把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　DrumBeater.java：</p>
+<pre><code>public class DrumBeater {
     public static void main(String[] args) {
-        People jim = new Jim();
-        Fruit apple = new Apple();
-        Fruit Banana = new Banana();//这里符合了里氏替换原则
-        jim.eat(apple);
-        jim.eat(Banana);
+        Player player = new PlayerA(new PlayerB(new PlayerC(new PlayerD(null))));
+        player.handle(3);
     }
 }
-运行结果：
-Jim eat apple
-Jim eat banana
-</code></pre></blockquote>
-<ul>
-<li>People类是复杂的业务逻辑，属于高层模块，而Fruit是原子模块，属于低层模块。People依赖于抽象的Fruit接口，做到了高层模块不应该依赖低层模块，两者都应该依赖于抽象。</li>
-<li>People和Fruit接口与各自的实现类没有关系，增加实现类不会影响接口，这就做到了：抽象（抽象类或接口）不应该依赖于细节。</li>
-<li>Jim、Apple、Banana实现类都要去实现各自的接口所定义的抽象方法，所以是依赖于接口的。这就做到了：细节（具体实现类）应该依赖抽象。</li>
-</ul>
-<h3 id="3-什么是倒置"><a href="#3-什么是倒置" class="headerlink" title="3 什么是倒置"></a>3 什么是倒置</h3><p>　就是提取公共的抽象，面向接口（抽象类）编程。不再依赖于具体实现了，而是依赖于接口或抽象类，这就是依赖的思维方式“倒置”了。</p>
-<h3 id="4-依赖的三种实现方式"><a href="#4-依赖的三种实现方式" class="headerlink" title="4 依赖的三种实现方式"></a>4 依赖的三种实现方式</h3><p> 　对象的依赖关系有三种方式来传递:  </p>
-<ul>
-<li><p>接口方法中声明依赖对象</p>
-<pre><code>public interface People {
-    public void eat(Fruit fruit);
-}
-</code></pre></li>
-<li><p>构造方法传递依赖对象</p>
-<pre><code>public class Jim implements People{
-    private Fruit fruit;
-    public Jim(Fruit fruit){//构造方法传递依赖对象
-    this.fruit = fruit;
-    }
-}
-</code></pre></li>
-<li><p>Setter方法传递依赖对象</p>
-<pre><code>public class Jim implements People{ 
-    private Fruit fruit; 
-    public void setFruit(Fruit fruit){//setter方式传递依赖对象
-        this.fruit = fruit;
-    }
-}
-</code></pre></li>
-</ul>
-<h3 id="5-优点"><a href="#5-优点" class="headerlink" title="5 优点"></a>5 优点</h3><p>　从上面的代码修改过程中，我们可以看到由于类之间松耦合的设计，面向接口编程依赖抽象而不依赖细节，所以在修改某个类的代码时，不会牵涉到其他类的修改，显著降低系统风险，提高系统健壮性。<br>　还有一个优点是，实际项目开发中，每人负责某一模块。比如一个人负责开发People模块，一人负责开发Fruit模块，如果未采用依赖倒置原则，没有提取抽象，那么开发People模块的人必须等Fruit模块开发完成后自己才能开发，否则编译都无法通过，这就是<strong>单线程</strong>的开发。为了能够两人<strong>并行开发</strong>，设计时遵循依赖倒置原则，提取抽象，就可以大大提高开发进度。　</p>
-<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><p>　依赖倒置原则的核心就是面向接口编程的思想，尽量对每个实现类都提取抽象和公共接口形成接口或抽象类，依赖于抽象而不要依赖于具体实现。<br>　依赖倒置原则的本质其实就是通过抽象（抽象类或接口）使各个类或模块的实现彼此独立，不相互影响，实现模块间的松耦合。<br>　但是这个原则也是6个设计原则中最难以实现的了，如果没有实现这个原则，那么也就意味着开闭原则（对扩展开放，对修改关闭）也无法实现。</p>
-
+</code></pre><p>　程序运行结果：</p>
+<pre><code>PlayerA把花向下传
+PlayerB把花向下传
+PlayerC喝酒
+</code></pre>
           
         
       
@@ -1341,7 +1384,7 @@ Jim eat banana
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1384,7 +1427,7 @@ Jim eat banana
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1393,7 +1436,7 @@ Jim eat banana
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1402,7 +1445,7 @@ Jim eat banana
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

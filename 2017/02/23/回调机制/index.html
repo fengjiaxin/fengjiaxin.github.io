@@ -1,0 +1,819 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="回调," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。
+一、 异步和同步　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回调机制">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/23/回调机制/index.html">
+<meta property="og:site_name" content="冯佳欣的博客">
+<meta property="og:description" content="之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。
+一、 异步和同步　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等">
+<meta property="og:updated_time" content="2017-02-23T08:09:58.061Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="回调机制">
+<meta name="twitter:description" content="之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。
+一、 异步和同步　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/23/回调机制/"/>
+
+
+
+
+
+  <title> 回调机制 | 冯佳欣的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">冯佳欣的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">滴水穿石</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/回调机制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                回调机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T15:19:50+08:00">
+                2017-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。</p>
+<h1 id="一、-异步和同步"><a href="#一、-异步和同步" class="headerlink" title="一、 异步和同步"></a>一、 异步和同步</h1><p>　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。<br>　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等前面动作执行完成以后方可执行。这就是同步。</p>
+<p>　这里引用一个例子进行说明。</p>
+<blockquote>
+<p>案例：<br>A、张三打电话给李四，让李四帮忙写份材料。<br>B、李四接到电话的时候，手上有自己的工作要处理，但他答应张三，忙完手上的工作后马上帮张三写好材料，并传真给张三。<br>C、通完电话后，张三外出办事。</p>
+<p>说明：<br>张三给李四通完电话后，就出去办事了，他并不需要等李四把材料写好才外出。那么张三让李四写材料的消息就属于异步消息。<br>相反，如果张三必须等李四把材料写好才能外出办事的话，那么这个消息就属于同步消息了。</p>
+</blockquote>
+<h1 id="二、-异步的实现"><a href="#二、-异步的实现" class="headerlink" title="二、 异步的实现"></a>二、 异步的实现</h1><p>　传统的程序执行代码都是从上到下，一条一条执行的。<br>　在以上的案例中，如果李四需要几个小时以后才能帮张三写好材料的话，那张三就必须等几个小时，这样张三这几个小时就无法干其他的事情。</p>
+<hr>
+<p>　可以使用以下办法来处理这种问题：</p>
+<ul>
+<li>张三找王五去给李四打电话，等李四写好材料后，由王五转交给张三。这样张三就可以外出办其他的事情了。</li>
+<li>问题得到了合理的解决，之前张三一条线的工作，由张三和王五两条线来完成了，两边同时进行，彼此不耽误。</li>
+</ul>
+<h1 id="三、-计算机语言的实现"><a href="#三、-计算机语言的实现" class="headerlink" title="三、 计算机语言的实现"></a>三、 计算机语言的实现</h1><ul>
+<li>以前由一个线程来处理的工作，可以通过新增一个线程来达到异步的目的。这也就是JAVA中的多线程技术。</li>
+<li>最后李四写好的材料必须交给张三，以做他用。这就是回调。</li>
+</ul>
+<p>　<strong>回调机制可以这样理解：</strong><br>　A发送消息给B，B处理好A要求的事情后，将结果返回给A，A再对B返回的结果来做进一步的处理。</p>
+<h1 id="四、-Java代码的实现"><a href="#四、-Java代码的实现" class="headerlink" title="四、 Java代码的实现"></a>四、 Java代码的实现</h1><p>回调的实现</p>
+<pre><code>/**
+ * 回调接口
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:45:06
+ */
+public interface CallBack {
+    /**
+     * 执行回调方法
+     * @param objects 将处理后的结果作为参数返回给回调函数
+     * @return: void
+     */
+    public void execute(Object...objects);
+
+}
+</code></pre><p>消息的发送者</p>
+<pre><code>/**
+ * 简单本地发送异步消息的类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:47:07
+ */
+public class Local implements CallBack, Runnable {
+    /**
+     * 远程接收消息的类。
+     */
+    private Remote remote;
+    /**
+     * 发送出去的消息
+     */
+    private String message;
+
+    public Local(Remote remote ,String message){
+        super();
+        this.remote = remote;
+        this.message = message;
+    }
+
+    public void sendMessage(){
+        //当前线程的名称
+        System.out.println(Thread.currentThread().getName());
+        //创建一个新的线程发送消息
+        Thread thread = new Thread(this);
+        thread.start();
+        //当前线程继续执行
+        System.out.println(&quot;Message has been sent by Local&quot;);
+    }
+
+
+    @Override
+    public void run() {
+        remote.excuteMessage(message, this);
+    }
+    /**
+     * 发送消息后的回调函数
+     */
+    @Override
+    public void execute(Object... objects) {
+        //打印返回的消息
+        System.out.println(objects[0]);
+        //打印发送消息的线程名称
+        System.out.println(Thread.currentThread().getName());
+        //中断发送消息的线程
+        Thread.interrupted();
+    }
+
+    public static void main(String[] args){
+        Local local = new Local(new Remote(),&quot;hello&quot;);
+        local.sendMessage();
+    }
+
+}
+</code></pre><p>远程消息的接收者</p>
+<pre><code>/**
+ * 处理消息的远程类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:49:43
+ */
+public class Remote {
+    /**
+     * 处理消息
+     * @param msg 接收的消息
+     * @param callBack 回调函数处理类
+     * @return: void
+     */
+    public void excuteMessage(String msg,CallBack callBack){
+        /**
+         * 模拟远程类正在处理其他事情
+         */
+        for(int i =0;i&lt;10000;i++)
+        {
+
+        }
+        /**
+         * 处理完其他事情，现在来处理消息
+         */
+        System.out.println(msg);
+        System.out.println(&quot;I have executed the message by Local&quot;);
+        /**
+         * 执行回调
+         */
+        callBack.execute(new String[]{&quot;Nice to meet you~!&quot;});
+    }
+
+}
+</code></pre><p>执行结果为</p>
+<pre><code>main
+Message has been sent by Local
+hello
+I have executed the message by Local
+Nice to meet you~!
+</code></pre><p><strong>注意：remote.executeMessage(message, this);</strong><br>　executeMessage方法需要接收一个message参数，表示发送出去的消息，而CallBack参数是他自己，也就是这里的this。表示发送消息后，由Local类自己来处理，调用自身的execute方法来处理消息结果。<br>　如果这里不是用this，而是用其他的CallBack接口的实现类的话，那就不能称之为“回调”了，在OO的世界里，那就属于“委派”。也就是说，“回调”必须是消息的发送者来处理消息结果，否则不能称之为回调。这个概念必须明确。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/回调/" rel="tag"># 回调</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/20/Comparable接口的实现和使用/" rel="next" title="Comparable接口的实现和使用">
+                <i class="fa fa-chevron-left"></i> Comparable接口的实现和使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/23/HashMap源码学习(三)- 功能实现/" rel="prev" title="HashMap源码学习(三)-功能实现">
+                HashMap源码学习(三)-功能实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="冯佳欣" />
+          <p class="site-author-name" itemprop="name">冯佳欣</p>
+          <p class="site-description motion-element" itemprop="description">记录一点一滴</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、-异步和同步"><span class="nav-text">一、 异步和同步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、-异步的实现"><span class="nav-text">二、 异步的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、-计算机语言的实现"><span class="nav-text">三、 计算机语言的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、-Java代码的实现"><span class="nav-text">四、 Java代码的实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冯佳欣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

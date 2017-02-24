@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/10/Set中hashCode()学习/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(一)-介绍/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/10/Set中hashCode()学习/" itemprop="url">
-                  Set中hashCode学习
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(一)-介绍/" itemprop="url">
+                  HashMap源码学习(一)-介绍
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-10T08:48:25+08:00">
-                2017-02-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:20+08:00">
+                2017-02-23
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
                   </a>
                 </span>
 
@@ -353,51 +353,20 @@
       
         
           
-            <p>　我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的<strong>hashCode()</strong>方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。</p>
-<h1 id="Hash表："><a href="#Hash表：" class="headerlink" title="Hash表："></a>Hash表：</h1><p>　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键字进行比较来进行查找。这个源于Hash表设计的特殊性，它采用了函数映射的思想将记录的存储位置与记录的关键字关联起来，从而能够很快速地进行查找。</p>
-<h2 id="1-设计思想："><a href="#1-设计思想：" class="headerlink" title="1.设计思想："></a>1.设计思想：</h2><p>　Hash表采用一个映射函数 f : key —&gt; address 将关键字映射到该记录在表中的存储位置，从而在想要查找该记录时，可以直接根据关键字和映射关系计算出该记录在表中的存储位置，通常情况下，这种映射关系称作为Hash函数，而通过Hash函数和关键字计算出来的存储位置(注意这里的存储位置只是表中的存储位置，并不是实际的物理地址)称作为Hash地址。</p>
-<h2 id="2-构造方法："><a href="#2-构造方法：" class="headerlink" title="2.构造方法："></a>2.构造方法：</h2><h3 id="1-直接定址法"><a href="#1-直接定址法" class="headerlink" title="1)直接定址法"></a>1)直接定址法</h3><p>　取关键字或者关键字的某个线性函数为Hash地址，即address(key)=a*key+b;如知道学生的学号从2000开始，最大为4000，则可以将address(key)=key-2000作为Hash地址。</p>
-<h3 id="2-平方取中法"><a href="#2-平方取中法" class="headerlink" title="2)平方取中法"></a>2)平方取中法</h3><p>　对关键字进行平方运算，然后取结果的中间几位作为Hash地址。假如有以下关键字序列{421，423，436}，平方之后的结果为{177241，178929，190096}，那么可以取{72，89，00}作为Hash地址。</p>
-<h3 id="3-折叠法"><a href="#3-折叠法" class="headerlink" title="3)折叠法"></a>3)折叠法</h3><p>　将关键字拆分成几部分，然后将这几部分组合在一起，以特定的方式进行转化形成Hash地址。假如知道图书的ISBN号为8903-241-23，可以将address(key)=89+03+24+12+3作为Hash地址。</p>
-<h3 id="4-除留取余法"><a href="#4-除留取余法" class="headerlink" title="4)除留取余法"></a>4)除留取余法</h3><p>　如果知道Hash表的最大长度为m，可以取不大于m的最大质数p，然后对关键字进行取余运算，address(key)=key%p。在这里p的选取非常关键，p选择的好的话，能够最大程度地减少冲突，p一般取不大于m的最大质数。</p>
-<h2 id="3-Hash表大小的确定"><a href="#3-Hash表大小的确定" class="headerlink" title="3.Hash表大小的确定"></a>3.Hash表大小的确定</h2><p>　Hash表大小的确定也非常关键，如果Hash表的空间远远大于最后实际存储的记录个数，则造成了很大的空间浪费，如果选取小了的话，则容易造成冲突。在实际情况中，一般需要根据最终记录存储个数和关键字的分布特点来确定Hash表的大小。还有一种情况时可能事先不知道最终需要存储的记录个数，则需要动态维护Hash表的容量，此时可能需要重新计算Hash地址。</p>
-<h2 id="4-冲突的解决"><a href="#4-冲突的解决" class="headerlink" title="4.冲突的解决"></a>4.冲突的解决</h2><p>　在上述例子中，发生了冲突现象，因此需要办法来解决，否则记录无法进行正确的存储。通常情况下有2种解决办法：</p>
-<h3 id="1-开放定址法"><a href="#1-开放定址法" class="headerlink" title="1)开放定址法"></a>1)开放定址法</h3><p>　即当一个关键字和另一个关键字发生冲突时，使用某种探测技术在Hash表中形成一个探测序列，然后沿着这个探测序列依次查找下去，当碰到一个空的单元时，则插入其中。比较常用的探测方法有线性探测法；<br>　比如有一组关键字{12，13，25，23，38，34，6，84，91}，Hash表长为14，Hash函数为address(key)=key%11，当插入12，13，25时可以直接插入，而当插入23时，地址1被占用了，因此沿着地址1依次往下探测(探测步长可以根据情况而定)，直到探测到地址4，发现为空，则将23插入其中。</p>
-<h3 id="2-链地址法"><a href="#2-链地址法" class="headerlink" title="2)链地址法"></a>2)链地址法</h3><p>　采用数组和链表相结合的办法，将Hash地址相同的记录存储在一张线性表中，而每张表的表头的序号即为计算得到的Hash地址。如上述例子中，采用链地址法形成的Hash表存储表示为：<br><img src="http://i.imgur.com/NSBvkHx.jpg" alt=""></p>
-<p>　虽然能够采用一些办法去减少冲突，但是冲突是无法完全避免的。因此需要根据实际情况选取解决冲突的办法。</p>
-<h2 id="5-Hash表的平均查找长度"><a href="#5-Hash表的平均查找长度" class="headerlink" title="5.Hash表的平均查找长度"></a>5.Hash表的平均查找长度</h2><p>　　Hash表的平均查找长度包括查找成功时的平均查找长度和查找失败时的平均查找长度。<br>　　查找成功时的平均查找长度=表中每个元素查找成功时的比较次数之和/表中元素个数；<br>　　查找不成功时的平均查找长度相当于在表中查找元素不成功时的平均比较次数，可以理解为向表中插入某个元素，该元素在每个位置都有可能，然后计算出在每个位置能够插入时需要比较的次数，再除以表长即为查找不成功时的平均查找长度。<br>　　下面举个例子：<br>　　有一组关键字{23，12，14，2，3，5}，表长为14，Hash函数为key%11，则关键字在表中的存储如下：<br>　　地址     0     1     2     3      4     5    6   7   8    9  10   11   12    13<br>　　关键字        23    12   14     2     3    5<br>　　比较次数         1      2    1     3     3     2<br>　　因此查找成功时的平均查找长度为(1+2+1+3+3+2)/6=11/6；<br>　　查找失败时的平均查找长度为(1+7+6+5+4+3+2+1+1+1+1+1+1+1)/14=38/14；<br>　　这里有一个概念装填因子=表中的记录数/哈希表的长度，如果装填因子越小，表明表中还有很多的空单元，则发生冲突的可能性越小；而装填因子越大，则发生冲突的可能性就越大，在查找时所耗费的时间就越多。因此，Hash表的平均查找长度和装填因子有关。</p>
-<h2 id="6-Hash表的优缺点"><a href="#6-Hash表的优缺点" class="headerlink" title="6.Hash表的优缺点"></a>6.Hash表的优缺点</h2><p>　Hash表存在的优点显而易见，能够在常数级的时间复杂度上进行查找，并且插入数据和删除数据比较容易。但是它也有某些缺点，比如不支持排序，一般比用线性表存储需要更多的空间，并且记录的关键字不能重复。</p>
+            <p>　最近学习处理大数据，一般方法都是先将数据进行哈希分类，虽然学习数据结构的时候很了解HashMap的原理，但是并不清楚Java中是如何实现的，那么今天就结合原理和源代码好好总结一下HashMap这个类。</p>
+<h1 id="一、HashMap的引入"><a href="#一、HashMap的引入" class="headerlink" title="一、HashMap的引入"></a>一、HashMap的引入</h1><p>　数据结构中有数组和链表来实现对数据的存储，但这两者基本上是两个极端。</p>
+<h2 id="1-数组"><a href="#1-数组" class="headerlink" title="1.数组"></a>1.数组</h2><p>　数组存储区间是连续的，占用内存严重，故空间复杂的很大。但数组的二分查找时间复杂度小，为O(1)；数组的特点是：寻址容易，插入和删除困难；</p>
+<p>##2.链表##<br>　链表存储区间离散，占用内存比较宽松，故空间复杂度很小，但时间复杂度很大，达O（N）。链表的特点是：寻址困难，插入和删除容易。</p>
 <hr>
-<p>　<strong>到这里Hash表我也复习的差不多，那我开始分析Object对象的hashCode()方法和set中的HashCode()方法：</strong></p>
-<h1 id="一、java对象的比较"><a href="#一、java对象的比较" class="headerlink" title="一、java对象的比较"></a>一、java对象的比较</h1><p>　<strong>等号(==)：</strong><br>对比对象实例的内存地址（也即对象实例的ID），来判断是否是同一对象实例；又可以说是判断对象实例是否物理相等；<br>　<strong>equals()：</strong><br>对比两个对象实例是否相等；当对象所属的类没有重写根类Object的equals()方法时，equals()判断的是对象实例的ID（内存地址），是否是同一对象实例；该方法就是使用的等号(==)的判断结果。<br>　当对象所属的类重写equals()方法（可能因为需要自己特有的“逻辑相等”概念)时，equals()判断的根据就因具体实现而异，有些类是需要比较对象的某些指或内容，如String类重写equals()来判断字符串的值是否相等。判断逻辑相等。<br>　<strong>hashCode():</strong><br>　计算出对象实例的哈希码，并返回哈希码，又称为散列函数。根类Object的hashCode()方法的计算依赖于对象实例的D（内存地址），故每个Object对象的hashCode都是唯一的；当然，当对象所对应的类重写了hashCode()方法时，结果就截然不同了。<br>　<strong>查看Object类中的hashCode()方法源代码：</strong></p>
-<pre><code>public native int hashCode();
-</code></pre><p>　使用<strong>native</strong>关键字说明这个方法是原生函数，也就是这个方法是用C/C++语言实现的，并且被编译成了DLL，由java去调用。<br>　这些函数的实现体在DLL中，JDK的源代码中并不包含的。对于不同的平台它们也是不同的。这也是java的底层机制，实际上java就是在不同的平台上调用不同的native方法实现对操作系统的访问的；所以native关键字的函数都是操作系统实现的，java只能调用。<br>　<strong>默认情况下，Object中的hashCode() 返回对象的32位jvm内存地址。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</strong></p>
-<h1 id="二、hashCode的作用"><a href="#二、hashCode的作用" class="headerlink" title="二、hashCode的作用"></a>二、hashCode的作用</h1><ul>
-<li>Java中的集合（Collection）有两类，一类是List，再有一类是Set。后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复，可两个元素是否重复应该依据什么来判断呢？</li>
-<li>这就是 Object.equals方法了。但是，如果每增加一个元素就检查一次，那么当元素很多时，后添加到集合中的元素比较的次数就非常多了。也就是说，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，它就要调用1000次equals方法。这显然会大大降低效率。</li>
-<li>Java采用了哈希表的原理，当集合要添加新的元素时，将对象通过哈希算法计算得到哈希值，然后将哈希值和集合长度进行&amp;运算，得到该对象在该数组存放的位置索引。如果这个位置上没有元素，它就可以直接存储在这个位置；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存，不相同就表示发生冲突，散列表对于冲突有具体的解决办法，但最终还会将新元素保存在适当的位置。<br>　这样一来，实际调用equals方法比较的次数就大大降低了，几乎只需要一两次。简而言之，在集合查找时，hashcode能大大降低对象比较次数，提高查找效率！</li>
-</ul>
-<h1 id="三、Java-对象的equal方法和hashCode方法的关系"><a href="#三、Java-对象的equal方法和hashCode方法的关系" class="headerlink" title="三、Java  对象的equal方法和hashCode方法的关系"></a>三、Java  对象的equal方法和hashCode方法的关系</h1><p>　Java对象相同指的是两个对象通过eqauls方法判断的结果为true<br>　<strong>Java对象的eqauls方法和hashCode方法是这样规定的：</strong></p>
-<ol>
-<li>相等的对象必须具有相等的哈希码（或者散列码）。</li>
-<li>如果两个对象的hashCode相同，它们并不一定相同。  </li>
-</ol>
-<ul>
-<li><p><strong>关于第一点，相等（相同）的对象必须具有相等的哈希码（或者散列码），为什么？</strong><br>　想象一下，假如两个Java对象A和B，A和B相等（eqauls结果为true），但A和B的哈希码不同，则A和B存入HashMap时的哈希码计算得到的HashMap内部数组位置索引可能不同，那么A和B很有可能允许同时存入HashMap，显然相等/相同的元素是不允许同时存入HashMap，HashMap不允许存放重复元素。</p>
-</li>
-<li><p><strong>关于第二点，两个对象的hashCode相同，它们并不一定相同</strong><br>　也就是说，不同对象的hashCode可能相同；假如两个Java对象A和B，A和B不相等（eqauls结果为false），但A和B的哈希码相等，将A和B都存入HashMap时会发生哈希冲突，也就是A和B存放在HashMap内部数组的位置索引相同这时HashMap会在该位置建立一个链接表，将A和B串起来放在该位置，显然，该情况不违反HashMap的使用原则，是允许的。当然，哈希冲突越少越好，尽量采用好的哈希算法以避免哈希冲突。</p>
-</li>
-</ul>
-<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ol>
-<li><strong>绑定：</strong>当equals方法被重写时，通常有必要重写 hashCode 方法，以维护 hashCode 方法的常规协定，该协定声明相等对象必须具有相等的哈希码。</li>
-<li><strong>绑定原因：</strong>Hashtable实现一个哈希表，为了成功地在哈希表中存储和检索对象，用作键的对象必须实现 hashCode 方法和 equals 方法。同(1)，必须保证equals相等的对象，hashCode 也相等。因为哈希表通过hashCode检索对象。</li>
-<li><strong>默认：</strong><ul>
-<li>==默认比较对象在JVM中的地址。</li>
-<li>hashCode 默认返回对象在JVM中的存储地址。</li>
-<li>equal比较对象，默认也是比较对象在JVM中的地址，同==</li>
-</ul>
-</li>
-</ol>
+<p>　那么我们能不能综合两者的特性，做出一种寻址容易，插入删除也容易的数据结构？<br>　答案是肯定的，这就是我们要提起的哈希表。<strong>哈希表</strong>（(Hash table）既满足了数据的查找方便，同时不占用太多的内容空间，使用也十分方便。</p>
+<h1 id="二、HashMap数据结构简介"><a href="#二、HashMap数据结构简介" class="headerlink" title="二、HashMap数据结构简介"></a>二、HashMap数据结构简介</h1><p>　Java为数据结构中的映射定义了一个接口java.util.Map，此接口主要有四个常用的实现类，分别是HashMap、Hashtable、LinkedHashMap和TreeMap，类继承关系如下图所示：</p>
+<p><img src="http://i.imgur.com/xgHDD1k.png" alt=""></p>
+<p>　下面针对各个实现类的特点做一些说明：</p>
+<p>　<strong>1 HashMap</strong>：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections的synchronizedMap方法使HashMap具有线程安全的能力，或者使用ConcurrentHashMap。</p>
+<p>　<strong>2 LinkedHashMap</strong>：LinkedHashMap是HashMap的一个子类，保存了记录的插入顺序，在用Iterator遍历LinkedHashMap时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</p>
+<p>　<strong>3 TreeMap</strong>：TreeMap实现SortedMap接口，能够把它保存的记录根据键排序，默认是按键值的升序排序，也可以指定排序的比较器，当用Iterator遍历TreeMap时，得到的记录是排过序的。如果使用排序的映射，建议使用TreeMap。在使用TreeMap时，key必须实现Comparable接口或者在构造TreeMap传入自定义的Comparator，否则会在运行时抛出java.lang.ClassCastException类型的异常。</p>
+<hr>
+<p>　对于上述三种Map类型的类，要求映射中的key是不可变对象。不可变对象是该对象在创建后它的哈希值不会被改变。如果对象的哈希值发生变化，Map对象很可能就定位不到映射的位置了。</p>
 
           
         
@@ -436,7 +405,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（二）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(二)- 存储结构/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -461,8 +430,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（二）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(二)- 存储结构/" itemprop="url">
+                  HashMap源码学习(二)-存储结构
                 </a>
               
             
@@ -478,8 +447,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:56:53+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:20+08:00">
+                2017-02-23
               </time>
             
 
@@ -501,8 +470,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
                   </a>
                 </span>
 
@@ -538,115 +507,305 @@
       
         
           
-            <p>　<strong>在总结之前，我先复习一下有关String对象的知识。</strong></p>
-<p>#　String类 #</p>
-<p>　String类是<strong>final</strong>类型的，所以<strong>不能被被继承，方法不能被覆盖</strong>。它是一个引用数据类型，它的对象是一个字符串，程序中用” “标示的都是字符串。字符串是一个特殊的对象，字符串对象最大的特点是<strong>它为一个常量，一经初始化，永远不会改变</strong>，这是它跟其它引用数据类型最大的不同之处。<br>　常见的操作方法：  </p>
-<h2 id="1、获取"><a href="#1、获取" class="headerlink" title="1、获取"></a>1、获取</h2><p>1.1 字符串中的包含的字符数，也就是字符串的长度；</p>
-<pre><code>int length（）:获取长度。  （跟数组length的区别）
-</code></pre><p>1.2 根据位置获取位置上某个字符。</p>
-<pre><code>char charAt（int index）：
-</code></pre><p>1.3 根据字符获取该字符在字符串中的位置。</p>
-<pre><code>int indexOf（int ch）：返回的是ch在字符串中第一次出现的位置。
-int indexOf（int ch,int fromIndex）:从fromIndex指定位置开始，获取ch在字符串中的位置。
-int indexOf（String str）：返回的是str在字符串中第一次出现的位置。
-int indexOf（String str,int fromIndex）:从fromIndex指定位置开始，获取str在字符串中的位置。（str字符串）
-int lastIndexOf（int ch）：返回指定字符在此字符串中最后一次出现的索引。
-</code></pre><h2 id="2、判断"><a href="#2、判断" class="headerlink" title="2、判断"></a>2、判断</h2><p>2.1 字符串中是否包含某一个字串。</p>
-<pre><code>boolean contains(str);①
-</code></pre><p>2.2 字符串中是否有内容</p>
-<pre><code>boolean isEmpty（）;原理就是判断长度是否为0；
-</code></pre><p>2.3 字符串中是否是以指定内容开头。</p>
-<pre><code>boolean startsWith（str）;
-</code></pre><p>2.4 字符串中是否是以指定内容结尾。</p>
-<pre><code>boolean endsWith（str）;
-</code></pre><p>2.5 判读字符串的内容是否相同，复写了Object类中的equals方法。</p>
-<pre><code>boolean equals（str）；
-</code></pre><p>2.6 判断内容是否相同，并忽略大小写。</p>
-<pre><code>boolean equalsIgnoreCase（str）；
-</code></pre><h2 id="3-转换"><a href="#3-转换" class="headerlink" title="3. 转换"></a>3. 转换</h2><p>3.1 将字符数组转成字符串；</p>
-<pre><code>构造函数：String（char[]）
-String（char[]，offset，count）：将字符数组中的一部分转成字符串。
-offset起始位置，count取字符的个数。
-静态方法：
-   static String copyValueOf(char[]);
-   static String copyValueOf(char[] data,int offset ,int count)
-   static String valueOf(char[]):
-</code></pre><p>3.2 将字符串转成字符数组；</p>
-<pre><code>char[]  toCharArray();
-</code></pre><p>3.3 将字节数组转成字符串；</p>
-<pre><code>String（byte[]）
-String（byte[]，offset，count）
-</code></pre><p>3.4 将字符串转成字节数组;</p>
-<pre><code>Byte[] getBytes();
-</code></pre><p>3.5 将基本数据类型转成字符串。<br>    static String valueOf（int）<br>    static String valueOf（double）<br>    (3+””和String valueOf（3）)<br>    特殊：字符串和字节数组在转换过程中，是可以指定编码表的。</p>
-<h2 id="4-替换"><a href="#4-替换" class="headerlink" title="4. 替换"></a>4. 替换</h2><pre><code>String replace（oldchar，newchar）；
-</code></pre><h2 id="5-切割"><a href="#5-切割" class="headerlink" title="5. 切割"></a>5. 切割</h2><pre><code>String[] split（regex）；
-</code></pre><h2 id="6-字串，获取字符串中的一部分。"><a href="#6-字串，获取字符串中的一部分。" class="headerlink" title="6. 字串，获取字符串中的一部分。"></a>6. 字串，获取字符串中的一部分。</h2><pre><code>String substring(begin);
-String substring(begin,end);
-</code></pre><h2 id="7-转换，去除空格，比较。"><a href="#7-转换，去除空格，比较。" class="headerlink" title="7. 转换，去除空格，比较。"></a>7. 转换，去除空格，比较。</h2><p>7.1 将字符串转成大写或者小写。</p>
-<pre><code>String toUpperCase();
-String toLowerCase();
-</code></pre><p>7.2 将字符串两端的多个空格去除。</p>
-<pre><code>String trim();
-</code></pre><p>7.3 对两个字符串进行自然顺序的比较。</p>
-<pre><code>Int compareTo(string );
-</code></pre><p>#　接下来就是笔试题： #</p>
-<p>　扑克牌游戏大家应该都比较熟悉了，一副牌由54张组成，含3~A，2各4张，小王1张，大王1张。牌面从小到大用如下字符和字符串表示（其中，小写joker表示小王，大写JOKER表示大王）:)<br>3 4 5 6 7 8 9 10 J Q K A 2 joker JOKER<br>输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如：4 4 4 4-joker JOKER<br>请比较两手牌大小，输出较大的牌，如果不存在比较关系则输出ERROR<br>　基本规则：<br>（1）输入每手牌可能是个子，对子，顺子（连续5张），三个，炸弹（四个）和对王中的一种，不存在其他情况，由输入保证两手牌都是合法的，顺子已经从小到大排列；<br>（2）除了炸弹和对王可以和所有牌比较之外，其他类型的牌只能跟相同类型的存在比较关系（如，对子跟对子比较，三个跟三个比较），不考虑拆牌情况（如：将对子拆分成个子）<br>（3）大小规则跟大家平时了解的常见规则相同，个子，对子，三个比较牌面大小；顺子比较最小牌大小；炸弹大于前面所有的牌，炸弹之间比较牌面大小；对王是最大的牌；<br>（4）输入的两手牌不会出现相等的情况。<br>　答案提示：<br>（1）除了炸弹和对王之外，其他必须同类型比较。<br>（2）输入已经保证合法性，不用检查输入是否是合法的牌。<br>（3）输入的顺子已经经过从小到大排序，因此不用再排序了.<br>　输入描述:<br>　输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如4 4 4 4-joker JOKER。<br>　输出描述:<br>　输出两手牌中较大的那手，不含连接符，扑克牌顺序不变，仍以空格隔开；如果不存在比较关系则输出ERROR。<br>　输入例子:<br>　4 4 4 4-joker JOKER<br>　输出例子:<br>　joker JOKER<br>　<strong>注意：本道题目的输入规定是4 4 4 4-joker JOKER<br>要想获取两组字符串</strong><br><strong>正确做法是：</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-String[] left,right;
-String[] line;
-String nextLine,outString;
-while(sc.hasNext())
-{
-    nextLine = sc.nextLine();
-    line = nextLine.split(&quot;-&quot;);
-    left = line[0].split(&quot; &quot;);
-    right = line[1].split(&quot; &quot;);
-    //处理业务逻辑
+            <h1 id="HshMap的内部实现"><a href="#HshMap的内部实现" class="headerlink" title="HshMap的内部实现"></a>HshMap的内部实现</h1><p>　搞清楚HashMap，首先需要知道HashMap是什么，即它的存储结构-字段；其次弄明白它能干什么，即它的功能实现-方法。这篇文章主要学习存储结构。</p>
+<h1 id="存储结构-字段"><a href="#存储结构-字段" class="headerlink" title="存储结构-字段"></a>存储结构-字段</h1><p>　从结构实现来讲，HashMap是数组+链表+红黑树（JDK1.8增加了红黑树部分）实现的，如下所示：<br><img src="http://i.imgur.com/VfAl7ig.png" alt=""></p>
+<h2 id="1-哈希桶数组"><a href="#1-哈希桶数组" class="headerlink" title="1　哈希桶数组"></a>1　哈希桶数组</h2><p>　从源码可知，HashMap类中有一个非常重要的字段，就是 Node[] table，即哈希桶数组。</p>
+<pre><code>static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
+        final int hash;    //用来定位数组索引位置
+        final K key;
+        V value;
+        Node&lt;K,V&gt; next;   //链表的下一个node
 
+        Node(int hash, K key, V value, Node&lt;K,V&gt; next) { ... }
+        public final K getKey(){ ... }
+        public final V getValue() { ... }
+        public final String toString() { ... }
+        public final int hashCode() { ... }
+        public final V setValue(V newValue) { ... }
+        public final boolean equals(Object o) { ... }
 }
-</code></pre><p>　那么当牌个数相等时如何比较牌面大小呢？<br>　一种简单的方法就是获取字符串所在基础字符串的位置<br>　即</p>
-<pre><code>private static int count(String str){
-    return &quot;345678910JOKA2jokerJOKER&quot;.indexOf(str);
-}
-</code></pre><p>　写到这里，基本答案就出来了。</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String[] left,right;
-        String[] line;
-        String nextLine,outString;
-        while(sc.hasNext()){
-            nextLine = sc.nextLine();
-            if(nextLine.contains(&quot;joker JOKER&quot;))
-                outString = &quot;joker JOKER&quot;;
-            else{
-                line = nextLine.split(&quot;-&quot;);
-                left = line[0].split(&quot; &quot;);
-                right = line[1].split(&quot; &quot;);
+</code></pre><p>　Node是HashMap的一个内部类，实现了Map.Entry接口，本质是就是一个映射(键值对)。上图中的每个黑色圆点就是一个Node对象。</p>
+<h2 id="2-HashMap就是使用哈希表来存储的"><a href="#2-HashMap就是使用哈希表来存储的" class="headerlink" title="2  HashMap就是使用哈希表来存储的"></a>2  HashMap就是使用哈希表来存储的</h2><p>　哈希表为解决冲突，可以采用开放地址法和链地址法等来解决问题，Java中HashMap采用了链地址法。在每个数组元素上都一个链表结构，当数据被Hash后，得到数组下标，把数据放在对应下标元素的链表上。<br>　例如程序执行下面代码：</p>
+<pre><code>map.put(&quot;啦啦&quot;,&quot;嘿嘿&quot;);
+</code></pre><p>　系统将调用”啦啦”这个key的hashCode()方法得到其hashCode值，然后再通过Hash算法的后两步运算（高位运算和取模运算）来定位该键值对的存储位置，有时两个key会定位到相同的位置，表示发生了Hash碰撞。当然Hash算法计算结果越分散均匀，Hash碰撞的概率就越小，map的存取效率就会越高。<br>　那么通过什么方式来控制map使得Hash碰撞的概率又小，哈希桶数组（Node[] table）占用空间又少呢？<br>　答案就是<strong>好的Hash算法和扩容机制</strong>。  </p>
+<h2 id="3-HashMap的扩容字段"><a href="#3-HashMap的扩容字段" class="headerlink" title="3  HashMap的扩容字段"></a>3  HashMap的扩容字段</h2><p>　从HashMap的默认构造函数源码可知，构造函数就是对下面几个字段进行初始化，源码如下：</p>
+<pre><code>int threshold;             // 所能容纳的key-value对极限 
+final float loadFactor;    // 负载因子
+int modCount;  
+int size;
+</code></pre><p>　首先，Node[] table的初始化长度length(默认值是16)，Loadfactor为负载因子(默认值是0.75)，threshold是HashMap所能容纳的最大数据量的Node(键值对)个数。<br>　threshold = length * Load factor。<br>　也就是说，在数组定义好长度之后，负载因子越大，所能容纳的键值对个数越多。</p>
+<hr>
+<p>　结合负载因子的定义公式可知，threshold就是在此Loadfactor和length(数组长度)对应下允许的最大元素数目，超过这个数目就重新resize(扩容)，扩容后的HashMap容量是之前容量的两倍。</p>
+<p>　size字段就是HashMap中实际存在的键值对数量。modCount字段主要用来记录HashMap内部结构发生变化的次数，主要用于迭代的快速失败。<strong>强调一点</strong>，内部结构发生变化指的是结构发生变化，例如put新键值对，但是某个key对应的value值被覆盖不属于结构变化。</p>
+<p>　在HashMap中，哈希桶数组table的长度length大小必须为2的n次方(一定是合数)，这是一种非常规的设计，<strong>常规的设计是把桶的大小设计为素数。相对来说素数导致冲突的概率要小于合数</strong>。<br>　HashMap采用这种非常规设计，主要是为了在取模和扩容时做优化，同时为了减少冲突，HashMap定位哈希桶索引位置时，也加入了高位参与运算的过程。</p>
+<p>　<strong>在JDK1.8版本中，对数据结构做了进一步的优化，引入了红黑树。而当链表长度太长（默认超过8）时，链表就转换为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能。</strong></p>
 
-                if(left.length ==4 &amp;&amp; right.length!=4)
-                    outString = line[0];
-                else if(left.length!=4 &amp;&amp; right.length==4)
-                    outString = line[1];
+          
+        
+      
+    </div>
 
-                else if(left.length==right.length){
-                    if(count(left[0])&gt;count(right[0]))
-                        outString = line[0];
-                    else
-                        outString = line[1];
-                }else{
-                    outString = &quot;ERROR&quot;;
-                }
-            }
-            System.out.println(outString);
-        }  
-    }
-    private static int count(String str){
-        return &quot;345678910JQKA2jokerJOKER&quot;.indexOf(str);
-    }
-}
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(四)- 扩容机制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(四)- 扩容机制/" itemprop="url">
+                  HashMap源码学习(四)-扩容机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:20+08:00">
+                2017-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　本文继续学习HashMap的方法：<strong>扩容方法</strong>。</p>
+<p>　扩容(resize)就是重新计算容量，向HashMap对象里不停的添加元素，而HashMap对象内部的数组无法装载更多的元素时，对象就需要扩大数组的长度，以便能装入更多的元素。Java里的数组是无法自动扩容的，方法是使用一个新的数组代替已有的容量小的数组。</p>
+<p>　JDK1.7的resize的源码如下:</p>
+<pre><code> 1 void resize(int newCapacity) {   //传入新的容量
+ 2     Entry[] oldTable = table;    //引用扩容前的Entry数组
+ 3     int oldCapacity = oldTable.length;         
+ 4     if (oldCapacity == MAXIMUM_CAPACITY) {  //扩容前的数组大小如果已经达到最大(2^30)了
+ 5         threshold = Integer.MAX_VALUE; //修改阈值为int的最大值(2^31-1)，这样以后就不会扩容了
+ 6         return;
+ 7     }
+ 8  
+ 9     Entry[] newTable = new Entry[newCapacity];  //初始化一个新的Entry数组
+10     transfer(newTable);                         //！！将数据转移到新的Entry数组里
+11     table = newTable;                           //HashMap的table属性引用新的Entry数组
+12     threshold = (int)(newCapacity * loadFactor);//修改阈值
+13 }
+</code></pre><p>　使用一个容量更大的数组来代替已有的容量小的数组，transfer()方法将原有Entry数组的元素拷贝到新的Entry数组里。</p>
+<pre><code> 1 void transfer(Entry[] newTable) {
+ 2     Entry[] src = table;                   //src引用了旧的Entry数组
+ 3     int newCapacity = newTable.length;
+ 4     for (int j = 0; j &lt; src.length; j++) { //遍历旧的Entry数组
+ 5         Entry&lt;K,V&gt; e = src[j];             //取得旧Entry数组的每个元素
+ 6         if (e != null) {
+ 7             src[j] = null;//释放旧Entry数组的对象引用（for循环后，旧的Entry数组不再引用任何对象）
+ 8             do {
+ 9                 Entry&lt;K,V&gt; next = e.next;
+10                 int i = indexFor(e.hash, newCapacity); //！！重新计算每个元素在数组中的位置
+11                 e.next = newTable[i]; //标记[1]
+12                 newTable[i] = e;      //将元素放在数组上
+13                 e = next;             //访问下一个Entry链上的元素
+14             } while (e != null);
+15         }
+16     }
+17 }
+</code></pre><p>　newTable[i]的引用赋给了e.next，也就是使用了单链表的头插入方式，同一位置上新元素总会被放在链表的头部位置；这样先放在一个索引上的元素终会被放到Entry链的尾部(如果发生了hash冲突的话），这一点和Jdk1.8有区别，下文详解。在旧数组中同一条Entry链上的元素，通过重新计算索引位置后，有可能被放到了新数组的不同位置上。</p>
+<p>　下面举个例子说明下扩容过程。假设了我们的hash算法就是简单的用key　mod一下表的大小。其中哈希桶数组table的size=2， 所以key = 3、7、5，put顺序依次为 5、7、3。在mod 2以后都冲突在table[1]这里了。这里假设负载因子 loadFactor=1，即当键值对的实际大小size 大于 table的实际大小时进行扩容。接下来的三个步骤是哈希桶数组 resize成4，然后所有的Node重新rehash的过程。</p>
+<p>　　　　　　<img src="http://i.imgur.com/KMFNW0r.png" alt=""></p>
+<p>　下面我们讲解下JDK1.8做了哪些优化。经过观测可以发现，我们使用的是2次幂的扩展(指长度扩为原来2倍)，所以，元素的位置要么是在原位置，要么是在原位置再移动2次幂的位置。看下图可以明白这句话的意思，n为table的长度，图（a）表示扩容前的key1和key2两种key确定索引位置的示例，图（b）表示扩容后key1和key2两种key确定索引位置的示例，其中hash1是key1对应的哈希与高位运算结果。</p>
+<p>　　　　　<img src="http://i.imgur.com/qjAly66.png" alt=""></p>
+<p>　元素在重新计算hash之后，因为n变为2倍，那么n-1的mask范围在高位多1bit(红色)，因此新的index就会发生这样的变化：</p>
+<p>　　　<img src="http://i.imgur.com/F1VnI5z.png" alt=""></p>
+<p>　因此，我们在扩充HashMap的时候，不需要像JDK1.7的实现那样重新计算hash，只需要看看原来的hash值新增的那个bit是1还是0就好了，是0的话索引没变，是1的话索引变成“原索引+oldCap”，可以看看下图为16扩充为32的resize示意图：</p>
+<p>　　<img src="http://i.imgur.com/L4ZYIKg.png" alt=""></p>
+<p>　这个设计确实非常的巧妙，既省去了重新计算hash值的时间，而且同时，由于新增的1bit是0还是1可以认为是随机的，因此resize的过程，均匀的把之前的冲突的节点分散到新的bucket了。这一块就是JDK1.8新增的优化点。有一点注意区别，JDK1.7中rehash的时候，旧链表迁移新链表的时候，如果在新表的数组索引位置相同，则链表元素会倒置，但是从上图可以看出，JDK1.8不会倒置。</p>
+<p>　JDK1.8的resize源码如下:</p>
+<pre><code>1 final Node&lt;K,V&gt;[] resize() {
+ 2     Node&lt;K,V&gt;[] oldTab = table;
+ 3     int oldCap = (oldTab == null) ? 0 : oldTab.length;
+ 4     int oldThr = threshold;
+ 5     int newCap, newThr = 0;
+ 6     if (oldCap &gt; 0) {
+ 7         // 超过最大值就不再扩充了，就只好随你碰撞去吧
+ 8         if (oldCap &gt;= MAXIMUM_CAPACITY) {
+ 9             threshold = Integer.MAX_VALUE;
+10             return oldTab;
+11         }
+12         // 没超过最大值，就扩充为原来的2倍
+13         else if ((newCap = oldCap &lt;&lt; 1) &lt; MAXIMUM_CAPACITY &amp;&amp;
+14                  oldCap &gt;= DEFAULT_INITIAL_CAPACITY)
+15             newThr = oldThr &lt;&lt; 1; // double threshold
+16     }
+17     else if (oldThr &gt; 0) // initial capacity was placed in threshold
+18         newCap = oldThr;
+19     else {               // zero initial threshold signifies using defaults
+20         newCap = DEFAULT_INITIAL_CAPACITY;
+21         newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+22     }
+23     // 计算新的resize上限
+24     if (newThr == 0) {
+25 
+26         float ft = (float)newCap * loadFactor;
+27         newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (float)MAXIMUM_CAPACITY ?
+28                   (int)ft : Integer.MAX_VALUE);
+29     }
+30     threshold = newThr;
+31     @SuppressWarnings({&quot;rawtypes&quot;，&quot;unchecked&quot;})
+32         Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])new Node[newCap];
+33     table = newTab;
+34     if (oldTab != null) {
+35         // 把每个bucket都移动到新的buckets中
+36         for (int j = 0; j &lt; oldCap; ++j) {
+37             Node&lt;K,V&gt; e;
+38             if ((e = oldTab[j]) != null) {
+39                 oldTab[j] = null;
+40                 if (e.next == null)
+41                     newTab[e.hash &amp; (newCap - 1)] = e;
+42                 else if (e instanceof TreeNode)
+43                     ((TreeNode&lt;K,V&gt;)e).split(this, newTab, j, oldCap);
+44                 else { // 链表优化重hash的代码块
+45                     Node&lt;K,V&gt; loHead = null, loTail = null;
+46                     Node&lt;K,V&gt; hiHead = null, hiTail = null;
+47                     Node&lt;K,V&gt; next;
+48                     do {
+49                         next = e.next;
+50                         // 原索引
+51                         if ((e.hash &amp; oldCap) == 0) {
+52                             if (loTail == null)
+53                                 loHead = e;
+54                             else
+55                                 loTail.next = e;
+56                             loTail = e;
+57                         }
+58                         // 原索引+oldCap
+59                         else {
+60                             if (hiTail == null)
+61                                 hiHead = e;
+62                             else
+63                                 hiTail.next = e;
+64                             hiTail = e;
+65                         }
+66                     } while ((e = next) != null);
+67                     // 原索引放到bucket里
+68                     if (loTail != null) {
+69                         loTail.next = null;
+70                         newTab[j] = loHead;
+71                     }
+72                     // 原索引+oldCap放到bucket里
+73                     if (hiTail != null) {
+74                         hiTail.next = null;
+75                         newTab[j + oldCap] = hiHead;
+76                     }
+77                 }
+78             }
+79         }
+80     }
+81     return newTab;
+82 }
 </code></pre>
           
         
@@ -685,7 +844,7 @@ public class Main{
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（一）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(三)- 功能实现/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -710,8 +869,8 @@ public class Main{
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（一）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(三)- 功能实现/" itemprop="url">
+                  HashMap源码学习(三)-功能实现
                 </a>
               
             
@@ -727,8 +886,8 @@ public class Main{
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:04:25+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:20+08:00">
+                2017-02-23
               </time>
             
 
@@ -750,8 +909,8 @@ public class Main{
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
                   </a>
                 </span>
 
@@ -787,73 +946,94 @@ public class Main{
       
         
           
-            <p>　<strong>在总结之前，我得自身反省一下，明明想法其实已经想的差不多了，但是总差一些细节，尤其关于Scanner类，这个类非常重要，方法一定要记住。</strong></p>
-<p>##　Scanner类##<br>　在源码中应该包括下句：</p>
-<pre><code>import java.util.Scanner;  
-</code></pre><p>　Scanner是新增的一个简易文本扫描器，在 JDK 5.0之前，是没有的。</p>
-<p>　<strong>构造方法：</strong><br>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
-<p>　<strong>方法：</strong><br>　public void close()    //关闭<br>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代<br>　public boolean hasNext() //检测输入中，是否，还有单词<br>　public boolean hasNextInt() //检测输入中，是否，还有单词<br>　public String next()   //读取下一个单词，默认把空格作为分隔符<br>　public int hasNextInt();查看是否有int类型的token的分割段<br>　public String nextLine()  //读行   </p>
-<p>　<strong>读取键盘输入</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-while(sc.hasNext())
-{
-    //处理业务
+            <p>HashMap的内部功能实现很多，本文主要从根据<strong>key获取哈希桶数组索引位置、put方法</strong>的详细执行深入学习。</p>
+<h1 id="1、确定哈希桶数组索引位置"><a href="#1、确定哈希桶数组索引位置" class="headerlink" title="1、确定哈希桶数组索引位置"></a>1、确定哈希桶数组索引位置</h1><p>　HashMap定位数组索引位置，直接决定了hash方法的离散性能。先看看源码的实现(方法一+方法二):</p>
+<pre><code>方法一：
+static final int hash(Object key) {   //jdk1.8 &amp; jdk1.7
+     int h;
+     // h = key.hashCode() 为第一步 取hashCode值
+     // h ^ (h &gt;&gt;&gt; 16)  为第二步 高位参与运算
+     return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
 }
-</code></pre><p>　好了，在了解了一些基本信息后，我们开始看题：</p>
-<hr>
-<p>　输入包括多组测试数据。每组输入第一行是两个正整数N和M（0 &lt; N &lt;= 30000,0 &lt; M &lt; 5000）,分别代表学生的数目和操作的数目。<br>学生ID编号从1编到N。第二行包含N个整数，代表这N个学生的初始成绩，其中第i个数代表ID为i的学生的成绩<br>接下来又M行，每一行有一个字符C（只取‘Q’或‘U’），和两个正整数A,B,当C为’Q’的时候, 表示这是一条询问操作，他询问ID从A到B（包括A,B）的学生当中，成绩最高的是多少；当C为‘U’的时候，表示这是一条更新操作，要求把ID为A的学生的成绩更改为B。</p>
-<p>　我第一次做题的时候忽略了两点：</p>
-<ul>
-<li>M限制了查询次数</li>
-<li>A、B的大小关系不确定</li>
-</ul>
-<p>　在了解了这两个陷阱后，代码如下：</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int num = 0;
-        int count = 0;
-         int A=0,B =0;
-        while(sc.hasNext()){
-            num = sc.nextInt();
-            count = sc.nextInt();
-
-            int[] grade = new int[num];
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;num ;i++)
-                grade[i] = sc.nextInt();
-            String ch = null;
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;count;i++){
-                ch = sc.next();
-                A = sc.nextInt();
-                B = sc.nextInt();
-                if(ch.equals(&quot;U&quot;))
-                    grade[A-1] = B;
-                if(ch.equals(&quot;Q&quot;)){
-                    int result = max(grade,A,B);
-                    System.out.println(result);
-                }
-
-            }
-        }
-
-    }
-
-    public static int max(int[] array,int begin,int end){
-        int min = Math.min(begin,end)-1;
-        int max = Math.max(begin,end);
-
-        int result = array[min];
-        for(int i =min+1;i&lt;max;i++){
-            if(array[i]&gt;result)
-                result = array[i];
-        }
-        return result;
-    }
-
-
+方法二：
+static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个方法，但是实现原理一样的
+     return h &amp; (length-1);  //第三步 取模运算
 }
-</code></pre><p>　<strong>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</strong></p>
+</code></pre><p>　这里的Hash算法本质上就是三步：<strong>取key的hashCode值、高位运算、取模运算</strong>。</p>
+<p>　<strong>注意</strong>：Object的hashCode()方法中的hashCode是具体怎么计算的呢？<br>　Object中的hashCode() 返回对象的<strong>32位jvm内存地址</strong>。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</p>
+<p>　对于任意给定的对象，只要它的hashCode()返回值相同，那么程序调用方法一计算得到的Hash码值总是相同的。我们首先想到的就是把hash值对数组长度取模运算，这样元素的分布相对比较均匀。但是，模运算的消耗较大，在HashMap中调用方法二来计算该对象应该保存在table数组的哪个索引处。</p>
+<p>　这个方法非常巧妙，它通过h &amp; (table.length -1)来得到该对象的保存位，而HashMap底层数组的长度总是2的n次方，这是HashMap在速度上的优化。当length总是2的n次方时，h&amp; (length-1)运算等价于对length取模，也就是h%length，但是&amp;比%具有更高的效率。</p>
+<p>　在JDK的实现中，优化了高位运算的算法，通过hashCode()的高16位异或低16位实现的：(h = k.hashCode()) ^ (h &gt;&gt;&gt; 16)，主要是从速度、功效、质量来考虑的，这么做可以在数组table的length比较小的时候，也能保证考虑到高低Bit都参与到Hash的计算中，同时不会有太大的开销。</p>
+<p>　下面举例说明下，n为table的长度16。<br><img src="http://i.imgur.com/etKJGqq.png" alt=""></p>
+<h1 id="2、分析HashMap的put方法"><a href="#2、分析HashMap的put方法" class="headerlink" title="2、分析HashMap的put方法"></a>2、分析HashMap的put方法</h1><ol>
+<li>判断键值对数组table[i]是否为空或为null，否则执行resize()进行扩容；</li>
+<li>根据键值key计算hash值得到插入的数组索引i，如果table[i]==null，直接新建节点添加，转向6，如果table[i]不为空，转向3；</li>
+<li>判断table[i]的首个元素是否和key一样，如果相同直接覆盖value，否则转向4，这里的相同指的是hashCode以及equals；</li>
+<li>判断table[i] 是否为treeNode，即table[i] 是否是红黑树，如果是红黑树，则直接在树中插入键值对，否则转向5；</li>
+<li>遍历table[i]，判断链表长度是否大于8，大于8的话把链表转换为红黑树，在红黑树中执行插入操作，否则进行链表的插入操作；遍历过程中若发现key已经存在直接覆盖value即可；</li>
+<li>插入成功后，判断实际存在的键值对数量size是否超多了最大容量threshold，如果超过，进行扩容。</li>
+</ol>
+<p>　HashMap的put方法执行过程可以通过下图来理解</p>
+<p><img src="http://i.imgur.com/WJEDu7Y.png" alt=""></p>
+<p>　JDK1.8HashMap的put方法源码如下:</p>
+<pre><code> 1 public V put(K key, V value) {
+ 2     // 对key的hashCode()做hash
+ 3     return putVal(hash(key), key, value, false, true);
+ 4 }
+ 5 
+ 6 final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+ 7                boolean evict) {
+ 8     Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+ 9     // 步骤1：tab为空则创建
+10     if ((tab = table) == null || (n = tab.length) == 0)
+11         n = (tab = resize()).length;
+12     // 步骤2：计算index，并对null做处理 
+13     if ((p = tab[i = (n - 1) &amp; hash]) == null) 
+14         tab[i] = newNode(hash, key, value, null);
+15     else {
+16         Node&lt;K,V&gt; e; K k;
+17         // 步骤3：节点key存在，直接覆盖value
+18         if (p.hash == hash &amp;&amp;
+19             ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+20             e = p;
+21         // 步骤4：判断该链为红黑树
+22         else if (p instanceof TreeNode)
+23             e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+24         // 步骤5：该链为链表
+25         else {
+26             for (int binCount = 0; ; ++binCount) {
+27                 if ((e = p.next) == null) {
+28                     p.next = newNode(hash, key,value,null);
+                        //链表长度大于8转换为红黑树进行处理
+29                     if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st  
+30                         treeifyBin(tab, hash);
+31                     break;
+32                 }
+                    // key已经存在直接覆盖value
+33                 if (e.hash == hash &amp;&amp;
+34                     ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) 
+35                            break;
+36                 p = e;
+37             }
+38         }
+39         
+40         if (e != null) { // existing mapping for key
+41             V oldValue = e.value;
+42             if (!onlyIfAbsent || oldValue == null)
+43                 e.value = value;
+44             afterNodeAccess(e);
+45             return oldValue;
+46         }
+47     }
+
+48     ++modCount;
+49     // 步骤6：超过最大容量 就扩容
+50     if (++size &gt; threshold)
+51         resize();
+52     afterNodeInsertion(evict);
+53     return null;
+54 }
+</code></pre><p>　这样就把哈希桶数组索引位置、put方法讲解了一下，这样我们就在以后Java调用时更好地应用HashMap，那么下一章节就学习一下扩容机制，这个算法我记得在算法导论中曾经有相关的题目，下一章继续学习。</p>
 
           
         
@@ -892,7 +1072,7 @@ public class Main{
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/回调机制/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -917,8 +1097,8 @@ public class Main{
             
               
                 
-                <a class="post-title-link" href="/2017/02/04/排序的Java实现/" itemprop="url">
-                  排序的Java实现
+                <a class="post-title-link" href="/2017/02/23/回调机制/" itemprop="url">
+                  回调机制
                 </a>
               
             
@@ -934,368 +1114,8 @@ public class Main{
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T20:46:53+08:00">
-                2017-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
-<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。<br>　具体实现：</p>
-<pre><code>public class TestSelectSort {
-
-    public static void main(String[] args) {
-        int[] a = {5,4,9,8,7,6,0,1,3,2};
-        selectSort(a);
-        show(a);
-    }
-
-    public static void selectSort(int[] a){
-        int i,j;
-        int temp =0,flag =0;
-        for(i =0;i&lt;a.length;i++){
-            temp =a[i];
-            flag =i;
-            for(j =i+1;j&lt;a.length;j++){
-                if(a[j]&lt;temp){
-                    temp= a[j];
-                    flag =j;
-                }
-            }
-            if(flag!=i){
-                a[flag] =a[i];
-                a[i] = temp;
-            }
-        }
-    }
-
-    public static void show(int[] a){
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-
-}
-</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。<br>　具体实现：</p>
-<pre><code>public class TestInsertSort {
-    public static void main(String[] args) {
-        int[] array = {7,3,4,9,10,6};
-        insertSort(array);
-        for(int i=0;i&lt;array.length;i++)
-            System.out.print(array[i]+&quot; &quot;);
-
-    }
-    public static void insertSort(int[] a){
-        if(a!=null){
-            for(int i=1;i&lt;a.length;i++){
-                int temp = a[i],j =i;
-                if(temp&lt;a[j-1]){
-                    while(j&gt;=1 &amp;&amp; temp&lt;a[j-1]){
-                        a[j] = a[j-1];
-                        j--;
-                    }
-                }
-                a[j] = temp;
-            }
-        }
-    }
-}
-</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。<br>　具体实现：</p>
-<pre><code>public class TestBubbleSort {
-    public static void main(String[] args) {
-        int[] array = {4,2,9,10,8,6};
-        BubbleSort(array);
-        for(int i=0;i&lt;array.length;i++){
-            System.out.print(array[i]+&quot; &quot;);
-        }
-    }
-    public static void BubbleSort(int[] a){
-        int i,j,temp,len = a.length;
-        for( i=0;i&lt;len-1;i++){
-            for(j =0;j&lt;len-i-1;j++){
-                if(a[j]&gt;a[j+1]){
-                    temp = a[j];
-                    a[j] = a[j+1];
-                    a[j+1] = temp;
-                }
-            }
-        }
-    }
-}
-</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。<br>　具体实现：</p>
-<pre><code>public class TestMergeSort {
-    public static void main(String[] args) {
-        int[] a = {5,3,4,2,9,7,6,1};
-        MergeSort(a, 0, a.length-1);
-        for(int i =0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void Merge(int[] array,int left,int middle,int right){
-        int i,j,k,n1,n2;
-        n1 = middle-left+1;
-        n2 = right-middle;
-        int[] L = new int[n1];
-        int[] R = new int[n2];
-        for(i =0,k =left;i&lt;n1;i++,k++)
-            L[i] = array[k];
-        for(j =0,k=middle+1;j&lt;n2;j++,k++)
-            R[j] = array[k];
-        for(k =left,i =0,j =0;i&lt;n1 &amp;&amp; j&lt;n2;k++){
-            if(L[i]&lt;R[j])
-                array[k] = L[i++];
-            else
-                array[k] = R[j++];
-        }
-        //没有再声明一个变量是因为一下两种情况只会出现一种情况。
-        if(i&lt;n1){
-            for(j =i;j&lt;n1;j++,k++)
-                array[k] =L[j];
-        }
-        if(j&lt;n2){
-            for(i =j;i&lt;n2;i++,k++)
-                array[k] =R[i];    
-        }    
-    }
-
-    public static void MergeSort(int[] array,int left,int right){
-        if(left&lt;right){
-            int middle = (left+right)/2;
-            MergeSort(array, left, middle);
-            MergeSort(array,middle+1,right);
-            Merge(array,left,middle,right);
-        }
-    }
-}
-</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。<br>　具体实现：</p>
-<pre><code>public class TestQuickSort {
-    public static void main(String[] args) {
-        int[] a = {5,3,2,9,7,6,1};
-        quickSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void sort(int[] array,int low,int high){
-        int i,j,index;
-        if(low&gt;=high) return;
-        i =low;
-        j = high;
-        index = array[low];
-        while(i&lt;j){
-            while(i&lt;j &amp;&amp; array[j]&gt;index)
-                j--;
-            if(i&lt;j)
-                array[i++] = array[j];
-            while(i&lt;j &amp;&amp; array[i]&lt;index)
-                i++;
-            if(i&lt;j){
-                array[j--] = array[i];
-            }
-        }
-        array[i] = index;
-        sort(array,low,i-1);
-        sort(array,i+1,high);
-    }
-    public static void quickSort(int[] array){
-        sort(array,0,array.length-1);
-    }
-}
-</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。<br>　具体实现：</p>
-<pre><code>public class TestShellSort {    
-    public static void main(String[] args) {    
-        int[] a = {5,3,2,9,7,6,1};
-        shellSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void shellSort(int[] array){
-        int len = array.length;
-        int i,j,h;//h为步长
-        int temp;
-        for(h =len/2;h&gt;0;h/=2){
-            for(i =h;i&lt;len;i++){//从每组至少第二个元素开始遍历
-                temp = array[i];
-                for(j=i-h;j&gt;=0;j-=h){
-                    if(temp&lt;array[j])
-                        array[j+h] = array[j];
-                    else 
-                        break;
-                }
-                array[j+h] = temp;
-            }
-        }
-    }
-}
-</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。<br>　具体实现：</p>
-<pre><code>public class TestHeapSort {
-    public static void main(String[] args) {
-        int[] a = {4,3,2,7,6,5};
-        heapSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void adjustHeap(int[] a,int pos,int len){
-        int temp;
-        int child;
-        for(temp = a[pos];2*pos+1&lt;=len;pos = child){
-            child = 2*pos+1;
-            if(child&lt;len &amp;&amp; a[child+1]&gt;a[child])
-                child++;
-            if(a[child]&gt;temp)
-                a[pos] = a[child];
-            else
-                break;
-        }
-        a[pos] = temp;
-    }
-    public static void heapSort(int[] array){
-        int i;
-        int len = array.length;
-        for(i=len/2-1;i&gt;=0;i--)
-            adjustHeap(array, i, len-1);
-        for(i = len-1;i&gt;=0;i--){
-            int temp = array[0];
-            array[0] = array[i];
-            array[i] = temp;
-            adjustHeap(array, 0, i-1);
-        }
-    }
-}
-</code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/JAVA多线程（二）/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/04/JAVA多线程（二）/" itemprop="url">
-                  JAVA多线程（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T18:41:27+08:00">
-                2017-02-04
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T15:19:50+08:00">
+                2017-02-23
               </time>
             
 
@@ -1354,152 +1174,136 @@ public class Main{
       
         
           
-            <p>　接着上篇博客继续，还有一些多线程的概念，我以前也没听过，正好整理学习一下，加油！！</p>
-<h2 id="1、sleep-方法与wait-方法的不同？"><a href="#1、sleep-方法与wait-方法的不同？" class="headerlink" title="1、sleep()方法与wait()方法的不同？"></a>1、sleep()方法与wait()方法的不同？</h2><p>　区别主要显示在一下几个方面：</p>
-<ol>
-<li>原理不同，sleep()方法时Thread的静态方法，是线程控制自身流程的，会让此线程暂停一段时间，把机会让给其他线程；而wait()方法时Object的方法，用于线程见的通信，这个方法会使拥有该对象锁的进程等待，直到其他线程调用notify()方法。</li>
-<li>对锁的处理机制不同，sleep()方法不涉及线程间通信，不释放锁，而wait()会释放掉它所占用的锁，从而使线程所在对象的其他synchronized数据可被别的线程使用。</li>
-<li>使用区域不同，sleep()可以在任何地方使用，而wait()方法必须放在同步控制方法或语句块中使用；除此之外，sleep()方法必须捕获异常，而wait()方法不需要，在sleep()过程中，有可能被其他对象调用它的interrupt(),产生interruptedException异常。</li>
-</ol>
-<p>　<strong>那么扩展一下：sleep()和yield()有什么区别？</strong></p>
-<ol>
-<li>sleep()给其他线程运行机会时不考虑线程的优先级，而yield()只给相同优先级或更高优先级的线程运行的机会。</li>
-<li>线程执行sleep()后转入阻塞状态，所以在休眠的时间段内肯定不会被执行；但是yield()只是使当前线程重新回到可执行状态，所以可能执行yield()后进入到可执行状态后马上又被执行。</li>
-<li>sleep()方法抛出InterruptedException，而yield()没有声明任何异常。</li>
-<li>sleep()方法比yield()有更好地可移植性（操作系统方面）。</li>
-</ol>
-<h2 id="2、终止线程的方法？"><a href="#2、终止线程的方法？" class="headerlink" title="2、终止线程的方法？"></a>2、终止线程的方法？</h2><p>　<strong>stop()和suspend()方法。</strong></p>
-<p>　stop()方法释放已经锁定的所有监视资源，suspend()不会释放锁。这两种方式都不安全，一般建议让线程自行结束进入Dead状态；在学习这个方法前，先补充一下基础知识。</p>
+            <p>　之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。</p>
+<h1 id="一、-异步和同步"><a href="#一、-异步和同步" class="headerlink" title="一、 异步和同步"></a>一、 异步和同步</h1><p>　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。<br>　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等前面动作执行完成以后方可执行。这就是同步。</p>
+<p>　这里引用一个例子进行说明。</p>
+<blockquote>
+<p>案例：<br>A、张三打电话给李四，让李四帮忙写份材料。<br>B、李四接到电话的时候，手上有自己的工作要处理，但他答应张三，忙完手上的工作后马上帮张三写好材料，并传真给张三。<br>C、通完电话后，张三外出办事。</p>
+<p>说明：<br>张三给李四通完电话后，就出去办事了，他并不需要等李四把材料写好才外出。那么张三让李四写材料的消息就属于异步消息。<br>相反，如果张三必须等李四把材料写好才能外出办事的话，那么这个消息就属于同步消息了。</p>
+</blockquote>
+<h1 id="二、-异步的实现"><a href="#二、-异步的实现" class="headerlink" title="二、 异步的实现"></a>二、 异步的实现</h1><p>　传统的程序执行代码都是从上到下，一条一条执行的。<br>　在以上的案例中，如果李四需要几个小时以后才能帮张三写好材料的话，那张三就必须等几个小时，这样张三这几个小时就无法干其他的事情。</p>
 <hr>
-<p>　关键字<strong>volatile</strong>,类型修饰符，系统每次用它时都是直接从内存中读取，而不是从缓存中读取。</p>
-<hr>
-<p>　那么建议方式是通过设置flag()标志来控制循环是否执行，通过这种方法来让线程离开run()方法从而终止线程。</p>
-<p>　<strong>实例代码如下：</strong></p>
-<pre><code>public class MyThreadStop implements Runnable {
-    private volatile Boolean flag;
-
-    public void stop(){
-        flag = false;
-    }
-
-    @Override
-    public void run() {
-        while(flag){
-            //执行
-        }
-    }
+<p>　可以使用以下办法来处理这种问题：</p>
+<ul>
+<li>张三找王五去给李四打电话，等李四写好材料后，由王五转交给张三。这样张三就可以外出办其他的事情了。</li>
+<li>问题得到了合理的解决，之前张三一条线的工作，由张三和王五两条线来完成了，两边同时进行，彼此不耽误。</li>
+</ul>
+<h1 id="三、-计算机语言的实现"><a href="#三、-计算机语言的实现" class="headerlink" title="三、 计算机语言的实现"></a>三、 计算机语言的实现</h1><ul>
+<li>以前由一个线程来处理的工作，可以通过新增一个线程来达到异步的目的。这也就是JAVA中的多线程技术。</li>
+<li>最后李四写好的材料必须交给张三，以做他用。这就是回调。</li>
+</ul>
+<p>　<strong>回调机制可以这样理解：</strong><br>　A发送消息给B，B处理好A要求的事情后，将结果返回给A，A再对B返回的结果来做进一步的处理。</p>
+<h1 id="四、-Java代码的实现"><a href="#四、-Java代码的实现" class="headerlink" title="四、 Java代码的实现"></a>四、 Java代码的实现</h1><p>回调的实现</p>
+<pre><code>/**
+ * 回调接口
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:45:06
+ */
+public interface CallBack {
+    /**
+     * 执行回调方法
+     * @param objects 将处理后的结果作为参数返回给回调函数
+     * @return: void
+     */
+    public void execute(Object...objects);
 
 }
-</code></pre><p>　在上例中，调用stop()虽然能够终止线程，但是，当线程处于非运行状态时，这个方法就不可用啦，此时可以使用interrupt()方法来打破阻塞的情况，当interrupt()被调用时，会抛出interruptedException异常，可以通过在run()方法中来捕获这个异常让线程安全退出。</p>
-<p>　<strong>示例代码如下：</strong></p>
-<pre><code>public class MYThread {
+</code></pre><p>消息的发送者</p>
+<pre><code>/**
+ * 简单本地发送异步消息的类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:47:07
+ */
+public class Local implements CallBack, Runnable {
+    /**
+     * 远程接收消息的类。
+     */
+    private Remote remote;
+    /**
+     * 发送出去的消息
+     */
+    private String message;
 
-    public static void main(String[] args) {
-        Thread thread = new Thread(new Runnable() {
+    public Local(Remote remote ,String message){
+        super();
+        this.remote = remote;
+        this.message = message;
+    }
 
-            @Override
-            public void run() {
-                System.out.println(&quot;thread go to sleep&quot;);
-
-                try {
-                    Thread.sleep(5000);
-                    System.out.println(&quot;thread end&quot;);
-                } catch (InterruptedException e) {
-                    //e.printStackTrace();
-                    System.out.println(&quot;thread is interupted&quot;);
-                }
-            }
-        });
-
+    public void sendMessage(){
+        //当前线程的名称
+        System.out.println(Thread.currentThread().getName());
+        //创建一个新的线程发送消息
+        Thread thread = new Thread(this);
         thread.start();
-        thread.interrupt();
-
+        //当前线程继续执行
+        System.out.println(&quot;Message has been sent by Local&quot;);
     }
 
-}
-
-运行结果如下：
-thread go to sleep
-thread is interupted
-</code></pre><h2 id="3、什么是守护线程？"><a href="#3、什么是守护线程？" class="headerlink" title="3、什么是守护线程？"></a>3、什么是守护线程？</h2><p>　守护线程是指程序在运行时在后台提供一种通用服务的线程，用户线程跟守护线程的差别在：如果用户线程已经全部退出运行，只剩下守护线程存在，JVM也就退出了。</p>
-<p>　在Java中，守护线程一般具有较低的优先级，它可以由用户设置，方法就是在调用<strong>start()前</strong>调用对象的setDaemon(true)方法，注意：当在一个守护线程中产生了其他线程，那么这些新产生的线程默认还是守护线程。</p>
-<p>　<strong>说了这么多，代码实战一下更加清晰明了：</strong></p>
-<pre><code>class ThreadJoin extends Thread{
-    @Override
-    public void run() {
-        System.out.println(Thread.currentThread().getName()+&quot;:begin&quot;);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(Thread.currentThread().getName()+&quot;:end&quot;);
-    }
-
-}
-
-public class ThreadJoinDemo {
-
-    public static void main(String[] args) {
-        System.out.println(&quot;test:begin&quot;);
-        Thread t1 = new ThreadJoin();
-        t1.setDaemon(true);
-        t1.start();
-        System.out.println(&quot;test:end&quot;);
-
-    }
-
-}
-
-运行结果：
-test:begin
-test:end
-Thread-0:begin
-</code></pre><p>　其中守护线程最典型的的一个例子就是垃圾回收器，只要JVM启动，它始终在运行，实时监控和管理系统中可以被回收的资源。</p>
-<h2 id="4、join-方法的作用是什么？"><a href="#4、join-方法的作用是什么？" class="headerlink" title="4、join()方法的作用是什么？"></a>4、join()方法的作用是什么？</h2><p>　join()的作用是让调用该方法的线程在执行完run()方法后，再执行join()方法后面的代码。简单来说就是将两个线程合并，实现同步的功能；具体就是可以通过线程A的join()方法来等待线程A的结束，或者使用线程A的join(2000)方法来等待线程A的结束，但最多只等2s。</p>
-<p>　<strong>来，写个代码实例把：</strong></p>
-<pre><code>public class JoinTest {
-
-    public static void main(String[] args) {
-        Thread t = new Thread(new ThreadImp());
-        t.start();
-        try {
-            t.join(1000);
-            if(t.isAlive()){
-                System.out.println(&quot;t has not finished&quot;);
-            }else{
-                System.out.println(&quot;t has finished&quot;);
-            }
-            System.out.println(&quot;joinFinish&quot;);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-}
-
-class ThreadImp implements Runnable{
 
     @Override
     public void run() {
-        System.out.println(&quot;ThreadImp begin:&quot;);
-        try {
-            Thread.sleep(5000);
-            System.out.println(&quot;ThreadImp end:&quot;);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        remote.excuteMessage(message, this);
+    }
+    /**
+     * 发送消息后的回调函数
+     */
+    @Override
+    public void execute(Object... objects) {
+        //打印返回的消息
+        System.out.println(objects[0]);
+        //打印发送消息的线程名称
+        System.out.println(Thread.currentThread().getName());
+        //中断发送消息的线程
+        Thread.interrupted();
+    }
+
+    public static void main(String[] args){
+        Local local = new Local(new Remote(),&quot;hello&quot;);
+        local.sendMessage();
     }
 
 }
+</code></pre><p>远程消息的接收者</p>
+<pre><code>/**
+ * 处理消息的远程类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:49:43
+ */
+public class Remote {
+    /**
+     * 处理消息
+     * @param msg 接收的消息
+     * @param callBack 回调函数处理类
+     * @return: void
+     */
+    public void excuteMessage(String msg,CallBack callBack){
+        /**
+         * 模拟远程类正在处理其他事情
+         */
+        for(int i =0;i&lt;10000;i++)
+        {
 
-运行结果如下：
-ThreadImp begin:
-t has not finished
-joinFinish
-ThreadImp end:
-</code></pre><p>　<strong>到这里，关于线程的知识差不多整理完毕，有很多知识我也是重新学习了一遍，代码重新编写一次，写了这么多可真累，不过以后再捡起来就相对容易些了，先记录这些吧，以后再有新知识，新感悟在补充。</strong></p>
+        }
+        /**
+         * 处理完其他事情，现在来处理消息
+         */
+        System.out.println(msg);
+        System.out.println(&quot;I have executed the message by Local&quot;);
+        /**
+         * 执行回调
+         */
+        callBack.execute(new String[]{&quot;Nice to meet you~!&quot;});
+    }
+
+}
+</code></pre><p>执行结果为</p>
+<pre><code>main
+Message has been sent by Local
+hello
+I have executed the message by Local
+Nice to meet you~!
+</code></pre><p><strong>注意：remote.executeMessage(message, this);</strong><br>　executeMessage方法需要接收一个message参数，表示发送出去的消息，而CallBack参数是他自己，也就是这里的this。表示发送消息后，由Local类自己来处理，调用自身的execute方法来处理消息结果。<br>　如果这里不是用this，而是用其他的CallBack接口的实现类的话，那就不能称之为“回调”了，在OO的世界里，那就属于“委派”。也就是说，“回调”必须是消息的发送者来处理消息结果，否则不能称之为回调。这个概念必须明确。</p>
 
           
         
@@ -1533,7 +1337,7 @@ ThreadImp end:
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1576,7 +1380,7 @@ ThreadImp end:
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1585,7 +1389,7 @@ ThreadImp end:
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1594,7 +1398,7 @@ ThreadImp end:
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

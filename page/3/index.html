@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（一）/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/" itemprop="url">
-                  静态嵌套类(Static Nested Class)和内部类（Inner Class）的不同
+                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（一）/" itemprop="url">
+                  华为在线笔试总结（一）
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:55:46+08:00">
-                2017-02-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:04:25+08:00">
+                2017-02-09
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
+                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
+                    <span itemprop="name">笔试总结</span>
                   </a>
                 </span>
 
@@ -353,442 +353,73 @@
       
         
           
-            <p>　Static Nested Class是被声明为静态（static）的内部类，它可以不依赖于外部类实例被实例化。而通常的内部类需要在外部类实例化后才能实例化。</p>
-<p>　<strong>代码示例如下：</strong></p>
-<pre><code>/**
- * 扑克类（一副扑克）
- *
- */
-public class Poker {
-    private static String[] suites = {&quot;黑桃&quot;, &quot;红桃&quot;, &quot;草花&quot;, &quot;方块&quot;};
-    private static int[] faces = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-    private Card[] cards;
-    /**
-     * 构造器
-     * 
-     */
-    public Poker() {
-        cards = new Card[52];
-        for(int i = 0; i &lt; suites.length; i++) {
-            for(int j = 0; j &lt; faces.length; j++) {
-                cards[i * 13 + j] = new Card(suites[i], faces[j]);
-            }
-        }
-    }
-    /**
-     * 洗牌 （随机乱序）
-     * 
-     */
-    public void shuffle() {
-        for(int i = 0, len = cards.length; i &lt; len; i++) {
-            int index = (int) (Math.random() * len);
-            Card temp = cards[index];
-            cards[index] = cards[i];
-            cards[i] = temp;
-        }
-    }
-    /**
-     * 发牌
-     * @param index 发牌的位置
-     * 
-     */
-    public Card deal(int index) {
-        return cards[index];
-    }
-    /**
-     * 卡片类（一张扑克）
-     * [内部类]
-     *
-     */
-    public class Card {
-        private String suite;   // 花色
-        private int face;       // 点数
-        public Card(String suite, int face) {
-            this.suite = suite;
-            this.face = face;
-        }
-        @Override
-        public String toString() {
-            String faceStr = &quot;&quot;;
-            switch(face) {
-            case 1: faceStr = &quot;A&quot;; break;
-            case 11: faceStr = &quot;J&quot;; break;
-            case 12: faceStr = &quot;Q&quot;; break;
-            case 13: faceStr = &quot;K&quot;; break;
-            default: faceStr = String.valueOf(face);
-            }
-            return suite + faceStr;
-        }
-    }
+            <p>　<strong>在总结之前，我得自身反省一下，明明想法其实已经想的差不多了，但是总差一些细节，尤其关于Scanner类，这个类非常重要，方法一定要记住。</strong></p>
+<p>##　Scanner类##<br>　在源码中应该包括下句：</p>
+<pre><code>import java.util.Scanner;  
+</code></pre><p>　Scanner是新增的一个简易文本扫描器，在 JDK 5.0之前，是没有的。</p>
+<p>　<strong>构造方法：</strong><br>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
+<p>　<strong>方法：</strong><br>　public void close()    //关闭<br>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代<br>　public boolean hasNext() //检测输入中，是否，还有单词<br>　public boolean hasNextInt() //检测输入中，是否，还有单词<br>　public String next()   //读取下一个单词，默认把空格作为分隔符<br>　public int hasNextInt();查看是否有int类型的token的分割段<br>　public String nextLine()  //读行   </p>
+<p>　<strong>读取键盘输入</strong></p>
+<pre><code>Scanner sc = new Scanner(System.in);
+while(sc.hasNext())
+{
+    //处理业务
 }
-</code></pre><p>　测试代码如下：</p>
-<pre><code>class PokerTest {
-    public static void main(String[] args) {
-        Poker poker = new Poker();
-        poker.shuffle();                // 洗牌
-        Poker.Card c1 = poker.deal(0);  // 发第一张牌
-        // 对于非静态内部类Card
-        // 只有通过其外部类Poker对象才能创建Card对象
-        Poker.Card c2 = poker.new Card(&quot;红心&quot;, 1);    // 自己创建一张牌
-
-        System.out.println(c1);     // 洗牌后的第一张
-        System.out.println(c2);     // 打印: 红心A
-    }
-}
-</code></pre><p>　<strong>面试题：下面的代码哪些地方会产生编译错误？</strong></p>
-<pre><code>class Outer {
-    class Inner {}
-    pｕblic static void foo() { new Inner(); }
-    public void bar() { new Inner(); }
-    public static void main(String[] args) {
-        new Inner();
-    }
-}
-</code></pre><p>　解答：Java中非静态内部类对象的创建要依赖其外部类对象，上面的面试题中foo和main方法都是静态方法，静态方法中没有this，也就是说没有所谓的外部类对象，因此无法创建内部类对象，如果要在静态方法中创建内部类对象，可以这样做：</p>
-<pre><code>new Outer().new Inner();
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/" itemprop="url">
-                  抽象类（abstract class）和接口（interface）有什么异同
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:21:13+08:00">
-                2017-02-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　如果一个类中包含抽象方法，那么这个类就是抽象类，在Java中可以通过abstract关键字声明该类或该方法时抽象的；接口就是指一些方法的集合，接口中的所有方法都没有方法体。<br>　只要包含一个抽象方法的类就必须别声明为抽象类，抽象类可以声明方法的存在而不去实现它，被声明的抽象方法不能包含方法体，在实现时，必须包含相同的或者更低的访问级别；接口中的所有方法都是抽象的，接口中的成员变量都是static final类型。</p>
-<p>　<strong>接口与抽象类的相同点如下：</strong></p>
-<ol>
-<li>都不能被实例化。</li>
-<li>接口类的实现类或抽象类的子类都只有实现了接口或抽象类的方法后才能被实例化。</li>
-</ol>
-<p>　<strong>接口是抽象类的不同点如下：</strong></p>
-<ol>
-<li>接口只有定义，其方法不能在接口中实现，只有实现接口的类才能实现接口中定义的方法，而抽象类可以有定义与实现，即其方法可以在抽象类中被实现。</li>
-<li>接口需要实现，但是抽象类只能被继承。</li>
-<li>接口强调特定功能的实现，其设计理念是“has- a”关系，而抽象类强调所属关系，其设计理念为“is- a”关系。</li>
-<li>接口中定义的成员变量默认为public static final,并且必须赋给其初值，其所有成员方法都是public、abstract的；而抽象类可以有自己的数据成员变量，也可以有非抽象的成员方法。</li>
-<li>接口被用于实现比较常用的功能，便于日后的维护或添加删除方法；而抽象类更倾向于充当公共类的角色，不适用于日后重新对里面的代码进行修改。<br>　<strong>一般而言，抽象类多用于在同类事物中有无法具体描述的方法的场景，所以当子类和父类之间存在有逻辑上的层次结构时，推荐使用抽象类；而接口多用于不同类之间，定义不同类之间的通信规则。</strong></li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/02/Java中字符串与存储的机制/" itemprop="url">
-                  Java中字符串与存储的机制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T18:29:28+08:00">
-                2017-02-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>今天准备总结一下String对象的存储机制</strong></p>
-<p>　字符串的声明与初始化有如下两种情况：</p>
-<ol>
-<li>String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象</li>
-<li>String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后s2指向字符串常量池中”abc”对象的首地址。</li>
-</ol>
-<p>　具体来说：</p>
-<pre><code>String s1 = &quot;abc&quot;//把&quot;abc&quot;放到常量池中，在编译时产生
-String s2 = &quot;ab&quot;+&quot;c&quot;//把&quot;ab&quot;+&quot;c&quot;转换成字符串常量&quot;abc&quot;放到常量区中
-String s3 = new String(&quot;abc&quot;)//在运行时把&quot;abc&quot;放到堆里面
-</code></pre><ul>
-<li>String对象的intern()方法会得到字符串对象在常量池中对应的版本的引用（如果常量池中有一个字符串与String对象的equals结果是true），如果常量池中没有对应的字符串，则该字符串将被添加到常量池中，然后返回常量池中字符串的引用</li>
-<li>字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象</li>
+</code></pre><p>　好了，在了解了一些基本信息后，我们开始看题：</p>
+<hr>
+<p>　输入包括多组测试数据。每组输入第一行是两个正整数N和M（0 &lt; N &lt;= 30000,0 &lt; M &lt; 5000）,分别代表学生的数目和操作的数目。<br>学生ID编号从1编到N。第二行包含N个整数，代表这N个学生的初始成绩，其中第i个数代表ID为i的学生的成绩<br>接下来又M行，每一行有一个字符C（只取‘Q’或‘U’），和两个正整数A,B,当C为’Q’的时候, 表示这是一条询问操作，他询问ID从A到B（包括A,B）的学生当中，成绩最高的是多少；当C为‘U’的时候，表示这是一条更新操作，要求把ID为A的学生的成绩更改为B。</p>
+<p>　我第一次做题的时候忽略了两点：</p>
+<ul>
+<li>M限制了查询次数</li>
+<li>A、B的大小关系不确定</li>
 </ul>
-<hr>
-<p>　在明白了以上两点，那么我们来做两道笔试题：</p>
-<ol>
-<li>什么情况下用+运算符进行字符串连接比调用StringBuffer/StringBuilder对象的append方法连接字符串性能更好？<br>StringBuffer对象适用于字符串经常操作，不产生而额外内存，而String对象不可变，一旦创建不能修改，但是操作简单，效率高，所以适用于字符串较少时，操作次数少的情况下。  </li>
-<li><p>请说出下面程序的输出。</p>
-<pre><code>class StringEqualTest {
-    public static void main(String[] args) {
-        String s1 = &quot;Programming&quot;;
-        String s2 = new String(&quot;Programming&quot;);
-        String s3 = &quot;Program&quot;;
-        String s4 = &quot;ming&quot;;
-        String s5 = &quot;Program&quot; + &quot;ming&quot;;
-        String s6 = s3 + s4;
-        System.out.println(s1 == s2);
-        System.out.println(s1 == s5);
-        System.out.println(s1 == s6);
-        System.out.println(s1 == s6.intern());
-        System.out.println(s2 == s2.intern());
-    }
-}
-</code></pre></li>
-</ol>
-<pre><code>**结果为**
+<p>　在了解了这两个陷阱后，代码如下：</p>
+<pre><code>import java.util.Scanner;
+public class Main{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int num = 0;
+        int count = 0;
+         int A=0,B =0;
+        while(sc.hasNext()){
+            num = sc.nextInt();
+            count = sc.nextInt();
 
-    System.out.println(s1==s2);//false
-    System.out.println(s1==s5);//true
-    System.out.println(s1==s6);//false
-    System.out.println(s1==s6.intern());//true
-    System.out.println(s2==s2.intern());//false
-</code></pre><p>　　<strong>解释</strong>：字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象；</p>
-<pre><code>String s6 = s3+s4//等价于
-StringBuilder temp = s3;
-temp.append(s4);
-String s6 = temp.toString();
-</code></pre><p>　所以S6是创建一个新的StringBuilder对象的toString()方法处理成String对象，因此s1==s6为false。</p>
+            int[] grade = new int[num];
+            for(int i=0;sc.hasNext() &amp;&amp; i&lt;num ;i++)
+                grade[i] = sc.nextInt();
+            String ch = null;
+            for(int i=0;sc.hasNext() &amp;&amp; i&lt;count;i++){
+                ch = sc.next();
+                A = sc.nextInt();
+                B = sc.nextInt();
+                if(ch.equals(&quot;U&quot;))
+                    grade[A-1] = B;
+                if(ch.equals(&quot;Q&quot;)){
+                    int result = max(grade,A,B);
+                    System.out.println(result);
+                }
+
+            }
+        }
+
+    }
+
+    public static int max(int[] array,int begin,int end){
+        int min = Math.min(begin,end)-1;
+        int max = Math.max(begin,end);
+
+        int result = array[min];
+        for(int i =min+1;i&lt;max;i++){
+            if(array[i]&gt;result)
+                result = array[i];
+        }
+        return result;
+    }
+
+
+}
+</code></pre><p>　<strong>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</strong></p>
 
           
         
@@ -827,7 +458,7 @@ String s6 = temp.toString();
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中i++和++i的区别和理解/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -852,8 +483,8 @@ String s6 = temp.toString();
             
               
                 
-                <a class="post-title-link" href="/2017/02/02/Java中i++和++i的区别和理解/" itemprop="url">
-                  Java中i++和++i的区别和理解
+                <a class="post-title-link" href="/2017/02/04/排序的Java实现/" itemprop="url">
+                  排序的Java实现
                 </a>
               
             
@@ -869,8 +500,368 @@ String s6 = temp.toString();
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T17:31:43+08:00">
-                2017-02-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T20:46:53+08:00">
+                2017-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
+<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。<br>　具体实现：</p>
+<pre><code>public class TestSelectSort {
+
+    public static void main(String[] args) {
+        int[] a = {5,4,9,8,7,6,0,1,3,2};
+        selectSort(a);
+        show(a);
+    }
+
+    public static void selectSort(int[] a){
+        int i,j;
+        int temp =0,flag =0;
+        for(i =0;i&lt;a.length;i++){
+            temp =a[i];
+            flag =i;
+            for(j =i+1;j&lt;a.length;j++){
+                if(a[j]&lt;temp){
+                    temp= a[j];
+                    flag =j;
+                }
+            }
+            if(flag!=i){
+                a[flag] =a[i];
+                a[i] = temp;
+            }
+        }
+    }
+
+    public static void show(int[] a){
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+
+}
+</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。<br>　具体实现：</p>
+<pre><code>public class TestInsertSort {
+    public static void main(String[] args) {
+        int[] array = {7,3,4,9,10,6};
+        insertSort(array);
+        for(int i=0;i&lt;array.length;i++)
+            System.out.print(array[i]+&quot; &quot;);
+
+    }
+    public static void insertSort(int[] a){
+        if(a!=null){
+            for(int i=1;i&lt;a.length;i++){
+                int temp = a[i],j =i;
+                if(temp&lt;a[j-1]){
+                    while(j&gt;=1 &amp;&amp; temp&lt;a[j-1]){
+                        a[j] = a[j-1];
+                        j--;
+                    }
+                }
+                a[j] = temp;
+            }
+        }
+    }
+}
+</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。<br>　具体实现：</p>
+<pre><code>public class TestBubbleSort {
+    public static void main(String[] args) {
+        int[] array = {4,2,9,10,8,6};
+        BubbleSort(array);
+        for(int i=0;i&lt;array.length;i++){
+            System.out.print(array[i]+&quot; &quot;);
+        }
+    }
+    public static void BubbleSort(int[] a){
+        int i,j,temp,len = a.length;
+        for( i=0;i&lt;len-1;i++){
+            for(j =0;j&lt;len-i-1;j++){
+                if(a[j]&gt;a[j+1]){
+                    temp = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = temp;
+                }
+            }
+        }
+    }
+}
+</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。<br>　具体实现：</p>
+<pre><code>public class TestMergeSort {
+    public static void main(String[] args) {
+        int[] a = {5,3,4,2,9,7,6,1};
+        MergeSort(a, 0, a.length-1);
+        for(int i =0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+    public static void Merge(int[] array,int left,int middle,int right){
+        int i,j,k,n1,n2;
+        n1 = middle-left+1;
+        n2 = right-middle;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+        for(i =0,k =left;i&lt;n1;i++,k++)
+            L[i] = array[k];
+        for(j =0,k=middle+1;j&lt;n2;j++,k++)
+            R[j] = array[k];
+        for(k =left,i =0,j =0;i&lt;n1 &amp;&amp; j&lt;n2;k++){
+            if(L[i]&lt;R[j])
+                array[k] = L[i++];
+            else
+                array[k] = R[j++];
+        }
+        //没有再声明一个变量是因为一下两种情况只会出现一种情况。
+        if(i&lt;n1){
+            for(j =i;j&lt;n1;j++,k++)
+                array[k] =L[j];
+        }
+        if(j&lt;n2){
+            for(i =j;i&lt;n2;i++,k++)
+                array[k] =R[i];    
+        }    
+    }
+
+    public static void MergeSort(int[] array,int left,int right){
+        if(left&lt;right){
+            int middle = (left+right)/2;
+            MergeSort(array, left, middle);
+            MergeSort(array,middle+1,right);
+            Merge(array,left,middle,right);
+        }
+    }
+}
+</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。<br>　具体实现：</p>
+<pre><code>public class TestQuickSort {
+    public static void main(String[] args) {
+        int[] a = {5,3,2,9,7,6,1};
+        quickSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+    public static void sort(int[] array,int low,int high){
+        int i,j,index;
+        if(low&gt;=high) return;
+        i =low;
+        j = high;
+        index = array[low];
+        while(i&lt;j){
+            while(i&lt;j &amp;&amp; array[j]&gt;index)
+                j--;
+            if(i&lt;j)
+                array[i++] = array[j];
+            while(i&lt;j &amp;&amp; array[i]&lt;index)
+                i++;
+            if(i&lt;j){
+                array[j--] = array[i];
+            }
+        }
+        array[i] = index;
+        sort(array,low,i-1);
+        sort(array,i+1,high);
+    }
+    public static void quickSort(int[] array){
+        sort(array,0,array.length-1);
+    }
+}
+</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。<br>　具体实现：</p>
+<pre><code>public class TestShellSort {    
+    public static void main(String[] args) {    
+        int[] a = {5,3,2,9,7,6,1};
+        shellSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+    public static void shellSort(int[] array){
+        int len = array.length;
+        int i,j,h;//h为步长
+        int temp;
+        for(h =len/2;h&gt;0;h/=2){
+            for(i =h;i&lt;len;i++){//从每组至少第二个元素开始遍历
+                temp = array[i];
+                for(j=i-h;j&gt;=0;j-=h){
+                    if(temp&lt;array[j])
+                        array[j+h] = array[j];
+                    else 
+                        break;
+                }
+                array[j+h] = temp;
+            }
+        }
+    }
+}
+</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。<br>　具体实现：</p>
+<pre><code>public class TestHeapSort {
+    public static void main(String[] args) {
+        int[] a = {4,3,2,7,6,5};
+        heapSort(a);
+        for(int i=0;i&lt;a.length;i++)
+            System.out.print(a[i]+&quot; &quot;);
+    }
+    public static void adjustHeap(int[] a,int pos,int len){
+        int temp;
+        int child;
+        for(temp = a[pos];2*pos+1&lt;=len;pos = child){
+            child = 2*pos+1;
+            if(child&lt;len &amp;&amp; a[child+1]&gt;a[child])
+                child++;
+            if(a[child]&gt;temp)
+                a[pos] = a[child];
+            else
+                break;
+        }
+        a[pos] = temp;
+    }
+    public static void heapSort(int[] array){
+        int i;
+        int len = array.length;
+        for(i=len/2-1;i&gt;=0;i--)
+            adjustHeap(array, i, len-1);
+        for(i = len-1;i&gt;=0;i--){
+            int temp = array[0];
+            array[0] = array[i];
+            array[i] = temp;
+            adjustHeap(array, 0, i-1);
+        }
+    }
+}
+</code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/JAVA多线程（二）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/04/JAVA多线程（二）/" itemprop="url">
+                  JAVA多线程（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T18:41:27+08:00">
+                2017-02-04
               </time>
             
 
@@ -929,56 +920,152 @@ String s6 = temp.toString();
       
         
           
-            <p>　今天在做Java题时碰到了关于i++的问题，题目是这样的：</p>
-<pre><code>public class Inc { 
-    public static void main(String[] args) { 
-       Inc inc = new Inc(); 
-       int i = 0; 
-       inc.fermin(i); 
-       i= i ++; 
-       System.out.println(i);
-
-    } 
-    void fermin(int i){ 
-       i++; 
-    } 
-}
-最终答案是0。
-</code></pre><p>　关于值传递我还是理解的，但是i=i++这个语句我又有点懵了，于是找了相关资料，总结就是JVM的机制所引起的，接下来我要详细介绍一下这方面知识，也算给自己一个交代。</p>
-<hr>
-<p>　<strong>jvm里面有两个存储区，一个是暂存区（是一个堆栈，以下称为堆栈），另一个是变量区。jvm会这样运行这条语句：</strong></p>
+            <p>　接着上篇博客继续，还有一些多线程的概念，我以前也没听过，正好整理学习一下，加油！！</p>
+<h2 id="1、sleep-方法与wait-方法的不同？"><a href="#1、sleep-方法与wait-方法的不同？" class="headerlink" title="1、sleep()方法与wait()方法的不同？"></a>1、sleep()方法与wait()方法的不同？</h2><p>　区别主要显示在一下几个方面：</p>
 <ol>
-<li>JVM把count值（其值是0）拷贝到临时变量区。 </li>
-<li>count值加1，这时候count的值是1。 </li>
-<li>返回临时变量区的值。</li>
-<li>返回值赋值给count，此时count值被重置成0。  </li>
+<li>原理不同，sleep()方法时Thread的静态方法，是线程控制自身流程的，会让此线程暂停一段时间，把机会让给其他线程；而wait()方法时Object的方法，用于线程见的通信，这个方法会使拥有该对象锁的进程等待，直到其他线程调用notify()方法。</li>
+<li>对锁的处理机制不同，sleep()方法不涉及线程间通信，不释放锁，而wait()会释放掉它所占用的锁，从而使线程所在对象的其他synchronized数据可被别的线程使用。</li>
+<li>使用区域不同，sleep()可以在任何地方使用，而wait()方法必须放在同步控制方法或语句块中使用；除此之外，sleep()方法必须捕获异常，而wait()方法不需要，在sleep()过程中，有可能被其他对象调用它的interrupt(),产生interruptedException异常。</li>
 </ol>
-<p>　所以上题的i= i++应该是下面的过程</p>
-<pre><code>int i =0;
-temp = i;//temp 为临时变量
-i =i+1;//i =1
-i = temp //i =0
-</code></pre><p>　对于自增运算++j与j++，由于加一的执行顺序不同，所以Java中有中间缓存变量来储存其单个表达式的值，而j的自增自减的结果依然保留在原来的变量储存区。因为本体是j的值，而单个表达式的值是中间产生的一个临时变量值，是在整条计算表达式结束后就可以抛弃的值，所以用个临时中间缓存变量在放就可以了。</p>
-<p>　<strong>按字面理解就是i++ 等价于</strong></p>
-<pre><code>temp =i;//jvm把i的值拷贝到临时变量temp
-i =i+1;//i自加1
-返回临时变量temp的值0作为表达式i++/++i的值
-</code></pre><p>　感觉了解了Java的自增原理，那么我们在练习一道题：</p>
-<pre><code>int j = 0;
-j =++j + j++ +j++ + j++;
+<p>　<strong>那么扩展一下：sleep()和yield()有什么区别？</strong></p>
+<ol>
+<li>sleep()给其他线程运行机会时不考虑线程的优先级，而yield()只给相同优先级或更高优先级的线程运行的机会。</li>
+<li>线程执行sleep()后转入阻塞状态，所以在休眠的时间段内肯定不会被执行；但是yield()只是使当前线程重新回到可执行状态，所以可能执行yield()后进入到可执行状态后马上又被执行。</li>
+<li>sleep()方法抛出InterruptedException，而yield()没有声明任何异常。</li>
+<li>sleep()方法比yield()有更好地可移植性（操作系统方面）。</li>
+</ol>
+<h2 id="2、终止线程的方法？"><a href="#2、终止线程的方法？" class="headerlink" title="2、终止线程的方法？"></a>2、终止线程的方法？</h2><p>　<strong>stop()和suspend()方法。</strong></p>
+<p>　stop()方法释放已经锁定的所有监视资源，suspend()不会释放锁。这两种方式都不安全，一般建议让线程自行结束进入Dead状态；在学习这个方法前，先补充一下基础知识。</p>
+<hr>
+<p>　关键字<strong>volatile</strong>,类型修饰符，系统每次用它时都是直接从内存中读取，而不是从缓存中读取。</p>
+<hr>
+<p>　那么建议方式是通过设置flag()标志来控制循环是否执行，通过这种方法来让线程离开run()方法从而终止线程。</p>
+<p>　<strong>实例代码如下：</strong></p>
+<pre><code>public class MyThreadStop implements Runnable {
+    private volatile Boolean flag;
 
-最终结果为7，详细解答如下
+    public void stop(){
+        flag = false;
+    }
 
-j =j+1 =1;
-temp1 = j =1;
-temp2 = j =1;
-j = j+1 =2;
-temp3 = j = 2；
-j =j+1 =3;
-temp4 = j = 3;
-j = j+1 =4;
-j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
-</code></pre><p> <strong>总结</strong>：今天算是终于弄明白i++的原理了，有些问题一定要弄清楚，不能糊弄过去，加油！！！</p>
+    @Override
+    public void run() {
+        while(flag){
+            //执行
+        }
+    }
+
+}
+</code></pre><p>　在上例中，调用stop()虽然能够终止线程，但是，当线程处于非运行状态时，这个方法就不可用啦，此时可以使用interrupt()方法来打破阻塞的情况，当interrupt()被调用时，会抛出interruptedException异常，可以通过在run()方法中来捕获这个异常让线程安全退出。</p>
+<p>　<strong>示例代码如下：</strong></p>
+<pre><code>public class MYThread {
+
+    public static void main(String[] args) {
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println(&quot;thread go to sleep&quot;);
+
+                try {
+                    Thread.sleep(5000);
+                    System.out.println(&quot;thread end&quot;);
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                    System.out.println(&quot;thread is interupted&quot;);
+                }
+            }
+        });
+
+        thread.start();
+        thread.interrupt();
+
+    }
+
+}
+
+运行结果如下：
+thread go to sleep
+thread is interupted
+</code></pre><h2 id="3、什么是守护线程？"><a href="#3、什么是守护线程？" class="headerlink" title="3、什么是守护线程？"></a>3、什么是守护线程？</h2><p>　守护线程是指程序在运行时在后台提供一种通用服务的线程，用户线程跟守护线程的差别在：如果用户线程已经全部退出运行，只剩下守护线程存在，JVM也就退出了。</p>
+<p>　在Java中，守护线程一般具有较低的优先级，它可以由用户设置，方法就是在调用<strong>start()前</strong>调用对象的setDaemon(true)方法，注意：当在一个守护线程中产生了其他线程，那么这些新产生的线程默认还是守护线程。</p>
+<p>　<strong>说了这么多，代码实战一下更加清晰明了：</strong></p>
+<pre><code>class ThreadJoin extends Thread{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName()+&quot;:begin&quot;);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(Thread.currentThread().getName()+&quot;:end&quot;);
+    }
+
+}
+
+public class ThreadJoinDemo {
+
+    public static void main(String[] args) {
+        System.out.println(&quot;test:begin&quot;);
+        Thread t1 = new ThreadJoin();
+        t1.setDaemon(true);
+        t1.start();
+        System.out.println(&quot;test:end&quot;);
+
+    }
+
+}
+
+运行结果：
+test:begin
+test:end
+Thread-0:begin
+</code></pre><p>　其中守护线程最典型的的一个例子就是垃圾回收器，只要JVM启动，它始终在运行，实时监控和管理系统中可以被回收的资源。</p>
+<h2 id="4、join-方法的作用是什么？"><a href="#4、join-方法的作用是什么？" class="headerlink" title="4、join()方法的作用是什么？"></a>4、join()方法的作用是什么？</h2><p>　join()的作用是让调用该方法的线程在执行完run()方法后，再执行join()方法后面的代码。简单来说就是将两个线程合并，实现同步的功能；具体就是可以通过线程A的join()方法来等待线程A的结束，或者使用线程A的join(2000)方法来等待线程A的结束，但最多只等2s。</p>
+<p>　<strong>来，写个代码实例把：</strong></p>
+<pre><code>public class JoinTest {
+
+    public static void main(String[] args) {
+        Thread t = new Thread(new ThreadImp());
+        t.start();
+        try {
+            t.join(1000);
+            if(t.isAlive()){
+                System.out.println(&quot;t has not finished&quot;);
+            }else{
+                System.out.println(&quot;t has finished&quot;);
+            }
+            System.out.println(&quot;joinFinish&quot;);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}
+
+class ThreadImp implements Runnable{
+
+    @Override
+    public void run() {
+        System.out.println(&quot;ThreadImp begin:&quot;);
+        try {
+            Thread.sleep(5000);
+            System.out.println(&quot;ThreadImp end:&quot;);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+运行结果如下：
+ThreadImp begin:
+t has not finished
+joinFinish
+ThreadImp end:
+</code></pre><p>　<strong>到这里，关于线程的知识差不多整理完毕，有很多知识我也是重新学习了一遍，代码重新编写一次，写了这么多可真累，不过以后再捡起来就相对容易些了，先记录这些吧，以后再有新知识，新感悟在补充。</strong></p>
 
           
         
@@ -1017,7 +1104,7 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/01/基本操作/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/JAVA多线程（一）/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1042,8 +1129,8 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
             
               
                 
-                <a class="post-title-link" href="/2017/02/01/基本操作/" itemprop="url">
-                  基本操作
+                <a class="post-title-link" href="/2017/02/03/JAVA多线程（一）/" itemprop="url">
+                  JAVA多线程（一）
                 </a>
               
             
@@ -1059,8 +1146,8 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T19:51:36+08:00">
-                2017-02-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T20:42:34+08:00">
+                2017-02-03
               </time>
             
 
@@ -1082,8 +1169,8 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/备忘录/" itemprop="url" rel="index">
-                    <span itemprop="name">备忘录</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -1119,17 +1206,489 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
       
         
           
-            <h2 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>hexo new &quot;postName&quot; #新建文章
-hexo generate #生成静态页面至public目录
-hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）
-hexo deploy #将.deploy目录部署到GitHub
-hexo help  # 查看帮助
-hexo version  #查看Hexo的版本
-</code></pre><h3 id="命令简写"><a href="#命令简写" class="headerlink" title="命令简写"></a>命令简写</h3><pre><code>hexo n == hexo new
-hexo g == hexo generate
-hexo s == hexo server
-hexo d == hexo deploy
-</code></pre>
+            <p>　在上学期学习了操作系统的相关知识，首先学的就是进程与线程的知识概念，但是linux操作系统是用c语言编写的，并且关于线程的代码太底端，平时做题也是运用伪代码来写的，那么今天在整理Java多线程的相关知识的同时，正好与之前学习的操作系统知识相结合，那么这篇文章主要介绍一下多线程的Java实现。</p>
+<h2 id="1、线程与进程的概念"><a href="#1、线程与进程的概念" class="headerlink" title="1、线程与进程的概念"></a>1、线程与进程的概念</h2><p>　线程是指程序在执行过程中，能够执行程序代码的一个执行单元，在Java语言中有四种状态：运行、就绪、挂起、结束。</p>
+<p>　进程是指一段正在执行的程序，而线程有时成为轻量级进程，是程序执行的最小单元，一个进程可以有多个线程，各个线程之间共享程序的内存空间（代码段、数据段、堆空间）以及一些进程级的资源，但是各个线程拥有自己的栈空间。</p>
+<p>　在网上找到一个图片很合适的表现的进程与线程的对比关系，图如下：</p>
+<p><img src="http://i.imgur.com/Tv9A8OA.png" alt=""></p>
+<p>　在操作系统级别上，程序的执行都是以进程为单位，每个进程通常有多个线程互不影响并发的执行，那么为什么使用多线程呢？</p>
+<ol>
+<li>使用多线程可以减少程序的响应时间。</li>
+<li>与进程相比，线程的创建和切换开销更小。</li>
+<li>多CPU或多核计算机本身就具有执行多线程的能力。</li>
+<li>使用多线程能简化程序的结构，使程序便于理解和维护。</li>
+</ol>
+<h2 id="2、同步和异步的区别？"><a href="#2、同步和异步的区别？" class="headerlink" title="2、同步和异步的区别？"></a>2、同步和异步的区别？</h2><p>　答：如果系统中存在临界资源（资源数量少于竞争资源的线程数量的资源），例如正在写的数据以后可能被另一个线程读到，或者正在读的数据可能已经被另一个线程写过了，那么这些数据就必须进行同步存取（数据库操作中的排他锁就是最好的例子）。当应用程序在对象上调用了一个需要花费很长时间来执行的方法，并且不希望让程序等待方法的返回时，就应该使用异步编程，在很多情况下采用异步途径往往更有效率。事实上，所谓的同步就是指阻塞式操作，而异步就是非阻塞式操作。</p>
+<h2 id="3、如何实现JAVA多线程？"><a href="#3、如何实现JAVA多线程？" class="headerlink" title="3、如何实现JAVA多线程？"></a>3、如何实现JAVA多线程？</h2><p>　Java虚拟机允许应用程序并发的运行多个线程，在Java中，一共有三种实现方式，那么根据我的掌握程度，我只写前两个实现方式。</p>
+<ol>
+<li>继承Thread类，重写run()方法</li>
+<li><p>声明实现Runnable接口类，并实现run()方法。</p>
+<p> <strong>对于方式一：</strong></p>
+</li>
+</ol>
+<p>　启动线程的唯一方法就是通过Thread的start()方法。start()方法是一个本地方法，将启动一个新线程，并执行run()方法；需要注意的是：调用start()方法是使得该线程变为可运行状态，什么时候运行线程代码是由操作系统决定。</p>
+<p>　代码示例如下：</p>
+<pre><code>class Demo extends Thread    
+{  
+    private String name;  
+    Demo(String name)//构造函数  
+    {  
+        //this.name = name;  
+        super(name);  
+
+    }  
+    public void run()//复写run方法  
+    {  
+        for ( int i = 0 ; i &lt; 60  ; i++ )  
+        {  
+            System.out.println(Thread.currentThread().getName()+&quot;run=&quot;+i);  
+        }  
+    }  
+} 
+public class ThreadExtendsDemo {
+
+    public static void main(String[] args) {
+        Demo t1 = new Demo(&quot;one&quot;);//创建一个对象t1  
+        Demo t2 = new Demo(&quot;two&quot;);  
+        t1.start();// 通过调用start方法，开启多线程  
+        t2.start();  
+        run();  
+    }
+
+    private static void run() {
+        for(int i =0;i&lt;60;i++)
+            System.out.println(&quot;main&quot; +i);
+    }
+
+}
+</code></pre><p>　需要注意的是：<br>　t1.start()开启线程并执行该线程的run方法。<br>　t1.run()仅仅是对象调用方法。而线程创建了，并没有运行。还是在主线程的运行中。</p>
+<p>　　<strong>对于方式二：</strong></p>
+<p>　首先定义类实现Runnable接口，实现run()方法；然后创建Thread对象，用实现Runnable接口的对象作为参数实例化该Thread对象；最有调用Thread的start()方法。</p>
+<p>　代码示例如下：</p>
+<pre><code>class MyThread implements Runnable{
+
+    @Override
+    public void run() {
+        System.out.println(&quot;Thread Body&quot;);
+    }
+
+}
+public class ThreadImmDemo {
+
+    public static void main(String[] args) {
+        MyThread thread = new MyThread();
+        Thread t = new Thread(thread);
+        t.start();
+
+    }
+
+}
+</code></pre><p>　其实，不管是通过继承Thread类还是通过实现Runnable接口来实现多线程的方法，最终还是通过Thread对象的API来控制线程。</p>
+<p>　在学习了这两种方式实现多线程，那么有一个问题：<strong>一个类是否可以同时继承Thread类并实现Runnable接口</strong>？<br>　答案是可以的;代码示例如下：</p>
+<pre><code>public class Test extends Thread implements Runnable {
+
+    public static void main(String[] args) {
+        Thread t = new Thread(new Test());
+        t.start();
+    }
+
+}
+</code></pre><p>　上面这段代码是可以编译通过的，因为Test类从Thread类继承了run()方法，这个继承的run()方法可以被当做对RUnnable接口的实现，因此此段代码可以编译通过。</p>
+<h2 id="4、run-方法和start-方法的区别？"><a href="#4、run-方法和start-方法的区别？" class="headerlink" title="4、run()方法和start()方法的区别？"></a>4、run()方法和start()方法的区别？</h2><p>　通常，系统通过调用线程类的start()方法来启动一个线程，此时该线程处于就绪状态，而非运行状态，也就意味着这个线程可以被JVM来调度执行；在调度过程中，JVM通过调用线程类的run()方法来完成实际的操作，当run()方法结束后，此线程就会终止。</p>
+<p>　如果直接调用run()方法，这会别当做一个普通的函数调用，程序中仍然只有主线程这一个线程；<br>由此可知，只有通过调用线程类的start()方法才能真正达到多线程的目的。</p>
+<h2 id="5、多线程同步的实现方法？"><a href="#5、多线程同步的实现方法？" class="headerlink" title="5、多线程同步的实现方法？"></a>5、多线程同步的实现方法？</h2><p><strong>Java主要提供了3种实现同步机制的方法：</strong></p>
+<h3 id="1-synchronized关键字"><a href="#1-synchronized关键字" class="headerlink" title="1 synchronized关键字"></a>1 synchronized关键字</h3><p>　在Java中，每个对象都有一个对象锁与之相关联，该锁表明对象在任何时候只允许被一个线程所拥有，当一个线程调用对象的一段synchronized代码时，需要先获取这个锁，然后去执行相应的代码，执行结束后，释放锁。</p>
+<p>　synchronized关键字有两种用法：synchronized方法和synchronized块，此外，该关键字可以用作于静态方法、类、或某个实例。</p>
+<p>　讲解了这么多，我编写一个买票程序，使用两个线程买票，一个线程在同步块中，一个线程在同步函数中，代码实例如下：</p>
+<pre><code>class Ticket implements Runnable{
+    private int ticket =100;
+    boolean flag = true;
+
+    @Override
+    public void run() {
+        if(flag){
+            while(true){
+                synchronized (this) {
+                    if(ticket&gt;0){
+                        try {
+                            Thread.sleep(10);
+                            System.out.println(Thread.currentThread().getName()+&quot;runs=&quot;+ticket--);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        }
+        else{
+            show();
+        }
+    }
+
+    private synchronized void show() {
+        while(true){
+            if(ticket&gt;0){
+                try {
+                    Thread.sleep(10);
+                    System.out.println(Thread.currentThread().getName()+&quot;show =&quot;+ticket--);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+}
+
+public class TicketDemo {
+
+    public static void main(String[] args) {
+        Ticket t = new Ticket();
+        Thread t1 = new Thread(t);
+        Thread t2 = new Thread(t);
+        t1.start();
+
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        t.flag = false;
+        t2.start();
+
+    }
+
+}
+</code></pre><p>　那么如果同步函数被static修饰后，使用的锁是什么呢？我们知道静态进内存时一定没有本类对象，但一定有该类对应的字节码文件对象，即类.class,实在不行，我们创建一个对象，<strong>Object obj = new Objext()</strong>;然后利用obj锁。</p>
+<h3 id="2-wait-和notify-方法"><a href="#2-wait-和notify-方法" class="headerlink" title="2 wait()和notify()方法"></a>2 wait()和notify()方法</h3><p>　在synchronized代码被执行期间，线程可以通过调用对象的wait()方法，释放对象锁，进入等待状态，并且可以调用notify()或notifyAll()方法通知正在等待的其他线程。其中，notify()方法仅唤醒一个线程（等待队列的第一个线程），并允许它去获得锁；notifyAll()方法唤醒所有等待这个对象的线程并允许他们获得锁（让这些线程竞争获得）。</p>
+<p>　接下来编写一个生产者消费者的实例，代码实例如下：</p>
+<pre><code>public class ProducerConsumerDemo {
+
+    public static void main(String[] args) {
+        Resource res = new Resource();
+        Producer pro = new Producer(res);
+        Consumer con = new Consumer(res);
+
+        Thread t0 = new Thread(pro);
+        Thread t1 = new Thread(pro);
+        Thread t2 = new Thread(con);
+        Thread t3 = new Thread(con);
+
+        t0.start();
+        t1.start();
+        t2.start();
+        t3.start();
+
+    }
+
+}
+
+class Resource{
+    private String name ;
+    private int count =1;
+    private boolean flag = false;//true代表有产品，false代笔没有产品
+
+    //生产
+    public synchronized void set(String name){
+        while(flag){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        this.name = name;
+        System.out.println(Thread.currentThread().getName()+&quot;...生产者&quot;+this.name);
+        flag = true;
+        this.notifyAll();
+    }
+
+    //消费
+    public synchronized void out(){
+        while(!flag){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Thread.currentThread().getName()+&quot;...消费者&quot;+this.name);
+        flag = false;
+        this.notifyAll();
+
+    }
+}
+
+class Producer implements Runnable{
+    private Resource res;
+    Producer(Resource res){
+        this.res = res;
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            res.set(&quot;商品&quot;);
+        }
+    }
+
+}
+
+class Consumer implements Runnable{
+    private Resource res;
+    Consumer(Resource res){
+        this.res = res;
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            res.out();
+        }
+    }
+
+}
+</code></pre><h3 id="3-Lock"><a href="#3-Lock" class="headerlink" title="3 Lock"></a>3 Lock</h3><p>　JDK5后新增了Lock接口以及一个实现类ReentrantLock(重入锁)，我也第一次接触，好好学习一下，Lock也可以用来实现多线程的同步，它提供一些放法实现多线程的同步：</p>
+<p>　1 lock():以阻塞的方式获取锁，即如果获取到了锁，立即返回，如果别的线程持有锁，当前线程等待，直到获取锁后返回。</p>
+<p>　2 tryLock():以非阻塞的方式来获取锁，只是试探获取，如果获取到锁，立即返回true,否则返回false。</p>
+<p>　3 lockInterruptibly():如果获取到了锁，立即返回，否则，当前线程处于休眠状态，直到获得锁，注意：如果当前线程被别的线程中断，会收到InterruptedException异常。</p>
+<p>　<strong>先总结到这里，没想到写了这么多还有很多没写完，那么只好再写一篇啦。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/03/finally块中的代码什么时候被执行/" itemprop="url">
+                  finally块中的代码什么时候被执行
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T18:08:53+08:00">
+                2017-02-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。<br>　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？<br>　解答：在Java语言的异常处理中，<strong>finally块的作用就是为了保证无论出现什么情况，finally中的代码一定会被执行</strong>，因此任何语句要执行都只能在return前执行（<strong>除非碰到exit函数</strong>），因此finally块中的代码在return前执行。此外，如果try-finally或catch-finally中都有return,那么<strong>finally块中的return语句将会覆盖别处的return语句</strong>，最终返回到调用者那里的是finally中的return值。<br>　代码示例如下：</p>
+<pre><code>public class TestFinally1 {
+
+    public static int testfinally(){
+        try{
+            return 1;
+        }catch(Exception e){
+            return 0;
+        }finally{
+            System.out.println(&quot;execute finally&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        int result = testfinally();
+        System.out.println(result);
+
+    }
+
+}
+
+结果运行如下：
+execute finally
+1
+</code></pre><p>　从上面的例子中可以看出，在执行return语句之前确实执行了finally块中的代码；那么如果在finally块中放置return语句，会不会覆盖呢？<br>　代码示例如下：</p>
+<pre><code>public static int testfinally2(){
+    try {
+        return 1;
+    } catch (Exception e) {
+        return 0;
+    }finally{
+        System.out.println(&quot;execute finally2&quot;);
+        return 3;
+    }
+}
+
+public static void main(String[] args) {
+
+    int result = testfinally2();
+    System.out.println(result);
+
+}
+
+结果运行如下：
+execute finally2
+3
+</code></pre><p>　<strong>从上面的例子中可以看出，当finally块中有return语句时，将会覆盖函数中其它return语句；此外，由于在一个方法体中内部定义的变量都存储在栈中，在这个函数结束后，其对应的栈会被回收，此时在其方法体中定义的变量将不存在了，因此return在返回时不是直接返回变量的值，而是复制一份，然后返回。因此，对于基本类型的数据，在finally块中改变return的值对返回值没有任何影响，而对引用类型的数据会有影响。</strong><br>　代码示例如下：</p>
+<pre><code>public class TestReturn {
+
+    public static int testFinally1(){
+        int result =1;
+        try{
+            result =2;
+            return result;
+        }catch(Exception e){
+            return 0;
+        }finally{
+            result = 3;
+            System.out.println(&quot;excuate testFinally1&quot;);
+        }
+    }
+
+    public static StringBuffer testFinally2(){
+        StringBuffer s = new StringBuffer(&quot;hello&quot;);
+        try{
+            return s;
+        }catch(Exception e){
+            return null;
+        }finally{
+            s.append(&quot; world&quot;);
+            System.out.println(&quot;excuate testFinally2&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(testFinally1());
+        System.out.println(testFinally2());
+    }
+
+}
+
+结果运行如下：
+excuate testFinally1
+2
+excuate testFinally2
+hello world
+</code></pre><p>　解析：程序在执行return时会首先将返回值存储在一个指定的位置，其次去执行finally块，最后在返回。<br>　在testFinally1()方法调用return前，先把result的值1存储在一个指定的位置，然后再去执行finally块中的代码，此时修改result的值将不会影响到程序的返回结果。<br>　testFinally2()中，在调用return前先把s存储在一个指定的位置，由于s为引用类型，因此在finally块中修改s将会修改程序的返回结果。</p>
+<hr>
+<p>　写了这么多，总结的也应该比较到位，那我在网上找一道相关的面试题进行解答。<br>　<strong>出现在Java程序中的finally块是不是一定会被执行？</strong><br>　答:不一定，以下两种情况都不会。  </p>
+<ol>
+<li>当程序在进入try{}语句块之前就出现异常，会直接结束。例如在try{}之前有语句int i= 9/0;那么会直接抛出异常，导致没有执行try{}中的代码。  </li>
+<li>当程序在try{}中强制退出也不会执行。例如在try{System.exit(0)}。</li>
+</ol>
+
           
         
       
@@ -1162,7 +1721,7 @@ hexo d == hexo deploy
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1205,7 +1764,7 @@ hexo d == hexo deploy
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1214,7 +1773,7 @@ hexo d == hexo deploy
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1223,7 +1782,7 @@ hexo d == hexo deploy
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

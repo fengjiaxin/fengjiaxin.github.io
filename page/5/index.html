@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-外观模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-外观模式/" itemprop="url">
-                  Java典型设计模式-外观模式
+                <a class="post-title-link" href="/2017/02/02/Java中字符串与存储的机制/" itemprop="url">
+                  Java中字符串与存储的机制
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T18:29:28+08:00">
+                2017-02-02
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -353,94 +353,395 @@
       
         
           
-            <p>　最近在学习Tomcat,Tomcat中多处使用外观（门面）模式，那么今天系统学习一下外观模式，以便更好地学习Tomcat。</p>
-<hr>
-<p>　<strong>外观模式：要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行，外观模式提供一个更高层次的接口，使得子系统轻易使用。</strong><br>外观模式有以下两个角色：  </p>
-<ul>
-<li>外观角色：客户端可以调用该角色的方法，该角色知晓相关子系统的功能和责任；正常情况下，本角色会将所有从客户端发来的请求委派到相应的子系统，该角色没有实际的业务逻辑，只是一个委托类。</li>
-<li>子系统角色：可以同时有一个或多个子系统，每一个子系统都不是一个单独的类，而是一个类的集合。子系统不知道外观角色的存在，对于子系统而言，外观角色仅是另一个客户端。</li>
+            <p><strong>今天准备总结一下String对象的存储机制</strong></p>
+<p>　字符串的声明与初始化有如下两种情况：</p>
+<ol>
+<li>String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象</li>
+<li>String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后s2指向字符串常量池中”abc”对象的首地址。</li>
+</ol>
+<p>　具体来说：</p>
+<pre><code>String s1 = &quot;abc&quot;//把&quot;abc&quot;放到常量池中，在编译时产生
+String s2 = &quot;ab&quot;+&quot;c&quot;//把&quot;ab&quot;+&quot;c&quot;转换成字符串常量&quot;abc&quot;放到常量区中
+String s3 = new String(&quot;abc&quot;)//在运行时把&quot;abc&quot;放到堆里面
+</code></pre><ul>
+<li>String对象的intern()方法会得到字符串对象在常量池中对应的版本的引用（如果常量池中有一个字符串与String对象的equals结果是true），如果常量池中没有对应的字符串，则该字符串将被添加到常量池中，然后返回常量池中字符串的引用</li>
+<li>字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象</li>
 </ul>
-<p>外观模式类图如下：<br><img src="http://i.imgur.com/bnRLavr.png" alt=""> </p>
-<p>外观模式的优点：</p>
-<ol>
-<li>减少系统的相互依赖，所有的依赖都是对Facade对象的依赖，与子系统无关。</li>
-<li>提高灵活性，不管子系统如何变化，只要不影响Facade对象，任何活动都是自由的。</li>
-<li>提高安全性，Facade为提供的方法，外界就无法访问，提高系统的安全性。</li>
-<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
-</ol>
-<p>外观模式的使用场景：</p>
-<ol>
-<li>为一个浮渣的模块或子系统提供一个供外界访问的接口。</li>
-<li>子系统相对独立，外界对子系统的访问只要黑箱操作即可。</li>
-<li>预防风险扩散，使用Facade进行访问操作控制。</li>
-</ol>
 <hr>
-<p>　<strong>使用外观模式模拟秘书为老板准备工作的过程：</strong></p>
-<p>　Airport.java：    </p>
-<pre><code>public class Airport {
-    public void bookTicket(String from,String to){
-        System.out.println(&quot;订购了从&quot;+from+&quot;到&quot;+to+&quot;的机票&quot;);
+<p>　在明白了以上两点，那么我们来做两道笔试题：</p>
+<ol>
+<li>什么情况下用+运算符进行字符串连接比调用StringBuffer/StringBuilder对象的append方法连接字符串性能更好？<br>StringBuffer对象适用于字符串经常操作，不产生而额外内存，而String对象不可变，一旦创建不能修改，但是操作简单，效率高，所以适用于字符串较少时，操作次数少的情况下。  </li>
+<li><p>请说出下面程序的输出。</p>
+<pre><code>class StringEqualTest {
+    public static void main(String[] args) {
+        String s1 = &quot;Programming&quot;;
+        String s2 = new String(&quot;Programming&quot;);
+        String s3 = &quot;Program&quot;;
+        String s4 = &quot;ming&quot;;
+        String s5 = &quot;Program&quot; + &quot;ming&quot;;
+        String s6 = s3 + s4;
+        System.out.println(s1 == s2);
+        System.out.println(s1 == s5);
+        System.out.println(s1 == s6);
+        System.out.println(s1 == s6.intern());
+        System.out.println(s2 == s2.intern());
     }
 }
-</code></pre><p>　Hotel.java：</p>
-<pre><code>public class Hotel {
-    public void reserve(int days){
-        System.out.println(&quot;订了&quot;+days+&quot;天的房间&quot;);
-    }
-}
-</code></pre><p>　Restaurant.java：</p>
-<pre><code>public class Restaurant {
-    public void reserve(int num){
-        System.out.println(&quot;定了一座&quot;+num+&quot;个人的酒席&quot;);
-    }
-}
-</code></pre><p>　Driver.java：</p>
-<pre><code>public class Driver {
-    public void drive(String to){
-        System.out.println(&quot;司机开车到&quot;+to);
-    }
-}
-</code></pre><p>　Secretary.java：</p>
-<pre><code>public class Secretary {
-    private Driver driver = new Driver();
-    private Hotel hotel = new Hotel();
-    private Restaurant res = new Restaurant();
-    private Airport air = new Airport();
+</code></pre></li>
+</ol>
+<pre><code>**结果为**
 
-    //安排出差
-    public void trip(String to,int days){
-        air.bookTicket(&quot;青岛&quot;, to);
-        driver.drive(&quot;机场&quot;);
-        hotel.reserve(days);
-    }
+    System.out.println(s1==s2);//false
+    System.out.println(s1==s5);//true
+    System.out.println(s1==s6);//false
+    System.out.println(s1==s6.intern());//true
+    System.out.println(s2==s2.intern());//false
+</code></pre><p>　　<strong>解释</strong>：字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象；</p>
+<pre><code>String s6 = s3+s4//等价于
+StringBuilder temp = s3;
+temp.append(s4);
+String s6 = temp.toString();
+</code></pre><p>　所以S6是创建一个新的StringBuilder对象的toString()方法处理成String对象，因此s1==s6为false。</p>
 
-    //安排饭局
-    public void repast(int num){
-        res.reserve(num);
-        driver.drive(&quot;酒店&quot;);
-    }
-}
-</code></pre><p>　Boss.java</p>
-<pre><code>public class Boss {
-    public static void main(String[] args){
-        Secretary se = new Secretary();
-        System.out.println(&quot;老板告诉秘书要去上海出差10天&quot;);
-        se.trip(&quot;上海&quot;, 10);
-        System.out.println(&quot;................&quot;);
-        System.out.println(&quot;老板告诉秘书邀请8个人吃饭&quot;);
-        se.repast(8);
-    }
+          
+        
+      
+    </div>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中i++和++i的区别和理解/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/Java中i++和++i的区别和理解/" itemprop="url">
+                  Java中i++和++i的区别和理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T17:31:43+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　今天在做Java题时碰到了关于i++的问题，题目是这样的：</p>
+<pre><code>public class Inc { 
+    public static void main(String[] args) { 
+       Inc inc = new Inc(); 
+       int i = 0; 
+       inc.fermin(i); 
+       i= i ++; 
+       System.out.println(i);
+
+    } 
+    void fermin(int i){ 
+       i++; 
+    } 
 }
-</code></pre><p>　程序运行结果：</p>
-<pre><code>老板告诉秘书要去上海出差10天
-订购了从青岛到上海的机票
-司机开车到机场
-订了10天的房间
-................
-老板告诉秘书邀请8个人吃饭
-定了一座8个人的酒席
-司机开车到酒店
+最终答案是0。
+</code></pre><p>　关于值传递我还是理解的，但是i=i++这个语句我又有点懵了，于是找了相关资料，总结就是JVM的机制所引起的，接下来我要详细介绍一下这方面知识，也算给自己一个交代。</p>
+<hr>
+<p>　<strong>jvm里面有两个存储区，一个是暂存区（是一个堆栈，以下称为堆栈），另一个是变量区。jvm会这样运行这条语句：</strong></p>
+<ol>
+<li>JVM把count值（其值是0）拷贝到临时变量区。 </li>
+<li>count值加1，这时候count的值是1。 </li>
+<li>返回临时变量区的值。</li>
+<li>返回值赋值给count，此时count值被重置成0。  </li>
+</ol>
+<p>　所以上题的i= i++应该是下面的过程</p>
+<pre><code>int i =0;
+temp = i;//temp 为临时变量
+i =i+1;//i =1
+i = temp //i =0
+</code></pre><p>　对于自增运算++j与j++，由于加一的执行顺序不同，所以Java中有中间缓存变量来储存其单个表达式的值，而j的自增自减的结果依然保留在原来的变量储存区。因为本体是j的值，而单个表达式的值是中间产生的一个临时变量值，是在整条计算表达式结束后就可以抛弃的值，所以用个临时中间缓存变量在放就可以了。</p>
+<p>　<strong>按字面理解就是i++ 等价于</strong></p>
+<pre><code>temp =i;//jvm把i的值拷贝到临时变量temp
+i =i+1;//i自加1
+返回临时变量temp的值0作为表达式i++/++i的值
+</code></pre><p>　感觉了解了Java的自增原理，那么我们在练习一道题：</p>
+<pre><code>int j = 0;
+j =++j + j++ +j++ + j++;
+
+最终结果为7，详细解答如下
+
+j =j+1 =1;
+temp1 = j =1;
+temp2 = j =1;
+j = j+1 =2;
+temp3 = j = 2；
+j =j+1 =3;
+temp4 = j = 3;
+j = j+1 =4;
+j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
+</code></pre><p> <strong>总结</strong>：今天算是终于弄明白i++的原理了，有些问题一定要弄清楚，不能糊弄过去，加油！！！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/01/基本操作/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/01/基本操作/" itemprop="url">
+                  基本操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T19:51:36+08:00">
+                2017-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/备忘录/" itemprop="url" rel="index">
+                    <span itemprop="name">备忘录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>hexo new &quot;postName&quot; #新建文章
+hexo generate #生成静态页面至public目录
+hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）
+hexo deploy #将.deploy目录部署到GitHub
+hexo help  # 查看帮助
+hexo version  #查看Hexo的版本
+</code></pre><h3 id="命令简写"><a href="#命令简写" class="headerlink" title="命令简写"></a>命令简写</h3><pre><code>hexo n == hexo new
+hexo g == hexo generate
+hexo s == hexo server
+hexo d == hexo deploy
 </code></pre>
           
         
@@ -699,7 +1000,7 @@ observer2 has received!
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-适配器模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-外观模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -724,8 +1025,8 @@ observer2 has received!
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-适配器模式/" itemprop="url">
-                  Java典型设计模式-适配器模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-外观模式/" itemprop="url">
+                  Java典型设计模式-外观模式
                 </a>
               
             
@@ -741,7 +1042,7 @@ observer2 has received!
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:03:57+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
                 2017-01-09
               </time>
             
@@ -801,505 +1102,95 @@ observer2 has received!
       
         
           
-            <h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>　适配器模式主要分为三类：类的适配器模式、对象的适配器模式、接口的适配器模式。</p>
+            <p>　最近在学习Tomcat,Tomcat中多处使用外观（门面）模式，那么今天系统学习一下外观模式，以便更好地学习Tomcat。</p>
 <hr>
-<p>　适配器模式将某个类的接口转换成客户端期望的另一个接口表示，目的是消除由于接口不匹配所造成的类的兼容性问题。有点抽象，我们来看看详细的内容。  </p>
-<h4 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h4><p>　类的适配器模式核心思想就是：有一个Source类，拥有一个方法，待适配，目标接口是Targetable，通过Adapter类，将Source的功能扩展到Targetable里。</p>
-<pre><code>public class Source {
-    public void method1() {  
-        System.out.println(&quot;this is original method!&quot;);  
-    }  
-}
-
-public interface Targetable {
-    /* 与原类中的方法相同 */
-    public void method1();
-    /* 新类的方法 */
-    public void method2();
-}
-
-public class Adapter extends Source implements Targetable {
-    public void method2() {
-        System.out.println(&quot;this is the targetable method!&quot;);
-    }
-}
-
-public class AdapterTest {
-    public static void main(String[] args) {
-        Targetable target = new Adapter();
-        target.method1();
-        target.method2();
-    }
-}
-AdapterTest的运行结果：
-this is original method!
-this is the targetable method!
-</code></pre><h4 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h4><p>　对象的适配器模式的基本思路和类的适配器模式相同，只是将Adapter类作修改成Wrapper，这次不继承Source类，而是持有Source类的实例，以达到解决兼容性的问题。</p>
-<pre><code>public class Wrapper implements Targetable {
-    private Source source;
-    public Wrapper(Source source) {
-        super();
-        this.source = source;
-    }
-    @Override
-    public void method2() {
-        System.out.println(&quot;this is the targetable method!&quot;);
-    }
-    @Override
-    public void method1() {
-        source.method1();
-    }
-}
-
-public class AdapterTest {
-    public static void main(String[] args) {
-        Source source = new Source();
-        Targetable target = new Wrapper(source);
-        target.method1();
-        target.method2();
-    }
-}
-AdapterTest的运行结果：
-this is original method!
-this is the targetable method!
-</code></pre><h4 id="接口的适配器模式"><a href="#接口的适配器模式" class="headerlink" title="接口的适配器模式"></a>接口的适配器模式</h4><p>　接口的适配器是这样的：有时我们写的一个接口中有多个抽象方法，当我们写该接口的实现类时，必须实现该接口的所有方法，这明显有时比较浪费，因为并不是所有的方法都是我们需要的，有时只需要某一些，此处为了解决这个问题，我们引入了接口的适配器模式，借助于一个抽象类，该抽象类实现了该接口，实现了所有的方法，而我们不和原始的接口打交道，只和该抽象类取得联系，所以我们写一个类，继承该抽象类，重写我们需要的方法就行了。</p>
-<hr>
-<p>　在实际开发中，我们也常会遇到这种接口中定义了太多的方法，以致于有时我们在一些实现类中并不是都需要。看代码：</p>
-<pre><code>public interface Sourceable {    
-    public void method1();  
-    public void method2();  
-}  
-//抽象类Wrapper2：
-public abstract class Wrapper2 implements Sourceable{  
-
-    public void method1(){}  
-    public void method2(){}  
-}  
-
-public class SourceSub1 extends Wrapper2 {  
-    public void method1(){  
-        System.out.println(&quot;the sourceable interface&apos;s first Sub1!&quot;);  
-    }  
-}  
-public class SourceSub2 extends Wrapper2 {  
-    public void method2(){  
-        System.out.println(&quot;the sourceable interface&apos;s second Sub2!&quot;);  
-    }  
-}  
-public class WrapperTest {  
-    public static void main(String[] args) {  
-        Sourceable source1 = new SourceSub1();  
-        Sourceable source2 = new SourceSub2();  
-
-        source1.method1();  
-        source1.method2();  
-        source2.method1();  
-        source2.method2();  
-    }  
-}  
-测试输出：
-the sourceable interface&apos;s first Sub1!
-the sourceable interface&apos;s second Sub2!
-</code></pre><h3 id="总结一下三种适配器模式的应用场景"><a href="#总结一下三种适配器模式的应用场景" class="headerlink" title="总结一下三种适配器模式的应用场景"></a>总结一下三种适配器模式的应用场景</h3><ul>
-<li>类的适配器模式：当希望将一个类转换成满足另一个新接口的类时，可以使用类的适配器模式，创建一个新类，继承原有的类，实现新的接口即可。</li>
-<li>对象的适配器模式：当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Wrapper类，持有原类的一个实例，在Wrapper类的方法中，调用实例的方法就行。</li>
-<li>接口的适配器模式：当不希望实现一个接口中所有的方法时，可以创建一个抽象类Wrapper，实现所有方法，我们写别的类的时候，继承抽象类即可。</li>
+<p>　<strong>外观模式：要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行，外观模式提供一个更高层次的接口，使得子系统轻易使用。</strong><br>外观模式有以下两个角色：  </p>
+<ul>
+<li>外观角色：客户端可以调用该角色的方法，该角色知晓相关子系统的功能和责任；正常情况下，本角色会将所有从客户端发来的请求委派到相应的子系统，该角色没有实际的业务逻辑，只是一个委托类。</li>
+<li>子系统角色：可以同时有一个或多个子系统，每一个子系统都不是一个单独的类，而是一个类的集合。子系统不知道外观角色的存在，对于子系统而言，外观角色仅是另一个客户端。</li>
 </ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
-                  Java典型设计模式-工厂方法模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>###　工厂方法模式 ###</p>
-<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
-<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<pre><code>public interface MyInterface {
-    public void print();
-}    
-
-public class MyClassOne implements MyInterface {
-
-    @Override
-    public void print() {
-        System.out.println(&quot;MyClassOne&quot;);
-    }
-
-}
-public class MyClassTwo implements MyInterface {     
-    @Override
-    public void print() {
-        System.out.println(&quot;MyClassTwo&quot;);
-    }
-}
-
-
-public class MyFactory {
-    public MyInterface produce(String type) {  
-        if (&quot;One&quot;.equals(type)) {  
-            return new MyClassOne();  
-        } else if (&quot;Two&quot;.equals(type)) {  
-            return new MyClassTwo();  
-        } else {  
-            System.out.println(&quot;没有要找的类型&quot;);  
-            return null;  
-        }  
-    }
-
-}
-
-
-public class FactoryTest {
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produce(&quot;One&quot;);  
-        myi.print();
-    }
-
-}
-</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-     public MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-
-}
-
-public class FactoryTest {
-
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produceOne();
-        myi.print();
-    }
-
-}
-</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
-<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-    public static MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public static MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-}
-
-public class FactoryTest {
-    public static void main(String[] args){ 
-        MyInterface myi = MyFactory.produceOne();
-        myi.print();
-
-}
-</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-抽象工厂方法模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" itemprop="url">
-                  Java典型设计模式-抽象工厂方法模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>###　抽象工厂模式 ###<br>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
+<p>外观模式类图如下：<br><img src="http://i.imgur.com/bnRLavr.png" alt=""> </p>
+<p>外观模式的优点：</p>
+<ol>
+<li>减少系统的相互依赖，所有的依赖都是对Facade对象的依赖，与子系统无关。</li>
+<li>提高灵活性，不管子系统如何变化，只要不影响Facade对象，任何活动都是自由的。</li>
+<li>提高安全性，Facade为提供的方法，外界就无法访问，提高系统的安全性。</li>
+<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
+</ol>
+<p>外观模式的使用场景：</p>
+<ol>
+<li>为一个浮渣的模块或子系统提供一个供外界访问的接口。</li>
+<li>子系统相对独立，外界对子系统的访问只要黑箱操作即可。</li>
+<li>预防风险扩散，使用Facade进行访问操作控制。</li>
+</ol>
 <hr>
-<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码，这样就符合闭包原则了。<br>　下面来看看代码：<br>　MyInterface、MyClassOne、MyClassTwo不变。<br>　新增如下接口和类：</p>
-<pre><code>public interface Provider {
-    public MyInterface produce(); 
-}
-
-public class MyFactoryOne implements Provider {
-    @Override
-    public MyInterface produce() {
-        return new MyClassOne();
+<p>　<strong>使用外观模式模拟秘书为老板准备工作的过程：</strong></p>
+<p>　Airport.java：    </p>
+<pre><code>public class Airport {
+    public void bookTicket(String from,String to){
+        System.out.println(&quot;订购了从&quot;+from+&quot;到&quot;+to+&quot;的机票&quot;);
     }
 }
-
-public class MyFactoryTwo implements Provider {
-    @Override
-    public MyInterface produce() {
-        return new MyClassTwo();
+</code></pre><p>　Hotel.java：</p>
+<pre><code>public class Hotel {
+    public void reserve(int days){
+        System.out.println(&quot;订了&quot;+days+&quot;天的房间&quot;);
     }
 }
-</code></pre><p>　修改测试类FactoryTest如下：</p>
-<pre><code>public class FactoryTest {
-    public static void main(String[] args){ 
-        Provider provider = new MyFactoryOne();
-        MyInterface myi = provider.produce();
-        myi.print();
+</code></pre><p>　Restaurant.java：</p>
+<pre><code>public class Restaurant {
+    public void reserve(int num){
+        System.out.println(&quot;定了一座&quot;+num+&quot;个人的酒席&quot;);
     }
 }
-</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+</code></pre><p>　Driver.java：</p>
+<pre><code>public class Driver {
+    public void drive(String to){
+        System.out.println(&quot;司机开车到&quot;+to);
+    }
+}
+</code></pre><p>　Secretary.java：</p>
+<pre><code>public class Secretary {
+    private Driver driver = new Driver();
+    private Hotel hotel = new Hotel();
+    private Restaurant res = new Restaurant();
+    private Airport air = new Airport();
 
+    //安排出差
+    public void trip(String to,int days){
+        air.bookTicket(&quot;青岛&quot;, to);
+        driver.drive(&quot;机场&quot;);
+        hotel.reserve(days);
+    }
+
+    //安排饭局
+    public void repast(int num){
+        res.reserve(num);
+        driver.drive(&quot;酒店&quot;);
+    }
+}
+</code></pre><p>　Boss.java</p>
+<pre><code>public class Boss {
+    public static void main(String[] args){
+        Secretary se = new Secretary();
+        System.out.println(&quot;老板告诉秘书要去上海出差10天&quot;);
+        se.trip(&quot;上海&quot;, 10);
+        System.out.println(&quot;................&quot;);
+        System.out.println(&quot;老板告诉秘书邀请8个人吃饭&quot;);
+        se.repast(8);
+    }
+
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>老板告诉秘书要去上海出差10天
+订购了从青岛到上海的机票
+司机开车到机场
+订了10天的房间
+................
+老板告诉秘书邀请8个人吃饭
+定了一座8个人的酒席
+司机开车到酒店
+</code></pre>
           
         
       
@@ -1332,7 +1223,7 @@ public class MyFactoryTwo implements Provider {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1375,7 +1266,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1384,7 +1275,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1393,7 +1284,7 @@ public class MyFactoryTwo implements Provider {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

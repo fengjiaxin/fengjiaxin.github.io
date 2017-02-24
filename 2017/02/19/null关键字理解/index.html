@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="关键字是电脑语言里事先定义的，有特别意义的标识符，有时又叫保留字，还有特别意义的变量。Java的关键字对Java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等，关键字不能用作变量名、方法名、类名、包名和参数。Java语言规定了Java中的关键字不能作为标识符。那么，今天，我们来探讨一下Java中的关键字null。
+一、null是代表不确定的对象　　Java中，null是一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="null关键字理解">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/19/null关键字理解/index.html">
+<meta property="og:site_name" content="冯佳欣的博客">
+<meta property="og:description" content="关键字是电脑语言里事先定义的，有特别意义的标识符，有时又叫保留字，还有特别意义的变量。Java的关键字对Java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等，关键字不能用作变量名、方法名、类名、包名和参数。Java语言规定了Java中的关键字不能作为标识符。那么，今天，我们来探讨一下Java中的关键字null。
+一、null是代表不确定的对象　　Java中，null是一个">
+<meta property="og:updated_time" content="2017-02-23T14:31:42.413Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="null关键字理解">
+<meta name="twitter:description" content="关键字是电脑语言里事先定义的，有特别意义的标识符，有时又叫保留字，还有特别意义的变量。Java的关键字对Java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等，关键字不能用作变量名、方法名、类名、包名和参数。Java语言规定了Java中的关键字不能作为标识符。那么，今天，我们来探讨一下Java中的关键字null。
+一、null是代表不确定的对象　　Java中，null是一个">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/19/null关键字理解/"/>
+
+
+
+
+
+  <title> null关键字理解 | 冯佳欣的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">冯佳欣的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">滴水穿石</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/19/null关键字理解/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                null关键字理解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-19T21:35:07+08:00">
+                2017-02-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　<strong>关键字</strong>是电脑语言里事先定义的，有特别意义的标识符，有时又叫保留字，还有特别意义的变量。Java的关键字对Java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等，关键字不能用作变量名、方法名、类名、包名和参数。Java语言规定了Java中的关键字不能作为标识符。那么，今天，我们来探讨一下Java中的关键字null。</p>
+<h1 id="一、null是代表不确定的对象"><a href="#一、null是代表不确定的对象" class="headerlink" title="一、null是代表不确定的对象"></a>一、null是代表不确定的对象</h1><p>　　Java中，null是一个关键字，用来标识一个不确定的对象。因此可以将null赋给引用类型变量，但不可以将null赋给基本类型变量。<br>　　比如：int a = null;是错误的。Ojbect o = null是正确的。<br>　　Java中，变量的适用都遵循一个原则，先定义，并且初始化后，才可以使用。我们不能int a后，不给a指定值，就去打印a的值。这条对对于引用类型变量也是适用的。<br>　　我们在定义一个引用类型变量时，无法给出一个确定的值，但是不指定值，程序可能会在try语句块中初始化值。但我们下面使用变量的时候就会报错。但只要先给变量指定一个null值，问题就解决了。例：</p>
+<pre><code>Connection conn = null;
+　　try {
+　　conn = DriverManager.getConnection(&quot;url&quot;, &quot;user&quot;, &quot;password&quot;);
+　　} catch (SQLException e) {
+　　e.printStackTrace();
+　　}
+    String catalog = conn.getCatalog();
+</code></pre><p>　如果刚开始的时候不指定conn = null，则最后一句就会报错。</p>
+<h1 id="二、null本身不是对象，也不是Objcet的实例"><a href="#二、null本身不是对象，也不是Objcet的实例" class="headerlink" title="二、null本身不是对象，也不是Objcet的实例"></a>二、null本身不是对象，也不是Objcet的实例</h1><p>　null本身虽然能代表一个不确定的对象，但就null本身来说，它不是对象，也不知道什么类型，也不是java.lang.Object的实例。</p>
+<h1 id="三、Java默认给变量赋值"><a href="#三、Java默认给变量赋值" class="headerlink" title="三、Java默认给变量赋值"></a>三、Java默认给变量赋值</h1><p>　在定义变量的时候，如果定义后没有给变量赋值，则Java在运行时会自动给变量赋值。赋值原则是整数类型int、byte、short、long的自动赋值为0，带小数点的float、double自动赋值为0.0，boolean的自动赋值为false，其他各供引用类型变量自动赋值为null。</p>
+<h1 id="四、null的其他作用"><a href="#四、null的其他作用" class="headerlink" title="四、null的其他作用"></a>四、null的其他作用</h1><p>1、判断一个引用类型数据是否null。 用==来判断。<br>2、释放内存，让一个非null的引用类型变量指向null。这样这个对象就不再被任何对象应用了。等待JVM垃圾回收机制去回收。</p>
+<h1 id="五、null与””的相关问题"><a href="#五、null与””的相关问题" class="headerlink" title="五、null与””的相关问题"></a>五、null与””的相关问题</h1><h2 id="问题一：null和””的区别"><a href="#问题一：null和””的区别" class="headerlink" title="问题一：null和””的区别"></a>问题一：null和””的区别</h2><pre><code>String s=null; 
+string.trim()就会抛出为空的exception 
+String s=&quot;&quot;; 
+string.trim()就不会抛,为什么? 
+</code></pre><p>　NULL代表声明了一个空对象，根本就不是一个字符串；””代表声明了一个对象实例，这个对象实例的值是一个长度为0的空字符串。<br>　NULL代表声明了一个空对象,对空对象做任何操作都不行的,除了=和==；””是一个字符串了,只是这个字符串里面没有内容了</p>
+<pre><code>String s=null;只是定义了一个句柄，也就是说你有了个引用，但是这个引用未指乡任何内存空间 
+String s=&quot;&quot;;这个引用已经指向了一块是空字符串的内存空间，是一个实际的东西。
+String s=null;//null是未分配堆内存空间 
+String a;//分配了一个内存空间,没存入任何对象 
+String a=&quot;&quot;;//分配了一个内存空间,存了一个字符串对象 
+</code></pre><h2 id="问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？"><a href="#问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？" class="headerlink" title="问题二： String s;和String s=null;和String s=”a”;有什么区别？"></a>问题二： String s;和String s=null;和String s=”a”;有什么区别？</h2><p>　针对这三种情况，使用out.println(s);的时候，第一个会出现异常，第二个会输出null.第三个则会输出a，这是为什么呢？这三句声明语句，各自作了什么呢？<br>　第一个只是定义了一个String类型变量s，并没有给它赋初值，在Java中，默认在使用一<br>个变量的时候必须赋予它初值（降低风险）。<br>　第二个和第三个都定义了String类型变量s，并赋予它初值，只不过第二个赋予的值为null（空）罢了<br>　主要要理解的是String s; <strong>s为一个引用，它不是对象</strong><br>　第一个是没有初始化的引用；<br>　第二个为空引用；<br>　第三个是在字符串池里写入一个字符’a’,然后用s指向它。<br>　另外， String s=”a”和String s=new String(“a”);是有本质上的区别的；前者是在字符串池里写入一个字符’a’,然后用s指向它；后者是在堆上创建一个内容为”a”的字符串对象。 </p>
+<pre><code>String str=&quot;aaa&quot;; //于栈上分配内存 
+String str=new String(&quot;aaa&quot;); //于堆上分配内存 
+String s; 系统会自动赋值null 
+String s;只是给s分配一个内存空间 
+String s=null;是分配的空间中存储的值为空值 
+String s=&quot;a&quot;;这句就不用我多说了分配的空间的值为字符a 
+</code></pre><h2 id="问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同"><a href="#问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同" class="headerlink" title="问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?"></a>问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?</h2><p>　如果没有给a赋过值，a==””会导致异常。<br>　在实际处理时，往往认为””和null代表相同的含义，即都代表无值。<br>　此时建议用如下语法： </p>
+<pre><code>if(a==null || a==&quot;&quot;) 
+{ 
+} 
+</code></pre><p>　如果a为null，就不会执行后面的判断，直接返回true；null是用来判断引用类型是否分配了存储空间 ，””是针对字符串的。string类型实际上是字符串指针，也即是一个引用类型 所以如果没有给a赋过值，a==””会导致异常 </p>
+<h2 id="问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？"><a href="#问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？" class="headerlink" title="问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？"></a>问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？</h2><p>1：创建一个空字符串对象。<br>2：创建一个字符串为空的字符串对象。<br>3：声明一个字符串对象，但并没有分配内存，而1，2已经分配了内存<br>　对于最后一种表示,你不能if(abc==null),或者int length = abc.length();编译的时候会提示可能没有初始化。</p>
+<pre><code>String abc=null; 
+String abc=&quot;&quot;; 
+</code></pre><p>　一般推荐使用第二种。<br>　第一种abc指向null，很多时候要判断字符串是否为空时，容易漏掉这种情况，在调用String的相关方法的时候就会出错<br>　第二种则相对简单，String的方法都可以用，判断的时候也不会出错。</p>
+<pre><code>1) String abc=null; 
+2) String abc; 
+3）String a=&quot;&quot;; 
+4) String b=&quot;&quot;; 
+5) String c=new String(&quot;&quot;); 
+6) String d=new String(&quot;&quot;); 
+
+//1)等于2），和C语言不同，**JAVA为安全原因不允许一个悬挂引用，没有赋值的引用地址一律自动赋值为NULL，以防止访问到任意内存 **  
+//3)和4)中,变量a和b将会指向同一内存地址(&quot;&quot;的地址)   
+//5)和6)中，变量c和d不会指向同一地址,而是两个&quot;&quot;内容的地址,并且和a,b不同,实际上,3)和4)相当于new String(&quot;&quot;).intern().   
+//String类维护着一个字符串池,对于像3)和4)这样的赋值方法,String会在这个池中查找字符串是否已经在池中,如果在,就直接指向该地址,   
+//如果不在,生成一个实例放入池中再指向那个地址,可见对于同样内容的字符串多次引用时3)4)的方法要比5)6)的方法剩内存,之所以这样做,是因为String是一个内容不可变的量,运用的是设计模式GOF.FlyWeight 
+</code></pre><p>　但有个关键的一点,这就是: <strong>String s;在什么情况下可以等同于String s=null;而在什么情况下又不等同？</strong><br>　考虑下面的代码: </p>
+<pre><code>//StringTest.java 
+public class StringTest { 
+    static String s; //１
+    public static void main(String[] args) { 
+    //String s; //２
+    System.out.println(s); 
+    } 
+} 
+</code></pre><p>　编译并运行上面的代码,将打印null。<br>　可见标有１号的行是自动初始化了的(s被自动初始化为null)。<br>　而如果把标有２号的行取消注释,代码将不能通过编译,这是因为这行定义的是本地变量,而本地变量是不会自动初始化的。<br><strong>由此得出结论：</strong><br>　在成员变量的定义中,String s;等同于String s=null;<br>　而在本地变量(方法变量)的定义中,String s;不等同于String s=null;,这时要使用s必须显式地赋值。     </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/16/Java反射机制/" rel="next" title="Java反射机制">
+                <i class="fa fa-chevron-left"></i> Java反射机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/20/Comparable接口的实现和使用/" rel="prev" title="Comparable接口的实现和使用">
+                Comparable接口的实现和使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="冯佳欣" />
+          <p class="site-author-name" itemprop="name">冯佳欣</p>
+          <p class="site-description motion-element" itemprop="description">记录一点一滴</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、null是代表不确定的对象"><span class="nav-text">一、null是代表不确定的对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、null本身不是对象，也不是Objcet的实例"><span class="nav-text">二、null本身不是对象，也不是Objcet的实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Java默认给变量赋值"><span class="nav-text">三、Java默认给变量赋值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、null的其他作用"><span class="nav-text">四、null的其他作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、null与””的相关问题"><span class="nav-text">五、null与””的相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题一：null和””的区别"><span class="nav-text">问题一：null和””的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？"><span class="nav-text">问题二： String s;和String s=null;和String s=”a”;有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同"><span class="nav-text">问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？"><span class="nav-text">问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冯佳欣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

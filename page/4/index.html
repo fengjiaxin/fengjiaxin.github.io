@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-装饰模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/Java异常机制及相关问题/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-装饰模式/" itemprop="url">
-                  Java典型设计模式-装饰模式
+                <a class="post-title-link" href="/2017/02/03/Java异常机制及相关问题/" itemprop="url">
+                  Java异常机制及原理
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T11:48:39+08:00">
+                2017-02-03
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -353,81 +353,91 @@
       
         
           
-            <p>　最近在复习I/O,发现很多类都是通过装饰模式进行修饰，将原来的类修饰的更强大，那么今天就来总结一下装饰模式。</p>
+            <p>　<strong>编写看这么多Java代码，有时候需要对可能出现的异常进行捕捉，有时候直接抛出，懵懵懂懂，那么今天重新看一遍关于Java异常处理机制，进行系统的总结。</strong></p>
+<h2 id="1、异常机制概述"><a href="#1、异常机制概述" class="headerlink" title="1、异常机制概述"></a>1、异常机制概述</h2><p>　异常机制是指当程序出现错误后，程序如何处理。具体来说，异常机制提供了程序退出的安全通道。当出现错误后，程序执行的流程发生改变，程序的控制权转移到异常处理器。</p>
+<h2 id="2-、异常处理的流程"><a href="#2-、异常处理的流程" class="headerlink" title="2 、异常处理的流程"></a>2 、异常处理的流程</h2><p>　当程序中抛出一个异常后，程序从程序中导致异常的代码处跳出，java虚拟机检测寻找和try关键字匹配的处理该异常的catch块，如果找到，将控制权交到catch块中的代码，然后继续往下执行程序，try块中发生异常的代码不会被重新执行。如果没有找到处理该异常的catch块，在所有的finally块代码被执行和当前线程的所属的ThreadGroup的uncaughtException方法被调用后，遇到异常的当前线程被中止。</p>
+<h2 id="3、异常的结构"><a href="#3、异常的结构" class="headerlink" title="3、异常的结构"></a>3、异常的结构</h2><p>　异常的继承结构：Throwable为基类，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception。Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。<br><img src="http://i.imgur.com/tQtFlXu.jpg" alt=""></p>
+<h2 id="４、Error异常"><a href="#４、Error异常" class="headerlink" title="４、Error异常"></a>４、Error异常</h2><p>　Error表示程序在运行期间出现了十分严重、不可恢复的错误，在这种情况下应用程序只能中止运行，例如JAVA 虚拟机出现错误。Error是一种unchecked Exception，编译器不会检查Error是否被处理，在程序中不用捕获Error类型的异常。一般情况下，在程序中也不应该抛出Error类型的异常。</p>
+<h2 id="5、RuntimeException异常"><a href="#5、RuntimeException异常" class="headerlink" title="5、RuntimeException异常"></a>5、RuntimeException异常</h2><p>　Exception异常包括RuntimeException异常和其他非RuntimeException的异常。<br>RuntimeException 是一种Unchecked Exception，即表示编译器不会检查程序是否对RuntimeException作了处理，在程序中不必捕获RuntimException类型的异常，也不必在方法体声明抛出RuntimeException类。RuntimeException发生的时候，表示程序中出现了编程错误，所以应该找出错误修改程序，而不是去捕获RuntimeException。</p>
+<p>　出现RuntimeException后，系统会把异常一直往上层抛出，知道遇到处理代码为止。若没有处理块，则抛到最上层；如果是多线程就用Thread.run()方法抛出，如果是单线程，就用main()方法抛出。抛出之后，如果是线程，那么这个线程退出了。如果是主程序抛出的异常，那么整个程序就退出了。</p>
+<h2 id="6、Checked-Exception异常"><a href="#6、Checked-Exception异常" class="headerlink" title="6、Checked Exception异常"></a>6、Checked Exception异常</h2><p>　Checked Exception异常，这也是在编程中使用最多的Exception，所有继承自Exception并且不是RuntimeException的异常都是checked Exception，上图中的IOException和ClassNotFoundException。JAVA 语言规定必须对checked Exception作处理，编译器会对此作检查，要么在方法体中声明抛出checked Exception，要么使用catch语句捕获checked Exception进行处理，不然不能通过编译。</p>
+<h2 id="7、应该在声明方法抛出异常还是在方法中捕获异常？"><a href="#7、应该在声明方法抛出异常还是在方法中捕获异常？" class="headerlink" title="7、应该在声明方法抛出异常还是在方法中捕获异常？"></a>7、应该在声明方法抛出异常还是在方法中捕获异常？</h2><p>　<strong>处理原则</strong>：捕捉并处理哪些知道如何处理的异常，而传递哪些不知道如何处理的异常。</p>
+<h2 id="8、使用finally块释放资源"><a href="#8、使用finally块释放资源" class="headerlink" title="8、使用finally块释放资源"></a>8、使用finally块释放资源</h2><p>　finally关键字保证无论程序使用任何方式离开try块，finally中的语句都会被执行。在以下三种情况下会进入finally块：</p>
+<ol>
+<li>try块中的代码正常执行完毕。</li>
+<li>在try块中抛出异常。</li>
+<li>在try块中执行return、break、continue。</li>
+</ol>
+<p>　因此，当你需要一个地方来执行在任何情况下都必须执行的代码时，就可以将这些代码放入finally块中。当你的程序中使用了外界资源，如数据库连接，文件等，必须将释放这些资源的代码写入finally块中。</p>
+<p>　必须注意的是：在finally块中不能抛出异常。JAVA异常处理机制保证无论在任何情况下必须先执行finally块然后再离开try块，因此在try块中发生异常的时候，JAVA虚拟机先转到finally块执行finally块中的代码，finally块执行完毕后，再向外抛出异常。如果在finally块中抛出异常，try块捕捉的异常就不能抛出，外部捕捉到的异常就是finally块中的异常信息，而try块中发生的真正的异常堆栈信息则丢失了。</p>
+<p>　<strong>示例代码如下：</strong></p>
+<pre><code>Connection  con = null;
+try
+{
+    con = dataSource.getConnection();
+    ……
+}
+catch(SQLException e)
+{
+    ……
+    throw e;//进行一些处理后再将数据库异常抛出给调用者处理
+}
+finally
+{
+    try
+    {
+        con.close();
+    }
+    catch(SQLException e)
+{
+    e.printStackTrace();
+    ……
+}
+}
+</code></pre><p>　<strong>运行程序后，调用者得到的信息如下：</strong></p>
+<p>　java.lang.NullPointerException<br>　at myPackage.MyClass.method1(methodl.java:266)<br>　而不是我们期望得到的数据库异常。这是因为这里的con是null的关系，在finally语句中抛出了NullPointerException，在finally块中增加对con是否为null的判断可以避免产生这种情况。</p>
+<h2 id="9、在使用异常处理时，还需要注意以下几个问题："><a href="#9、在使用异常处理时，还需要注意以下几个问题：" class="headerlink" title="9、在使用异常处理时，还需要注意以下几个问题："></a>9、在使用异常处理时，还需要注意以下几个问题：</h2><ol>
+<li>Java异常用到了多态的概念，在进行异常捕捉时，先捕捉子类，再捕捉基类的异常信息，否则，捕获子类的代码块永远不会执行。</li>
+<li>今早抛出异常，同时对捕捉的异常进行处理；而对于运行时异常，根本不需要理会。</li>
+<li>可以根据实际需求自定义异常类，只要继承Exception类即可。</li>
+<li>异常能处理就处理，不能处理就抛出。对于一般异常，如果不能进行有效的处理，最好转换为运行时异常抛出，对于最终没有处理的异常，JVM会进行处理。</li>
+</ol>
+<h2 id="10、在声明方法时候抛出异常"><a href="#10、在声明方法时候抛出异常" class="headerlink" title="10、在声明方法时候抛出异常"></a>10、在声明方法时候抛出异常</h2><p>　语法：throws（略）</p>
+<p>　<strong>为什么要在声明方法抛出异常？</strong></p>
+<p>　方法是否抛出异常与方法返回值的类型一样重要。假设方法抛出异常却没有声明该方法将抛出异常，那么客户程序员可以调用这个方法而且不用编写处理异常的代码。那么，一旦出现异常，那么这个异常就没有合适的异常控制器来解决。</p>
+<p>　<strong>为什么抛出的异常一定是已检查异常？</strong></p>
+<p>　RuntimeException与Error可以在任何代码中产生，它们不需要由程序员显示的抛出，一旦出现错误，那么相应的异常会被自动抛出。遇到Error，程序员一般是无能为力的；遇到RuntimeException，那么一定是程序存在逻辑错误，要对程序进行修改；只有已检查异常才是程序员所关心的，程序应该且仅应该抛出或处理已检查异常。而已检查异常是由程序员抛出的，这分为两种情况：客户程序员调用会抛出异常的库函数；客户程序员自己使用throw语句抛出异常。</p>
+<p>　<strong>注意：</strong><br>　覆盖父类某方法的子类方法不能抛出比父类方法更多的异常，所以，有时设计父类的方法时会声明抛出异常，但实际的实现方法的代码却并不抛出异常，这样做的目的就是为了方便子类方法覆盖父类方法时可以抛出异常。</p>
+<h2 id="11、在方法中如何抛出异常"><a href="#11、在方法中如何抛出异常" class="headerlink" title="11、在方法中如何抛出异常"></a>11、在方法中如何抛出异常</h2><p>　语法：throw（略）</p>
+<p>　<strong>抛出什么异常？</strong></p>
+<p>　对于一个异常对象，真正有用的信息是异常的对象类型，而异常对象本身毫无意义。比如一个异常对象的类型是ClassCastException，那么这个类名就是唯一有用的信息。所以，在选择抛出什么异常时，最关键的就是选择异常的类名能够明确说明异常情况的类。</p>
+<p>　异常对象通常有两种构造函数：一种是无参数的构造函数；另一种是带一个字符串的构造函数，这个字符串将作为这个异常对象除了类型名以外的额外说明。</p>
 <hr>
-<p>　<strong>装饰模式：动态地给一个对象添加一些额外的职责，就增加功能来说，装饰模式比生成子类更为灵活。</strong><br>装饰模式有以下四个角色：</p>
+<p>　<strong>那么总结了这么多，我们做几道题进行热身：</strong></p>
+<p><strong>1、Error和Exception有什么区别</strong></p>
+<p>　答：Error表示系统级的错误和程序不必处理的异常，是恢复不是不可能但很困难的情况下的一种严重问题；比如内存溢出，不可能指望程序能处理这样的情况；Exception表示需要捕捉或者需要程序进行处理的异常，是一种设计或实现问题；也就是说，它表示如果程序运行正常，从不会发生的情况。</p>
+<p><strong>2、列出一些你常见的运行时异常？</strong></p>
 <ul>
-<li>抽象构件角色：用于规范需要装饰的对象。</li>
-<li>具体构件角色：用于实现抽象构件接口，定义一个需要装饰的原始类。</li>
-<li>装饰角色：该角色持有一个构件对象的实例，并定义一个与抽象构件接口一致的接口。</li>
-<li>具体装饰角色：该角色负责对构件对象进行装饰</li>
+<li>ArithmeticException（算术异常） </li>
+<li>ClassCastException （类转换异常） </li>
+<li>IllegalArgumentException （非法参数异常） </li>
+<li>IndexOutOfBoundsException （下标越界异常） </li>
+<li>NullPointerException （空指针异常） </li>
+<li>SecurityException （安全异常）</li>
 </ul>
-<p>装饰模式类图如下：<br><img src="http://i.imgur.com/aIQFA1A.png" alt=""> </p>
-<p>装饰模式的优点：</p>
-<ol>
-<li>装饰类和被装饰类可以独立发展，而不会相互耦合。</li>
-<li>装饰模式是继承关系的一个替代方式，装饰类Decorator，不管装饰多少层，返回的对象还是Component。</li>
-<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
-</ol>
-<p>装饰模式的使用场景：</p>
-<ol>
-<li>需要扩展一个类的功能，或给一个类增加附加功能。</li>
-<li>需要动态地给一个对象增加功能，这些功能可以在动态地撤销。</li>
-<li>需要为一批类进行改装或加装功能。</li>
-</ol>
-<hr>
-<p>　通过对裸车进行装饰的过程演示装饰模式的应用：<br>　Car接口：  </p>
-<pre><code>public interface Car {
-    public void show();
-}
-</code></pre><p>　Benz实现IGamePlayer接口中的方法：</p>
-<pre><code>public class Benz implements Car {
-    @Override
-    public void show() {
-        System.out.println(&quot;奔驰车默认是黑色&quot;);
-    }
-}
-</code></pre><p>　汽车修饰类CarDecorator：</p>
-<pre><code>public abstract class CarDecorator {
-    private Car car = null;
-    public CarDecorator(Car car){
-    this.car = car;
-    }
-    public void show(){
-        this.car.show();
-    }
-}
-</code></pre><p>　汽车修饰实现类ConcreteCarDecorator：</p>
-<pre><code>public class ConcreteCarDecorator extends CarDecorator {
-    public ConcreteCarDecorator(Car car) {
-        super(car);
-    }
+<p><strong>3、运行时异常与受检异常有何异同？</strong></p>
+<p>　答：异常表示程序运行过程中可能出现的非正常状态，运行时异常表示虚拟机的通常操作中可能遇到的异常，是一种常见运行错误，只要程序设计得没有问题通常就不会发生。受检异常跟程序运行的上下文环境有关，即使程序设计无误，仍然可能因使用的问题而引发。Java编译器要求方法必须声明抛出可能发生的受检异常，但是并不要求必须声明抛出未被捕获的运行时异常。</p>
+<p><strong>4、TimedOutException不是一个RuntimeException，下面的那些选项载入程序中，使程序可以正常运行？</strong></p>
+<pre><code>A public void final()
+B public void final() throws Exception
+C public void final() throws TimedOutException
+D public void final() throw TimedOutException
+E public throw TimedOutException void final() 
+</code></pre><p>　答案：BC</p>
+<p>　<strong>试题分析：</strong></p>
+<p>　如果一个程序在运行时候有异常发生，而这个异常又不是RuntimeException或者Error，那么程序必须对这个异常进行捕获处理或者声明抛出该异常。捕获异常使用try-catch-finally，而声明异常则是在声明方法的同时将会发生的异常进行声明，使用关键字throws。</p>
+<p>　A项没有使用关键字声明异常，所以是错误的。由于Exception是所有异常的父类，当然也可以代表TimedOutException，所以B项是正确的。C项符合声明异常的格式，是正确的。在D项中，throw是抛出异常，而不是声明异常，关键字使用错误，所以D项是错的。E项的语法格式是错误的。</p>
 
-    public void print(){
-        System.out.println(&quot;彩绘喷漆&quot;);
-    }
-    public void setGps(){
-        System.out.println(&quot;安装GPS&quot;);
-    }
-    public void show(){
-        super.show();
-        this.print();
-        this.setGps();
-    }
-}
-</code></pre><p>　应用程序代码：</p>
-<pre><code>public class ClientDemo {
-    public static void main(String[] args) {
-        Car car = new Benz();
-        CarDecorator cd = new ConcreteCarDecorator(car);
-        cd.show();
-    }
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>奔驰车默认是黑色
-彩绘喷漆
-安装GPS
-</code></pre>
           
         
       
@@ -465,7 +475,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-代理模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/如何实现对象的clone/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -490,8 +500,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-代理模式/" itemprop="url">
-                  Java典型设计模式-代理模式
+                <a class="post-title-link" href="/2017/02/02/如何实现对象的clone/" itemprop="url">
+                  如何实现对象的clone
                 </a>
               
             
@@ -507,8 +517,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T21:38:30+08:00">
+                2017-02-02
               </time>
             
 
@@ -530,8 +540,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -567,90 +577,540 @@
       
         
           
-            <p>　最近在学习Spring，Spring的两个核心是依赖注入和面向切面编程，其中面向切面编程就是在一个方法的前后位置加入其余的方法以更好地实现，那么在SpringAOP中是采用JDK动态代理实现的，动态代理就是采用代理模式技术实现的，关于JDK动态代理我稍后总结，今天就用静态代理的例子好好学习代理模式。</p>
-<hr>
-<p>　<strong>代理模式：为其他对象提供一种代理以控制对这个对象的访问。</strong><br>　代理模式有一下优点：  </p>
-<ol>
-<li>职责清晰：真实的角色实现实际的业务逻辑，不用关心其他非本职的事务，通过后期的代理完成附加的事务，附带的结果就是编程简洁清晰。    </li>
-<li>高扩展性：具体主题角色随需求的不同可能有很多种，但只要实现了接口，代理类就完全可以在不做任何修改的情况下代理各种真实主题角色。  </li>
-<li>智能化：代理类介意在运行时才确定去代理的真实主题（动态代理）。  </li>
-</ol>
-<hr>
-<p>　通过游戏代练的过程演示代理模式的应用，其类图如下所示：<br><img src="http://i.imgur.com/Q6N61ev.png" alt=""><br>　IGamePlayer接口：  </p>
-<pre><code>public interface IGamePlayer {
-    public void killBoss();
-    public void upGrade();
+            <p>有两种方式：</p>
+<p>　1. 实现Cloneable接口并重写Object类中的clone()方法；<br>　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：</p>
+<pre><code>class Obj implements Cloneable{
+    private int aInt =0;
+    public int getInt(){
+        return aInt;
+    }
 
+    public void setAInt(int int1){
+        aInt = int1;
+    }
+
+    public void changeInt(){
+        this.aInt =1;
+    }
+
+    public Object clone(){
+        Object o = null;
+        try {
+            o = (Object)super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
 }
-</code></pre><p>　GamePlayer实现IGamePlayer接口中的方法：</p>
-<pre><code>public class GamePlayer implements IGamePlayer {
-    private String name =&quot;&quot;;
+public class TestRef {
+    public static void main(String[] args) {
+        Obj a = new Obj();
+        Obj b = (Obj) a.clone();
+        b.changeInt();
+        System.out.println(a.getInt());//0
+        System.out.println(b.getInt());//1
 
+    }
+}
+</code></pre><p>　2. 实现Serializable接口，通过对象的序列化和反序列化实现克隆，可以实现真正的深度克隆;代码如下：</p>
+<pre><code>import java.io.Serializable;
+public class Employee implements Serializable {
+    private static final long serialVersionUID = -6470090944414208496L;
+    private String name;
+    private int id;
+    transient private int salary;
 
-    public GamePlayer(String name) {
-        super();
+    @Override
+    public String toString(){
+        return &quot;Employee{name=&quot;+name+&quot;,id=&quot;+id+&quot;,salary=&quot;+salary+&quot;}&quot;;
+    }
+
+    //getter and setter methods
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    @Override
-    public void killBoss() {
-        System.out.println(this.name+&quot;在打怪！！！！&quot;);
+    public int getId() {
+        return id;
     }
 
-    @Override
-    public void upGrade() {
-        System.out.println(this.name+&quot;成功升1级！！！！&quot;);
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+}
+</code></pre><p>　<strong>注意</strong>：static代笔类的静态成员，transient代表对象的临时数据，因此被声明为这两种类型的数据成员是不能够被序列化的。</p>
+<hr>
+<p>　现在我们假设需要把我们的对象写入文件，之后从相同的文件中将其反序列化，因此我们需要一些工具方法，通过使用ObjectInputStream和ObjectOutputStream来达到序列化的目的。</p>
+<pre><code>import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+/**
+ * A simple class with generic serialize and deserialize method implementations
+ * 
+ * 
+ */
+public class SerializationUtil {
+
+    // deserialize to Object from given file
+    public static Object deserialize(String fileName) throws IOException,
+            ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(fileName);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object obj = ois.readObject();
+        ois.close();
+        return obj;
+    }
+
+    // serialize the given object and save it to file
+    public static void serialize(Object obj, String fileName)
+            throws IOException {
+        FileOutputStream fos = new FileOutputStream(fileName);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(obj);
+
+        fos.close();
     }
 
 }
-</code></pre><p>　GamePlayerProxy是代理类：</p>
-<pre><code>public class GamePlayerProxy implements IGamePlayer {
-    private IGamePlayer player = null;
+</code></pre><p>　<strong>测试程序：</strong></p>
+<pre><code>import java.io.IOException;
 
-
-    public GamePlayerProxy(IGamePlayer player) {
-        super();
-        this.player = player;
-    }
-
-    @Override
-    public void killBoss() {
-        this.log();
-        player.killBoss();
-    }
-
-    @Override
-    public void upGrade() {
-        player.upGrade();
-        this.count();
-    }
-
-    private void log(){
-        System.out.println(&quot;打怪时间&quot;+new Date().toString());
-    }
-
-    private void count(){
-        System.out.println(&quot;升一级耗费50小时&quot;);
-    }
-
-}
-</code></pre><p>　应用程序代码：</p>
-<pre><code>public class ClientDemo {
+public class SerializationTest {
 
     public static void main(String[] args) {
-        IGamePlayer player = new GamePlayer(&quot;冯佳欣&quot;);
-        IGamePlayer proxy = new GamePlayerProxy(player);
-        proxy.killBoss();
-        proxy.upGrade();
+        String fileName=&quot;employee.ser&quot;;
+        Employee emp = new Employee();
+        emp.setId(100);
+        emp.setName(&quot;Pankaj&quot;);
+        emp.setSalary(5000);
 
+        //serialize to file
+        try {
+            SerializationUtil.serialize(emp, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Employee empNew = null;
+        try {
+            empNew = (Employee) SerializationUtil.deserialize(fileName);
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(&quot;emp Object::&quot;+emp);
+        System.out.println(&quot;empNew Object::&quot;+empNew);
     }
 
 }
-</code></pre><p>　程序运行结果：</p>
-<pre><code>打怪时间Sun Feb 12 17:23:41 CST 2017
-冯佳欣在打怪！！！！
-冯佳欣成功升1级！！！！
-升一级耗费50小时
+</code></pre><p>　运行以上测试程序，可以得到以下输出。</p>
+<pre><code>emp Object::Employee{name=Pankaj,id=100,salary=5000}
+empNew Object::Employee{name=Pankaj,id=100,salary=0}
+</code></pre><p>　<strong>由于salary是一个transient变量，它的值不会被存入文件中，因此也不会在新的对象中被恢复。类似的，静态变量的值也不会被序列化，因为他们是属于类而非对象的。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/hibernate如何提高性能和二级缓存的含义/" itemprop="url">
+                  hibernate如何提高性能和二级缓存的含义
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T20:37:04+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web总结/" itemprop="url" rel="index">
+                    <span itemprop="name">Web总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　之前编写了hibernate的一些相关代码，现在总结一些细节。<br><strong>问题： 在使用Hibernate时如何提高性能？</strong>  </p>
+<ol>
+<li>延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。  </li>
+<li>缓存技术。hibernate提供了一级缓存与二级缓存，合理的利用缓存有助于提高系统的性能，通过合理配置缓存的参数可以避免不合理的利用缓存导致内存的过度消耗降低系统的性能。  </li>
+<li>优化查询语句。<br>　说了这么多，那么什么是hibernate的二级缓存？<br>　<strong>缓存的目的</strong>是为了通过减少应用程序对物理数据源访问的次数来提高程序运行的效率，<strong>原理</strong>则是把当前或接下来一段时间可能会用到的数据保存在内存中，在使用时直接从内存中读取。</li>
+</ol>
+<hr>
+<p>　<strong>在hibernate中有一级缓存和二级缓存的概念，一级缓存由Session来管理，二级缓存由SessionFactory来管理，在使用时二级缓存可有可无，但是一级缓存必不可少。</strong><br>　一级缓存的使用场合如下：当使用session查询数据时，首先会在Session内部查找该对象是否存在，若存在，直接返回，否则，到数据库中区查询，并将查询结果缓存起来以便后期使用；缺点是当使用Session来表示一次会话中，它的生命周期较短，并且它是线程不安全的，不能够被多个线程共享，因此在实际使用中对效率的提升并不明显。<br>　二级缓存用来为Hibernate配置一种全局的缓存，以便实现多个线程和事物共享。在使用了二级缓存机制后，当查询数据时，会首先在内部缓存中去查找，如果不存在，接着在二级缓存中查找，最后才去数据库中查找，与一级缓存相比，二级缓存是独立于hibernate的软件部件，属于第三方的产品，hibernate3以后默认使用的产品是EhCache.<br>　二级缓存一般适用于以下几种情况：  </p>
+<ol>
+<li>数据量较小，如果数据量较大，缓存太多，大量消耗内存，造成内存资源短缺，从而降低系统的性能。  </li>
+<li>对数据的修改较少，如果进行大量的修改，就需要频繁的同步，也会影响系统的性能。  </li>
+<li>不会被大量的应用共享的数据，如果数据被大量线程或事物共享，多线程访问的同步机制会影响系统的性能。  </li>
+<li>不是很重要的数据，如果数据非常重要，对数据的准确性要求非常高，最好不要使用二级缓存。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/" itemprop="url">
+                  静态嵌套类(Static Nested Class)和内部类（Inner Class）的不同
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:55:46+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　Static Nested Class是被声明为静态（static）的内部类，它可以不依赖于外部类实例被实例化。而通常的内部类需要在外部类实例化后才能实例化。</p>
+<p>　<strong>代码示例如下：</strong></p>
+<pre><code>/**
+ * 扑克类（一副扑克）
+ *
+ */
+public class Poker {
+    private static String[] suites = {&quot;黑桃&quot;, &quot;红桃&quot;, &quot;草花&quot;, &quot;方块&quot;};
+    private static int[] faces = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    private Card[] cards;
+    /**
+     * 构造器
+     * 
+     */
+    public Poker() {
+        cards = new Card[52];
+        for(int i = 0; i &lt; suites.length; i++) {
+            for(int j = 0; j &lt; faces.length; j++) {
+                cards[i * 13 + j] = new Card(suites[i], faces[j]);
+            }
+        }
+    }
+    /**
+     * 洗牌 （随机乱序）
+     * 
+     */
+    public void shuffle() {
+        for(int i = 0, len = cards.length; i &lt; len; i++) {
+            int index = (int) (Math.random() * len);
+            Card temp = cards[index];
+            cards[index] = cards[i];
+            cards[i] = temp;
+        }
+    }
+    /**
+     * 发牌
+     * @param index 发牌的位置
+     * 
+     */
+    public Card deal(int index) {
+        return cards[index];
+    }
+    /**
+     * 卡片类（一张扑克）
+     * [内部类]
+     *
+     */
+    public class Card {
+        private String suite;   // 花色
+        private int face;       // 点数
+        public Card(String suite, int face) {
+            this.suite = suite;
+            this.face = face;
+        }
+        @Override
+        public String toString() {
+            String faceStr = &quot;&quot;;
+            switch(face) {
+            case 1: faceStr = &quot;A&quot;; break;
+            case 11: faceStr = &quot;J&quot;; break;
+            case 12: faceStr = &quot;Q&quot;; break;
+            case 13: faceStr = &quot;K&quot;; break;
+            default: faceStr = String.valueOf(face);
+            }
+            return suite + faceStr;
+        }
+    }
+}
+</code></pre><p>　测试代码如下：</p>
+<pre><code>class PokerTest {
+    public static void main(String[] args) {
+        Poker poker = new Poker();
+        poker.shuffle();                // 洗牌
+        Poker.Card c1 = poker.deal(0);  // 发第一张牌
+        // 对于非静态内部类Card
+        // 只有通过其外部类Poker对象才能创建Card对象
+        Poker.Card c2 = poker.new Card(&quot;红心&quot;, 1);    // 自己创建一张牌
+
+        System.out.println(c1);     // 洗牌后的第一张
+        System.out.println(c2);     // 打印: 红心A
+    }
+}
+</code></pre><p>　<strong>面试题：下面的代码哪些地方会产生编译错误？</strong></p>
+<pre><code>class Outer {
+    class Inner {}
+    pｕblic static void foo() { new Inner(); }
+    public void bar() { new Inner(); }
+    public static void main(String[] args) {
+        new Inner();
+    }
+}
+</code></pre><p>　解答：Java中非静态内部类对象的创建要依赖其外部类对象，上面的面试题中foo和main方法都是静态方法，静态方法中没有this，也就是说没有所谓的外部类对象，因此无法创建内部类对象，如果要在静态方法中创建内部类对象，可以这样做：</p>
+<pre><code>new Outer().new Inner();
 </code></pre>
           
         
@@ -689,7 +1149,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-责任链模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -714,8 +1174,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-责任链模式/" itemprop="url">
-                  Java典型设计模式-责任链模式
+                <a class="post-title-link" href="/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/" itemprop="url">
+                  抽象类（abstract class）和接口（interface）有什么异同
                 </a>
               
             
@@ -731,8 +1191,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:21:13+08:00">
+                2017-02-02
               </time>
             
 
@@ -754,8 +1214,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -791,567 +1251,21 @@
       
         
           
-            <p>　最近在学习Tomcat,Tomcat中最容易发现的设计模式就是责任链设计模式，这个设计模式也是在Tomcat中Container设计的基础，整个容器就是通过一个链连接在一起的，这个链一直将请求正确地传递给最终处理请求的Servlet，那么就学习一下责任链设计模式。</p>
-<hr>
-<p>　<strong>责任链模式：使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理为止。</strong><br>　责任链模式有以下两个角色：  </p>
-<ul>
-<li>抽象处理者角色：该角色对请求进行抽象，并定义一个方法以设定和返回对下一个处理者的引用。</li>
-<li>具体处理者角色：该角色接到请求后，可以选择将请求处理掉，或者将请求传给下一个处理者。</li>
-</ul>
-<p>　责任链模式类图如下：<br><img src="http://i.imgur.com/4jm2jrS.png" alt=""></p>
-<p>　责任链模式的优点：</p>
+            <p>　如果一个类中包含抽象方法，那么这个类就是抽象类，在Java中可以通过abstract关键字声明该类或该方法时抽象的；接口就是指一些方法的集合，接口中的所有方法都没有方法体。<br>　只要包含一个抽象方法的类就必须别声明为抽象类，抽象类可以声明方法的存在而不去实现它，被声明的抽象方法不能包含方法体，在实现时，必须包含相同的或者更低的访问级别；接口中的所有方法都是抽象的，接口中的成员变量都是static final类型。</p>
+<p>　<strong>接口与抽象类的相同点如下：</strong></p>
 <ol>
-<li>责任链模式将请求和处理分开，请求者不知道是谁处理的，处理者可以不用知道请求的全貌。</li>
-<li>提高系统的灵活性。</li>
+<li>都不能被实例化。</li>
+<li>接口类的实现类或抽象类的子类都只有实现了接口或抽象类的方法后才能被实例化。</li>
 </ol>
-<p>　责任链模式的缺点：</p>
+<p>　<strong>接口是抽象类的不同点如下：</strong></p>
 <ol>
-<li>降低程序的性能，每个请求都是从链头遍历到链尾，当链比较长的时候，性能会大幅下降。</li>
-<li>不易于调试，由于采用类似递归的方式，调试的时候逻辑比较复杂。<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</li>
+<li>接口只有定义，其方法不能在接口中实现，只有实现接口的类才能实现接口中定义的方法，而抽象类可以有定义与实现，即其方法可以在抽象类中被实现。</li>
+<li>接口需要实现，但是抽象类只能被继承。</li>
+<li>接口强调特定功能的实现，其设计理念是“has- a”关系，而抽象类强调所属关系，其设计理念为“is- a”关系。</li>
+<li>接口中定义的成员变量默认为public static final,并且必须赋给其初值，其所有成员方法都是public、abstract的；而抽象类可以有自己的数据成员变量，也可以有非抽象的成员方法。</li>
+<li>接口被用于实现比较常用的功能，便于日后的维护或添加删除方法；而抽象类更倾向于充当公共类的角色，不适用于日后重新对里面的代码进行修改。<br>　<strong>一般而言，抽象类多用于在同类事物中有无法具体描述的方法的场景，所以当子类和父类之间存在有逻辑上的层次结构时，推荐使用抽象类；而接口多用于不同类之间，定义不同类之间的通信规则。</strong></li>
 </ol>
-<p>　责任链模式的使用场景：</p>
-<ol>
-<li>一个请求需要一系列的处理工作。</li>
-<li>业务流的处理。</li>
-<li>对系统进行补充扩展。</li>
-</ol>
-<hr>
-<p>　<strong>击鼓传花演示责任链模式板例子：</strong></p>
-<p>　Player.java：    </p>
-<pre><code>public abstract class Player {
-    private Player successor;
-    public abstract void handle(int i);
-    protected void setSuccessor(Player aSuccessor){
-        this.successor = aSuccessor;
-    }
-    //传给下一个
-    public void next(int index){
-        if(successor!=null)
-            successor.handle(index);
-        else
-            System.out.println(&quot;游戏结束&quot;);
-    }
-}
-</code></pre><p>　PlayerAjava：</p>
-<pre><code>public class PlayerA extends Player {
-    public PlayerA(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==1)
-            System.out.println(&quot;PlayerA喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerA把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　PlayerB.java：</p>
-<pre><code>public class PlayerB extends Player {
-    public PlayerB(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==2)
-            System.out.println(&quot;PlayerB喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerB把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　PlayerC.java：</p>
-<pre><code>public class PlayerC extends Player {
-    public PlayerC(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==3)
-            System.out.println(&quot;PlayerC喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerC把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　PlayerD.java：</p>
-<pre><code>public class PlayerD extends Player {
-    public PlayerD(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==4)
-            System.out.println(&quot;PlayerD喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerD把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　DrumBeater.java：</p>
-<pre><code>public class DrumBeater {
-    public static void main(String[] args) {
-        Player player = new PlayerA(new PlayerB(new PlayerC(new PlayerD(null))));
-        player.handle(3);
-    }
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>PlayerA把花向下传
-PlayerB把花向下传
-PlayerC喝酒
-</code></pre>
-          
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-策略模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-策略模式/" itemprop="url">
-                  Java典型设计模式-策略模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　最近在学习Spring，在Spring中有多个地方使用策略模式，如Bean定义对象的创建和代理对象的创建等，那今天学习一下策略模式。</p>
-<hr>
-<p>　<strong>策略模式：针对一组算法，将每一个算法封装到具有共同接口的的独立类中，从而使得他们可以相互替换，使得算法可以在不影响客户端的情况下发生变化。</strong>  </p>
-<p>　策略模式有以下三个角色：  </p>
-<ul>
-<li>环境角色：该角色也叫上下文角色，起到承上启下的作用，屏蔽高层模块对策略、算法的直接访问，它持有一个Strategy的引用。</li>
-<li>抽象策略角色：该角色对策略、算法进行抽象，通常定义每个策略或算法必须具有的方法和属性。</li>
-<li>具体策略角色：该角色实现抽象策略中的具体操作，含有具体的算法。</li>
-</ul>
-<p>　策略模式类图如下：<br><img src="http://i.imgur.com/lLTa3AF.png" alt=""></p>
-<p>　策略式有以下优点：  </p>
-<ol>
-<li>策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族，恰当的使用继承可以把公共的代码移到父类中，从而避免代码重复。</li>
-<li>策略模式提供了可以替换继承关系的办法，继承可以处理多种算法或行为，如果不适用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为，但是这样算法或行为的使用者和算法本身混在一起，从而不可能在独立演化。</li>
-<li>使用策略模式可以避免使用多重条件转移语句。</li>
-</ol>
-<p>　策略模式的缺点：</p>
-<ol>
-<li>客户端必须知道所有的策略类，并自行决定使用哪一个策略类。</li>
-<li>策略模式造成很多的策略类。</li>
-</ol>
-<p>　策略模式的使用场景：</p>
-<ol>
-<li>多个类只是在算法或行为上稍有不同的场景。</li>
-<li>算法需要自由切换的场景。</li>
-<li>需要屏蔽算法规则的场景。</li>
-</ol>
-<hr>
-<p>　通过图书销售中不同折扣算法演示策略模式。<br>　DiscountStrategy.java</p>
-<pre><code>public abstract class DiscountStrategy {
-    private double price = 0;
-    private int number =0;
-    public DiscountStrategy(double price, int number) {
-        super();
-        this.price = price;
-        this.number = number;
-    }
-    public double getPrice() {
-        return price;
-    }
-    public int getNumber() {
-        return number;
-    }
-    public abstract double calculateDiscount();
-}
-</code></pre><p>　NoDiscountStrategy.java</p>
-<pre><code>public class NoDiscountStrategy extends DiscountStrategy {
-    public NoDiscountStrategy(double price, int number) {
-        super(price, number);
-
-    }
-    @Override
-    public double calculateDiscount() {
-        return 0;
-    }
-}
-</code></pre><p>　FixDiscountStrategy.java</p>
-<pre><code>public class FixDiscountStrategy extends DiscountStrategy {
-    public FixDiscountStrategy(double price, int number) {
-        super(price, number);
-    }
-    @Override
-    public double calculateDiscount() {
-        return getNumber()+1;
-    }
-}
-</code></pre><p>　PercentageDiscountStrategy.java</p>
-<pre><code>public class PercentageDiscountStrategy extends DiscountStrategy {
-    public PercentageDiscountStrategy(double price, int number) {
-        super(price, number);
-    }
-    @Override
-    public double calculateDiscount() {
-        return getPrice()*getNumber()*0.15;
-    }
-}
-</code></pre><p>　ContextClient.java</p>
-<pre><code>public class ContextClient {
-    private DiscountStrategy ds = null;
-    public ContextClient(DiscountStrategy ds) {
-        super();
-        this.ds = ds;
-    }
-    public double contextCalDisc(){
-        return this.ds.calculateDiscount();
-    }
-    public static void main(String[] args) {
-        ContextClient context0 = new ContextClient(new NoDiscountStrategy(48.5, 20));
-        System.out.println(&quot;0折扣&quot;+context0.contextCalDisc());
-
-        ContextClient context1 = new ContextClient(new FixDiscountStrategy(48.5, 20));
-        System.out.println(&quot;固定折扣&quot;+context1.contextCalDisc());
-
-        ContextClient context2 = new ContextClient(new PercentageDiscountStrategy(48.5, 20));
-        System.out.println(&quot;15%折扣&quot;+context2.contextCalDisc());
-    }
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>0折扣0.0
-固定折扣21.0
-15%折扣145.5
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-命令模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-命令模式/" itemprop="url">
-                  Java典型设计模式-命令模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　最近在学习Tomcat,Tomcat中的Connector组件是通过命令模式调用Container的，那么今天就来学习一下命令模式。</p>
-<hr>
-<p>　<strong>命令模式：将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以听、提供命令的撤销和恢复功能。</strong><br>　命令模式有以下两个角色：  </p>
-<ul>
-<li>命令角色：该角色声明一个给所有具体命令类的抽象接口，定义需要执行的命令。</li>
-<li>具体命令角色：该角色定义一个接受者和行为者之间的若耦合，实现命令方法，并调用接受者的相应操作。</li>
-<li>调用者角色：该角色负责调用命令对象执行请求。</li>
-<li>接受者角色：该角色负责具体实施和执行一个请求。</li>
-</ul>
-<p>　命令模式类图如下：<br><img src="http://i.imgur.com/OUd8uRD.png" alt=""></p>
-<p>　命令模式的优点：</p>
-<ol>
-<li>类间解耦：调用者角色与接收者角色之间没有任何依赖关系，调用者实现功能只需要调用Command中的execute()方法，不需要了解是哪个接受者执行。</li>
-<li>可扩展性：Command的子类可以非常容易的扩展，而调用者用Invoker和更高层次的模块Client不产生严重的代码耦合。</li>
-<li>命令模式结合其他模式更优秀。</li>
-</ol>
-<p>　命令模式的缺点：<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</p>
-<hr>
-<p>　<strong>命令模式模板例子：</strong></p>
-<p>　Command.java：    </p>
-<pre><code>public interface Command {
-    public void execute();
-
-}
-</code></pre><p>　ComcreteCommand.java：</p>
-<pre><code>public class ComcreteCommand implements Command {
-    private Receiver receiver;
-
-    public ComcreteCommand(Receiver receiver) {
-        super();
-        this.receiver = receiver;
-    }
-
-    @Override
-    public void execute() {
-        this.receiver.action();
-    }
-}
-</code></pre><p>　Receiver.java：</p>
-<pre><code>public class Receiver {
-    public void action(){
-        System.out.println(&quot;执行动作&quot;);
-    }
-}
-</code></pre><p>　Invoker.java：</p>
-<pre><code>public class Invoker {
-    private Command command;
-
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-    public void action(){
-        this.command.execute();
-    }
-}
-</code></pre><p>　Client.java：</p>
-<pre><code>public class Client {
-    public static void main(String[] args) {
-        Invoker invoker = new Invoker();
-        Receiver receiver = new Receiver();
-        Command command = new ComcreteCommand(receiver);
-        invoker.setCommand(command);
-        invoker.action();
-    }
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>执行动作
-</code></pre>
           
         
       
@@ -1384,7 +1298,7 @@ PlayerC喝酒
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1427,7 +1341,7 @@ PlayerC喝酒
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1436,7 +1350,7 @@ PlayerC喝酒
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1445,7 +1359,7 @@ PlayerC喝酒
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
