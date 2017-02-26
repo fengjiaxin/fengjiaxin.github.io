@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（一）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/回调机制/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（一）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/02/23/回调机制/" itemprop="url">
+                  回调机制
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:04:25+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T15:19:50+08:00">
+                2017-02-23
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -353,719 +353,136 @@
       
         
           
-            <p>　<strong>在总结之前，我得自身反省一下，明明想法其实已经想的差不多了，但是总差一些细节，尤其关于Scanner类，这个类非常重要，方法一定要记住。</strong></p>
-<p>##　Scanner类##<br>　在源码中应该包括下句：</p>
-<pre><code>import java.util.Scanner;  
-</code></pre><p>　Scanner是新增的一个简易文本扫描器，在 JDK 5.0之前，是没有的。</p>
-<p>　<strong>构造方法：</strong><br>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
-<p>　<strong>方法：</strong><br>　public void close()    //关闭<br>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代<br>　public boolean hasNext() //检测输入中，是否，还有单词<br>　public boolean hasNextInt() //检测输入中，是否，还有单词<br>　public String next()   //读取下一个单词，默认把空格作为分隔符<br>　public int hasNextInt();查看是否有int类型的token的分割段<br>　public String nextLine()  //读行   </p>
-<p>　<strong>读取键盘输入</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-while(sc.hasNext())
-{
-    //处理业务
-}
-</code></pre><p>　好了，在了解了一些基本信息后，我们开始看题：</p>
+            <p>　之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。</p>
+<h1 id="一、-异步和同步"><a href="#一、-异步和同步" class="headerlink" title="一、 异步和同步"></a>一、 异步和同步</h1><p>　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。<br>　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等前面动作执行完成以后方可执行。这就是同步。</p>
+<p>　这里引用一个例子进行说明。</p>
+<blockquote>
+<p>案例：<br>A、张三打电话给李四，让李四帮忙写份材料。<br>B、李四接到电话的时候，手上有自己的工作要处理，但他答应张三，忙完手上的工作后马上帮张三写好材料，并传真给张三。<br>C、通完电话后，张三外出办事。</p>
+<p>说明：<br>张三给李四通完电话后，就出去办事了，他并不需要等李四把材料写好才外出。那么张三让李四写材料的消息就属于异步消息。<br>相反，如果张三必须等李四把材料写好才能外出办事的话，那么这个消息就属于同步消息了。</p>
+</blockquote>
+<h1 id="二、-异步的实现"><a href="#二、-异步的实现" class="headerlink" title="二、 异步的实现"></a>二、 异步的实现</h1><p>　传统的程序执行代码都是从上到下，一条一条执行的。<br>　在以上的案例中，如果李四需要几个小时以后才能帮张三写好材料的话，那张三就必须等几个小时，这样张三这几个小时就无法干其他的事情。</p>
 <hr>
-<p>　输入包括多组测试数据。每组输入第一行是两个正整数N和M（0 &lt; N &lt;= 30000,0 &lt; M &lt; 5000）,分别代表学生的数目和操作的数目。<br>学生ID编号从1编到N。第二行包含N个整数，代表这N个学生的初始成绩，其中第i个数代表ID为i的学生的成绩<br>接下来又M行，每一行有一个字符C（只取‘Q’或‘U’），和两个正整数A,B,当C为’Q’的时候, 表示这是一条询问操作，他询问ID从A到B（包括A,B）的学生当中，成绩最高的是多少；当C为‘U’的时候，表示这是一条更新操作，要求把ID为A的学生的成绩更改为B。</p>
-<p>　我第一次做题的时候忽略了两点：</p>
+<p>　可以使用以下办法来处理这种问题：</p>
 <ul>
-<li>M限制了查询次数</li>
-<li>A、B的大小关系不确定</li>
+<li>张三找王五去给李四打电话，等李四写好材料后，由王五转交给张三。这样张三就可以外出办其他的事情了。</li>
+<li>问题得到了合理的解决，之前张三一条线的工作，由张三和王五两条线来完成了，两边同时进行，彼此不耽误。</li>
 </ul>
-<p>　在了解了这两个陷阱后，代码如下：</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int num = 0;
-        int count = 0;
-         int A=0,B =0;
-        while(sc.hasNext()){
-            num = sc.nextInt();
-            count = sc.nextInt();
-
-            int[] grade = new int[num];
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;num ;i++)
-                grade[i] = sc.nextInt();
-            String ch = null;
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;count;i++){
-                ch = sc.next();
-                A = sc.nextInt();
-                B = sc.nextInt();
-                if(ch.equals(&quot;U&quot;))
-                    grade[A-1] = B;
-                if(ch.equals(&quot;Q&quot;)){
-                    int result = max(grade,A,B);
-                    System.out.println(result);
-                }
-
-            }
-        }
-
-    }
-
-    public static int max(int[] array,int begin,int end){
-        int min = Math.min(begin,end)-1;
-        int max = Math.max(begin,end);
-
-        int result = array[min];
-        for(int i =min+1;i&lt;max;i++){
-            if(array[i]&gt;result)
-                result = array[i];
-        }
-        return result;
-    }
-
+<h1 id="三、-计算机语言的实现"><a href="#三、-计算机语言的实现" class="headerlink" title="三、 计算机语言的实现"></a>三、 计算机语言的实现</h1><ul>
+<li>以前由一个线程来处理的工作，可以通过新增一个线程来达到异步的目的。这也就是JAVA中的多线程技术。</li>
+<li>最后李四写好的材料必须交给张三，以做他用。这就是回调。</li>
+</ul>
+<p>　<strong>回调机制可以这样理解：</strong><br>　A发送消息给B，B处理好A要求的事情后，将结果返回给A，A再对B返回的结果来做进一步的处理。</p>
+<h1 id="四、-Java代码的实现"><a href="#四、-Java代码的实现" class="headerlink" title="四、 Java代码的实现"></a>四、 Java代码的实现</h1><p>回调的实现</p>
+<pre><code>/**
+ * 回调接口
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:45:06
+ */
+public interface CallBack {
+    /**
+     * 执行回调方法
+     * @param objects 将处理后的结果作为参数返回给回调函数
+     * @return: void
+     */
+    public void execute(Object...objects);
 
 }
-</code></pre><p>　<strong>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</strong></p>
+</code></pre><p>消息的发送者</p>
+<pre><code>/**
+ * 简单本地发送异步消息的类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:47:07
+ */
+public class Local implements CallBack, Runnable {
+    /**
+     * 远程接收消息的类。
+     */
+    private Remote remote;
+    /**
+     * 发送出去的消息
+     */
+    private String message;
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/04/排序的Java实现/" itemprop="url">
-                  排序的Java实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T20:46:53+08:00">
-                2017-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
-<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。<br>　具体实现：</p>
-<pre><code>public class TestSelectSort {
-
-    public static void main(String[] args) {
-        int[] a = {5,4,9,8,7,6,0,1,3,2};
-        selectSort(a);
-        show(a);
+    public Local(Remote remote ,String message){
+        super();
+        this.remote = remote;
+        this.message = message;
     }
 
-    public static void selectSort(int[] a){
-        int i,j;
-        int temp =0,flag =0;
-        for(i =0;i&lt;a.length;i++){
-            temp =a[i];
-            flag =i;
-            for(j =i+1;j&lt;a.length;j++){
-                if(a[j]&lt;temp){
-                    temp= a[j];
-                    flag =j;
-                }
-            }
-            if(flag!=i){
-                a[flag] =a[i];
-                a[i] = temp;
-            }
-        }
-    }
-
-    public static void show(int[] a){
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-
-}
-</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。<br>　具体实现：</p>
-<pre><code>public class TestInsertSort {
-    public static void main(String[] args) {
-        int[] array = {7,3,4,9,10,6};
-        insertSort(array);
-        for(int i=0;i&lt;array.length;i++)
-            System.out.print(array[i]+&quot; &quot;);
-
-    }
-    public static void insertSort(int[] a){
-        if(a!=null){
-            for(int i=1;i&lt;a.length;i++){
-                int temp = a[i],j =i;
-                if(temp&lt;a[j-1]){
-                    while(j&gt;=1 &amp;&amp; temp&lt;a[j-1]){
-                        a[j] = a[j-1];
-                        j--;
-                    }
-                }
-                a[j] = temp;
-            }
-        }
-    }
-}
-</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。<br>　具体实现：</p>
-<pre><code>public class TestBubbleSort {
-    public static void main(String[] args) {
-        int[] array = {4,2,9,10,8,6};
-        BubbleSort(array);
-        for(int i=0;i&lt;array.length;i++){
-            System.out.print(array[i]+&quot; &quot;);
-        }
-    }
-    public static void BubbleSort(int[] a){
-        int i,j,temp,len = a.length;
-        for( i=0;i&lt;len-1;i++){
-            for(j =0;j&lt;len-i-1;j++){
-                if(a[j]&gt;a[j+1]){
-                    temp = a[j];
-                    a[j] = a[j+1];
-                    a[j+1] = temp;
-                }
-            }
-        }
-    }
-}
-</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。<br>　具体实现：</p>
-<pre><code>public class TestMergeSort {
-    public static void main(String[] args) {
-        int[] a = {5,3,4,2,9,7,6,1};
-        MergeSort(a, 0, a.length-1);
-        for(int i =0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void Merge(int[] array,int left,int middle,int right){
-        int i,j,k,n1,n2;
-        n1 = middle-left+1;
-        n2 = right-middle;
-        int[] L = new int[n1];
-        int[] R = new int[n2];
-        for(i =0,k =left;i&lt;n1;i++,k++)
-            L[i] = array[k];
-        for(j =0,k=middle+1;j&lt;n2;j++,k++)
-            R[j] = array[k];
-        for(k =left,i =0,j =0;i&lt;n1 &amp;&amp; j&lt;n2;k++){
-            if(L[i]&lt;R[j])
-                array[k] = L[i++];
-            else
-                array[k] = R[j++];
-        }
-        //没有再声明一个变量是因为一下两种情况只会出现一种情况。
-        if(i&lt;n1){
-            for(j =i;j&lt;n1;j++,k++)
-                array[k] =L[j];
-        }
-        if(j&lt;n2){
-            for(i =j;i&lt;n2;i++,k++)
-                array[k] =R[i];    
-        }    
-    }
-
-    public static void MergeSort(int[] array,int left,int right){
-        if(left&lt;right){
-            int middle = (left+right)/2;
-            MergeSort(array, left, middle);
-            MergeSort(array,middle+1,right);
-            Merge(array,left,middle,right);
-        }
-    }
-}
-</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。<br>　具体实现：</p>
-<pre><code>public class TestQuickSort {
-    public static void main(String[] args) {
-        int[] a = {5,3,2,9,7,6,1};
-        quickSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void sort(int[] array,int low,int high){
-        int i,j,index;
-        if(low&gt;=high) return;
-        i =low;
-        j = high;
-        index = array[low];
-        while(i&lt;j){
-            while(i&lt;j &amp;&amp; array[j]&gt;index)
-                j--;
-            if(i&lt;j)
-                array[i++] = array[j];
-            while(i&lt;j &amp;&amp; array[i]&lt;index)
-                i++;
-            if(i&lt;j){
-                array[j--] = array[i];
-            }
-        }
-        array[i] = index;
-        sort(array,low,i-1);
-        sort(array,i+1,high);
-    }
-    public static void quickSort(int[] array){
-        sort(array,0,array.length-1);
-    }
-}
-</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。<br>　具体实现：</p>
-<pre><code>public class TestShellSort {    
-    public static void main(String[] args) {    
-        int[] a = {5,3,2,9,7,6,1};
-        shellSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void shellSort(int[] array){
-        int len = array.length;
-        int i,j,h;//h为步长
-        int temp;
-        for(h =len/2;h&gt;0;h/=2){
-            for(i =h;i&lt;len;i++){//从每组至少第二个元素开始遍历
-                temp = array[i];
-                for(j=i-h;j&gt;=0;j-=h){
-                    if(temp&lt;array[j])
-                        array[j+h] = array[j];
-                    else 
-                        break;
-                }
-                array[j+h] = temp;
-            }
-        }
-    }
-}
-</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。<br>　具体实现：</p>
-<pre><code>public class TestHeapSort {
-    public static void main(String[] args) {
-        int[] a = {4,3,2,7,6,5};
-        heapSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void adjustHeap(int[] a,int pos,int len){
-        int temp;
-        int child;
-        for(temp = a[pos];2*pos+1&lt;=len;pos = child){
-            child = 2*pos+1;
-            if(child&lt;len &amp;&amp; a[child+1]&gt;a[child])
-                child++;
-            if(a[child]&gt;temp)
-                a[pos] = a[child];
-            else
-                break;
-        }
-        a[pos] = temp;
-    }
-    public static void heapSort(int[] array){
-        int i;
-        int len = array.length;
-        for(i=len/2-1;i&gt;=0;i--)
-            adjustHeap(array, i, len-1);
-        for(i = len-1;i&gt;=0;i--){
-            int temp = array[0];
-            array[0] = array[i];
-            array[i] = temp;
-            adjustHeap(array, 0, i-1);
-        }
-    }
-}
-</code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/JAVA多线程（二）/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/04/JAVA多线程（二）/" itemprop="url">
-                  JAVA多线程（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T18:41:27+08:00">
-                2017-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　接着上篇博客继续，还有一些多线程的概念，我以前也没听过，正好整理学习一下，加油！！</p>
-<h2 id="1、sleep-方法与wait-方法的不同？"><a href="#1、sleep-方法与wait-方法的不同？" class="headerlink" title="1、sleep()方法与wait()方法的不同？"></a>1、sleep()方法与wait()方法的不同？</h2><p>　区别主要显示在一下几个方面：</p>
-<ol>
-<li>原理不同，sleep()方法时Thread的静态方法，是线程控制自身流程的，会让此线程暂停一段时间，把机会让给其他线程；而wait()方法时Object的方法，用于线程见的通信，这个方法会使拥有该对象锁的进程等待，直到其他线程调用notify()方法。</li>
-<li>对锁的处理机制不同，sleep()方法不涉及线程间通信，不释放锁，而wait()会释放掉它所占用的锁，从而使线程所在对象的其他synchronized数据可被别的线程使用。</li>
-<li>使用区域不同，sleep()可以在任何地方使用，而wait()方法必须放在同步控制方法或语句块中使用；除此之外，sleep()方法必须捕获异常，而wait()方法不需要，在sleep()过程中，有可能被其他对象调用它的interrupt(),产生interruptedException异常。</li>
-</ol>
-<p>　<strong>那么扩展一下：sleep()和yield()有什么区别？</strong></p>
-<ol>
-<li>sleep()给其他线程运行机会时不考虑线程的优先级，而yield()只给相同优先级或更高优先级的线程运行的机会。</li>
-<li>线程执行sleep()后转入阻塞状态，所以在休眠的时间段内肯定不会被执行；但是yield()只是使当前线程重新回到可执行状态，所以可能执行yield()后进入到可执行状态后马上又被执行。</li>
-<li>sleep()方法抛出InterruptedException，而yield()没有声明任何异常。</li>
-<li>sleep()方法比yield()有更好地可移植性（操作系统方面）。</li>
-</ol>
-<h2 id="2、终止线程的方法？"><a href="#2、终止线程的方法？" class="headerlink" title="2、终止线程的方法？"></a>2、终止线程的方法？</h2><p>　<strong>stop()和suspend()方法。</strong></p>
-<p>　stop()方法释放已经锁定的所有监视资源，suspend()不会释放锁。这两种方式都不安全，一般建议让线程自行结束进入Dead状态；在学习这个方法前，先补充一下基础知识。</p>
-<hr>
-<p>　关键字<strong>volatile</strong>,类型修饰符，系统每次用它时都是直接从内存中读取，而不是从缓存中读取。</p>
-<hr>
-<p>　那么建议方式是通过设置flag()标志来控制循环是否执行，通过这种方法来让线程离开run()方法从而终止线程。</p>
-<p>　<strong>实例代码如下：</strong></p>
-<pre><code>public class MyThreadStop implements Runnable {
-    private volatile Boolean flag;
-
-    public void stop(){
-        flag = false;
-    }
-
-    @Override
-    public void run() {
-        while(flag){
-            //执行
-        }
-    }
-
-}
-</code></pre><p>　在上例中，调用stop()虽然能够终止线程，但是，当线程处于非运行状态时，这个方法就不可用啦，此时可以使用interrupt()方法来打破阻塞的情况，当interrupt()被调用时，会抛出interruptedException异常，可以通过在run()方法中来捕获这个异常让线程安全退出。</p>
-<p>　<strong>示例代码如下：</strong></p>
-<pre><code>public class MYThread {
-
-    public static void main(String[] args) {
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                System.out.println(&quot;thread go to sleep&quot;);
-
-                try {
-                    Thread.sleep(5000);
-                    System.out.println(&quot;thread end&quot;);
-                } catch (InterruptedException e) {
-                    //e.printStackTrace();
-                    System.out.println(&quot;thread is interupted&quot;);
-                }
-            }
-        });
-
+    public void sendMessage(){
+        //当前线程的名称
+        System.out.println(Thread.currentThread().getName());
+        //创建一个新的线程发送消息
+        Thread thread = new Thread(this);
         thread.start();
-        thread.interrupt();
-
+        //当前线程继续执行
+        System.out.println(&quot;Message has been sent by Local&quot;);
     }
 
-}
-
-运行结果如下：
-thread go to sleep
-thread is interupted
-</code></pre><h2 id="3、什么是守护线程？"><a href="#3、什么是守护线程？" class="headerlink" title="3、什么是守护线程？"></a>3、什么是守护线程？</h2><p>　守护线程是指程序在运行时在后台提供一种通用服务的线程，用户线程跟守护线程的差别在：如果用户线程已经全部退出运行，只剩下守护线程存在，JVM也就退出了。</p>
-<p>　在Java中，守护线程一般具有较低的优先级，它可以由用户设置，方法就是在调用<strong>start()前</strong>调用对象的setDaemon(true)方法，注意：当在一个守护线程中产生了其他线程，那么这些新产生的线程默认还是守护线程。</p>
-<p>　<strong>说了这么多，代码实战一下更加清晰明了：</strong></p>
-<pre><code>class ThreadJoin extends Thread{
-    @Override
-    public void run() {
-        System.out.println(Thread.currentThread().getName()+&quot;:begin&quot;);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(Thread.currentThread().getName()+&quot;:end&quot;);
-    }
-
-}
-
-public class ThreadJoinDemo {
-
-    public static void main(String[] args) {
-        System.out.println(&quot;test:begin&quot;);
-        Thread t1 = new ThreadJoin();
-        t1.setDaemon(true);
-        t1.start();
-        System.out.println(&quot;test:end&quot;);
-
-    }
-
-}
-
-运行结果：
-test:begin
-test:end
-Thread-0:begin
-</code></pre><p>　其中守护线程最典型的的一个例子就是垃圾回收器，只要JVM启动，它始终在运行，实时监控和管理系统中可以被回收的资源。</p>
-<h2 id="4、join-方法的作用是什么？"><a href="#4、join-方法的作用是什么？" class="headerlink" title="4、join()方法的作用是什么？"></a>4、join()方法的作用是什么？</h2><p>　join()的作用是让调用该方法的线程在执行完run()方法后，再执行join()方法后面的代码。简单来说就是将两个线程合并，实现同步的功能；具体就是可以通过线程A的join()方法来等待线程A的结束，或者使用线程A的join(2000)方法来等待线程A的结束，但最多只等2s。</p>
-<p>　<strong>来，写个代码实例把：</strong></p>
-<pre><code>public class JoinTest {
-
-    public static void main(String[] args) {
-        Thread t = new Thread(new ThreadImp());
-        t.start();
-        try {
-            t.join(1000);
-            if(t.isAlive()){
-                System.out.println(&quot;t has not finished&quot;);
-            }else{
-                System.out.println(&quot;t has finished&quot;);
-            }
-            System.out.println(&quot;joinFinish&quot;);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-}
-
-class ThreadImp implements Runnable{
 
     @Override
     public void run() {
-        System.out.println(&quot;ThreadImp begin:&quot;);
-        try {
-            Thread.sleep(5000);
-            System.out.println(&quot;ThreadImp end:&quot;);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        remote.excuteMessage(message, this);
+    }
+    /**
+     * 发送消息后的回调函数
+     */
+    @Override
+    public void execute(Object... objects) {
+        //打印返回的消息
+        System.out.println(objects[0]);
+        //打印发送消息的线程名称
+        System.out.println(Thread.currentThread().getName());
+        //中断发送消息的线程
+        Thread.interrupted();
+    }
+
+    public static void main(String[] args){
+        Local local = new Local(new Remote(),&quot;hello&quot;);
+        local.sendMessage();
     }
 
 }
+</code></pre><p>远程消息的接收者</p>
+<pre><code>/**
+ * 处理消息的远程类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:49:43
+ */
+public class Remote {
+    /**
+     * 处理消息
+     * @param msg 接收的消息
+     * @param callBack 回调函数处理类
+     * @return: void
+     */
+    public void excuteMessage(String msg,CallBack callBack){
+        /**
+         * 模拟远程类正在处理其他事情
+         */
+        for(int i =0;i&lt;10000;i++)
+        {
 
-运行结果如下：
-ThreadImp begin:
-t has not finished
-joinFinish
-ThreadImp end:
-</code></pre><p>　<strong>到这里，关于线程的知识差不多整理完毕，有很多知识我也是重新学习了一遍，代码重新编写一次，写了这么多可真累，不过以后再捡起来就相对容易些了，先记录这些吧，以后再有新知识，新感悟在补充。</strong></p>
+        }
+        /**
+         * 处理完其他事情，现在来处理消息
+         */
+        System.out.println(msg);
+        System.out.println(&quot;I have executed the message by Local&quot;);
+        /**
+         * 执行回调
+         */
+        callBack.execute(new String[]{&quot;Nice to meet you~!&quot;});
+    }
+
+}
+</code></pre><p>执行结果为</p>
+<pre><code>main
+Message has been sent by Local
+hello
+I have executed the message by Local
+Nice to meet you~!
+</code></pre><p><strong>注意：remote.executeMessage(message, this);</strong><br>　executeMessage方法需要接收一个message参数，表示发送出去的消息，而CallBack参数是他自己，也就是这里的this。表示发送消息后，由Local类自己来处理，调用自身的execute方法来处理消息结果。<br>　如果这里不是用this，而是用其他的CallBack接口的实现类的话，那就不能称之为“回调”了，在OO的世界里，那就属于“委派”。也就是说，“回调”必须是消息的发送者来处理消息结果，否则不能称之为回调。这个概念必须明确。</p>
 
           
         
@@ -1104,7 +521,7 @@ ThreadImp end:
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/JAVA多线程（一）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/20/Comparable接口的实现和使用/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1129,8 +546,8 @@ ThreadImp end:
             
               
                 
-                <a class="post-title-link" href="/2017/02/03/JAVA多线程（一）/" itemprop="url">
-                  JAVA多线程（一）
+                <a class="post-title-link" href="/2017/02/20/Comparable接口的实现和使用/" itemprop="url">
+                  Comparable接口的实现和使用
                 </a>
               
             
@@ -1146,8 +563,8 @@ ThreadImp end:
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T20:42:34+08:00">
-                2017-02-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-20T22:07:31+08:00">
+                2017-02-20
               </time>
             
 
@@ -1206,487 +623,810 @@ ThreadImp end:
       
         
           
-            <p>　在上学期学习了操作系统的相关知识，首先学的就是进程与线程的知识概念，但是linux操作系统是用c语言编写的，并且关于线程的代码太底端，平时做题也是运用伪代码来写的，那么今天在整理Java多线程的相关知识的同时，正好与之前学习的操作系统知识相结合，那么这篇文章主要介绍一下多线程的Java实现。</p>
-<h2 id="1、线程与进程的概念"><a href="#1、线程与进程的概念" class="headerlink" title="1、线程与进程的概念"></a>1、线程与进程的概念</h2><p>　线程是指程序在执行过程中，能够执行程序代码的一个执行单元，在Java语言中有四种状态：运行、就绪、挂起、结束。</p>
-<p>　进程是指一段正在执行的程序，而线程有时成为轻量级进程，是程序执行的最小单元，一个进程可以有多个线程，各个线程之间共享程序的内存空间（代码段、数据段、堆空间）以及一些进程级的资源，但是各个线程拥有自己的栈空间。</p>
-<p>　在网上找到一个图片很合适的表现的进程与线程的对比关系，图如下：</p>
-<p><img src="http://i.imgur.com/Tv9A8OA.png" alt=""></p>
-<p>　在操作系统级别上，程序的执行都是以进程为单位，每个进程通常有多个线程互不影响并发的执行，那么为什么使用多线程呢？</p>
-<ol>
-<li>使用多线程可以减少程序的响应时间。</li>
-<li>与进程相比，线程的创建和切换开销更小。</li>
-<li>多CPU或多核计算机本身就具有执行多线程的能力。</li>
-<li>使用多线程能简化程序的结构，使程序便于理解和维护。</li>
-</ol>
-<h2 id="2、同步和异步的区别？"><a href="#2、同步和异步的区别？" class="headerlink" title="2、同步和异步的区别？"></a>2、同步和异步的区别？</h2><p>　答：如果系统中存在临界资源（资源数量少于竞争资源的线程数量的资源），例如正在写的数据以后可能被另一个线程读到，或者正在读的数据可能已经被另一个线程写过了，那么这些数据就必须进行同步存取（数据库操作中的排他锁就是最好的例子）。当应用程序在对象上调用了一个需要花费很长时间来执行的方法，并且不希望让程序等待方法的返回时，就应该使用异步编程，在很多情况下采用异步途径往往更有效率。事实上，所谓的同步就是指阻塞式操作，而异步就是非阻塞式操作。</p>
-<h2 id="3、如何实现JAVA多线程？"><a href="#3、如何实现JAVA多线程？" class="headerlink" title="3、如何实现JAVA多线程？"></a>3、如何实现JAVA多线程？</h2><p>　Java虚拟机允许应用程序并发的运行多个线程，在Java中，一共有三种实现方式，那么根据我的掌握程度，我只写前两个实现方式。</p>
-<ol>
-<li>继承Thread类，重写run()方法</li>
-<li><p>声明实现Runnable接口类，并实现run()方法。</p>
-<p> <strong>对于方式一：</strong></p>
-</li>
-</ol>
-<p>　启动线程的唯一方法就是通过Thread的start()方法。start()方法是一个本地方法，将启动一个新线程，并执行run()方法；需要注意的是：调用start()方法是使得该线程变为可运行状态，什么时候运行线程代码是由操作系统决定。</p>
-<p>　代码示例如下：</p>
-<pre><code>class Demo extends Thread    
-{  
-    private String name;  
-    Demo(String name)//构造函数  
-    {  
-        //this.name = name;  
-        super(name);  
-
-    }  
-    public void run()//复写run方法  
-    {  
-        for ( int i = 0 ; i &lt; 60  ; i++ )  
-        {  
-            System.out.println(Thread.currentThread().getName()+&quot;run=&quot;+i);  
-        }  
-    }  
-} 
-public class ThreadExtendsDemo {
-
-    public static void main(String[] args) {
-        Demo t1 = new Demo(&quot;one&quot;);//创建一个对象t1  
-        Demo t2 = new Demo(&quot;two&quot;);  
-        t1.start();// 通过调用start方法，开启多线程  
-        t2.start();  
-        run();  
-    }
-
-    private static void run() {
-        for(int i =0;i&lt;60;i++)
-            System.out.println(&quot;main&quot; +i);
-    }
-
-}
-</code></pre><p>　需要注意的是：<br>　t1.start()开启线程并执行该线程的run方法。<br>　t1.run()仅仅是对象调用方法。而线程创建了，并没有运行。还是在主线程的运行中。</p>
-<p>　　<strong>对于方式二：</strong></p>
-<p>　首先定义类实现Runnable接口，实现run()方法；然后创建Thread对象，用实现Runnable接口的对象作为参数实例化该Thread对象；最有调用Thread的start()方法。</p>
-<p>　代码示例如下：</p>
-<pre><code>class MyThread implements Runnable{
-
-    @Override
-    public void run() {
-        System.out.println(&quot;Thread Body&quot;);
-    }
-
-}
-public class ThreadImmDemo {
-
-    public static void main(String[] args) {
-        MyThread thread = new MyThread();
-        Thread t = new Thread(thread);
-        t.start();
-
-    }
-
-}
-</code></pre><p>　其实，不管是通过继承Thread类还是通过实现Runnable接口来实现多线程的方法，最终还是通过Thread对象的API来控制线程。</p>
-<p>　在学习了这两种方式实现多线程，那么有一个问题：<strong>一个类是否可以同时继承Thread类并实现Runnable接口</strong>？<br>　答案是可以的;代码示例如下：</p>
-<pre><code>public class Test extends Thread implements Runnable {
-
-    public static void main(String[] args) {
-        Thread t = new Thread(new Test());
-        t.start();
-    }
-
-}
-</code></pre><p>　上面这段代码是可以编译通过的，因为Test类从Thread类继承了run()方法，这个继承的run()方法可以被当做对RUnnable接口的实现，因此此段代码可以编译通过。</p>
-<h2 id="4、run-方法和start-方法的区别？"><a href="#4、run-方法和start-方法的区别？" class="headerlink" title="4、run()方法和start()方法的区别？"></a>4、run()方法和start()方法的区别？</h2><p>　通常，系统通过调用线程类的start()方法来启动一个线程，此时该线程处于就绪状态，而非运行状态，也就意味着这个线程可以被JVM来调度执行；在调度过程中，JVM通过调用线程类的run()方法来完成实际的操作，当run()方法结束后，此线程就会终止。</p>
-<p>　如果直接调用run()方法，这会别当做一个普通的函数调用，程序中仍然只有主线程这一个线程；<br>由此可知，只有通过调用线程类的start()方法才能真正达到多线程的目的。</p>
-<h2 id="5、多线程同步的实现方法？"><a href="#5、多线程同步的实现方法？" class="headerlink" title="5、多线程同步的实现方法？"></a>5、多线程同步的实现方法？</h2><p><strong>Java主要提供了3种实现同步机制的方法：</strong></p>
-<h3 id="1-synchronized关键字"><a href="#1-synchronized关键字" class="headerlink" title="1 synchronized关键字"></a>1 synchronized关键字</h3><p>　在Java中，每个对象都有一个对象锁与之相关联，该锁表明对象在任何时候只允许被一个线程所拥有，当一个线程调用对象的一段synchronized代码时，需要先获取这个锁，然后去执行相应的代码，执行结束后，释放锁。</p>
-<p>　synchronized关键字有两种用法：synchronized方法和synchronized块，此外，该关键字可以用作于静态方法、类、或某个实例。</p>
-<p>　讲解了这么多，我编写一个买票程序，使用两个线程买票，一个线程在同步块中，一个线程在同步函数中，代码实例如下：</p>
-<pre><code>class Ticket implements Runnable{
-    private int ticket =100;
-    boolean flag = true;
-
-    @Override
-    public void run() {
-        if(flag){
-            while(true){
-                synchronized (this) {
-                    if(ticket&gt;0){
-                        try {
-                            Thread.sleep(10);
-                            System.out.println(Thread.currentThread().getName()+&quot;runs=&quot;+ticket--);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-            }
-        }
-        else{
-            show();
-        }
-    }
-
-    private synchronized void show() {
-        while(true){
-            if(ticket&gt;0){
-                try {
-                    Thread.sleep(10);
-                    System.out.println(Thread.currentThread().getName()+&quot;show =&quot;+ticket--);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-}
-
-public class TicketDemo {
-
-    public static void main(String[] args) {
-        Ticket t = new Ticket();
-        Thread t1 = new Thread(t);
-        Thread t2 = new Thread(t);
-        t1.start();
-
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        t.flag = false;
-        t2.start();
-
-    }
-
-}
-</code></pre><p>　那么如果同步函数被static修饰后，使用的锁是什么呢？我们知道静态进内存时一定没有本类对象，但一定有该类对应的字节码文件对象，即类.class,实在不行，我们创建一个对象，<strong>Object obj = new Objext()</strong>;然后利用obj锁。</p>
-<h3 id="2-wait-和notify-方法"><a href="#2-wait-和notify-方法" class="headerlink" title="2 wait()和notify()方法"></a>2 wait()和notify()方法</h3><p>　在synchronized代码被执行期间，线程可以通过调用对象的wait()方法，释放对象锁，进入等待状态，并且可以调用notify()或notifyAll()方法通知正在等待的其他线程。其中，notify()方法仅唤醒一个线程（等待队列的第一个线程），并允许它去获得锁；notifyAll()方法唤醒所有等待这个对象的线程并允许他们获得锁（让这些线程竞争获得）。</p>
-<p>　接下来编写一个生产者消费者的实例，代码实例如下：</p>
-<pre><code>public class ProducerConsumerDemo {
-
-    public static void main(String[] args) {
-        Resource res = new Resource();
-        Producer pro = new Producer(res);
-        Consumer con = new Consumer(res);
-
-        Thread t0 = new Thread(pro);
-        Thread t1 = new Thread(pro);
-        Thread t2 = new Thread(con);
-        Thread t3 = new Thread(con);
-
-        t0.start();
-        t1.start();
-        t2.start();
-        t3.start();
-
-    }
-
-}
-
-class Resource{
-    private String name ;
-    private int count =1;
-    private boolean flag = false;//true代表有产品，false代笔没有产品
-
-    //生产
-    public synchronized void set(String name){
-        while(flag){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        this.name = name;
-        System.out.println(Thread.currentThread().getName()+&quot;...生产者&quot;+this.name);
-        flag = true;
-        this.notifyAll();
-    }
-
-    //消费
-    public synchronized void out(){
-        while(!flag){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(Thread.currentThread().getName()+&quot;...消费者&quot;+this.name);
-        flag = false;
-        this.notifyAll();
-
-    }
-}
-
-class Producer implements Runnable{
-    private Resource res;
-    Producer(Resource res){
-        this.res = res;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            res.set(&quot;商品&quot;);
-        }
-    }
-
-}
-
-class Consumer implements Runnable{
-    private Resource res;
-    Consumer(Resource res){
-        this.res = res;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            res.out();
-        }
-    }
-
-}
-</code></pre><h3 id="3-Lock"><a href="#3-Lock" class="headerlink" title="3 Lock"></a>3 Lock</h3><p>　JDK5后新增了Lock接口以及一个实现类ReentrantLock(重入锁)，我也第一次接触，好好学习一下，Lock也可以用来实现多线程的同步，它提供一些放法实现多线程的同步：</p>
-<p>　1 lock():以阻塞的方式获取锁，即如果获取到了锁，立即返回，如果别的线程持有锁，当前线程等待，直到获取锁后返回。</p>
-<p>　2 tryLock():以非阻塞的方式来获取锁，只是试探获取，如果获取到锁，立即返回true,否则返回false。</p>
-<p>　3 lockInterruptibly():如果获取到了锁，立即返回，否则，当前线程处于休眠状态，直到获得锁，注意：如果当前线程被别的线程中断，会收到InterruptedException异常。</p>
-<p>　<strong>先总结到这里，没想到写了这么多还有很多没写完，那么只好再写一篇啦。</strong></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/03/finally块中的代码什么时候被执行/" itemprop="url">
-                  finally块中的代码什么时候被执行
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T18:08:53+08:00">
-                2017-02-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。<br>　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？<br>　解答：在Java语言的异常处理中，<strong>finally块的作用就是为了保证无论出现什么情况，finally中的代码一定会被执行</strong>，因此任何语句要执行都只能在return前执行（<strong>除非碰到exit函数</strong>），因此finally块中的代码在return前执行。此外，如果try-finally或catch-finally中都有return,那么<strong>finally块中的return语句将会覆盖别处的return语句</strong>，最终返回到调用者那里的是finally中的return值。<br>　代码示例如下：</p>
-<pre><code>public class TestFinally1 {
-
-    public static int testfinally(){
-        try{
-            return 1;
-        }catch(Exception e){
-            return 0;
-        }finally{
-            System.out.println(&quot;execute finally&quot;);
-        }
-    }
-
-    public static void main(String[] args) {
-
-        int result = testfinally();
-        System.out.println(result);
-
-    }
-
-}
-
-结果运行如下：
-execute finally
-1
-</code></pre><p>　从上面的例子中可以看出，在执行return语句之前确实执行了finally块中的代码；那么如果在finally块中放置return语句，会不会覆盖呢？<br>　代码示例如下：</p>
-<pre><code>public static int testfinally2(){
-    try {
-        return 1;
-    } catch (Exception e) {
-        return 0;
-    }finally{
-        System.out.println(&quot;execute finally2&quot;);
-        return 3;
-    }
-}
-
-public static void main(String[] args) {
-
-    int result = testfinally2();
-    System.out.println(result);
-
-}
-
-结果运行如下：
-execute finally2
-3
-</code></pre><p>　<strong>从上面的例子中可以看出，当finally块中有return语句时，将会覆盖函数中其它return语句；此外，由于在一个方法体中内部定义的变量都存储在栈中，在这个函数结束后，其对应的栈会被回收，此时在其方法体中定义的变量将不存在了，因此return在返回时不是直接返回变量的值，而是复制一份，然后返回。因此，对于基本类型的数据，在finally块中改变return的值对返回值没有任何影响，而对引用类型的数据会有影响。</strong><br>　代码示例如下：</p>
-<pre><code>public class TestReturn {
-
-    public static int testFinally1(){
-        int result =1;
-        try{
-            result =2;
-            return result;
-        }catch(Exception e){
-            return 0;
-        }finally{
-            result = 3;
-            System.out.println(&quot;excuate testFinally1&quot;);
-        }
-    }
-
-    public static StringBuffer testFinally2(){
-        StringBuffer s = new StringBuffer(&quot;hello&quot;);
-        try{
-            return s;
-        }catch(Exception e){
-            return null;
-        }finally{
-            s.append(&quot; world&quot;);
-            System.out.println(&quot;excuate testFinally2&quot;);
-        }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(testFinally1());
-        System.out.println(testFinally2());
-    }
-
-}
-
-结果运行如下：
-excuate testFinally1
-2
-excuate testFinally2
-hello world
-</code></pre><p>　解析：程序在执行return时会首先将返回值存储在一个指定的位置，其次去执行finally块，最后在返回。<br>　在testFinally1()方法调用return前，先把result的值1存储在一个指定的位置，然后再去执行finally块中的代码，此时修改result的值将不会影响到程序的返回结果。<br>　testFinally2()中，在调用return前先把s存储在一个指定的位置，由于s为引用类型，因此在finally块中修改s将会修改程序的返回结果。</p>
+            <p>　在c语言中，有一个非常重要的概念就是<strong>回调函数</strong>，<strong>所谓回调函数，就是指函数先在某处注册，而他将在某个需要的时刻被调用</strong>。<br>　关于回调函数的概念，我将另起一篇文章进行学习。<br>　在Java中没有指针的概念，那么如何在Java语言中实现类似于函数指针的功能？可以利用接口与类来实现同样的效果，具体而言，就是先定义一个接口，然后在接口中声明要被调用的方法，接着实现这个接口，最后把这个实现类的一个对象作为参数传递给调用程序，调用程序通过这个参数来调用指定的函数，从而实现回调函数的功能。  </p>
 <hr>
-<p>　写了这么多，总结的也应该比较到位，那我在网上找一道相关的面试题进行解答。<br>　<strong>出现在Java程序中的finally块是不是一定会被执行？</strong><br>　答:不一定，以下两种情况都不会。  </p>
+<p>　那么接下来学习Compareble接口的实现和使用。</p>
+<h1 id="1-什么是Comparable接口"><a href="#1-什么是Comparable接口" class="headerlink" title="1.什么是Comparable接口"></a>1.什么是Comparable接口</h1><p>　此接口强行对实现它的每个类的对象进行整体排序。此排序被称为该类的自然排序 ，类的 compareTo 方法被称为它的自然比较方法 。实现此接口的对象列表（和数组）可以通过 Collections.sort （和 Arrays.sort ）进行自动排序。实现此接口的对象可以用作有序映射表中的键或有序集合中的元素，无需指定比较器。</p>
+<h1 id="2-实现什么方法"><a href="#2-实现什么方法" class="headerlink" title="2.实现什么方法"></a>2.实现什么方法</h1><pre><code>int compareTo(T o)
+</code></pre><p>　比较此对象与指定对象的顺序。如果该对象小于、等于或大于指定对象，则分别返回负整数、零或正整数。<br>　强烈推荐 (x.compareTo(y)==0) == (x.equals(y)) 这种做法，但不是 严格要求这样做。一般来说，任何实现 Comparable 接口和违背此条件的类都应该清楚地指出这一事实。推荐如此阐述：“注意：此类具有与 equals 不一致的自然排序。”</p>
+<pre><code>参数：
+       o - 要比较的对象。 
+返回：
+        负整数、零或正整数，根据此对象是小于、等于还是大于指定对象。 
+抛出：
+        ClassCastException - 如果指定对象的类型不允许它与此对象进行比较。
+</code></pre><h1 id="3-代码实例"><a href="#3-代码实例" class="headerlink" title="3.代码实例"></a>3.代码实例</h1><pre><code>import java.util.Arrays;
+import java.util.Random;
+class Employee implements Comparable&lt;Employee&gt;{
+    private int id;
+    private String name;
+    private double salary;
+    public Employee(String n,double s){
+        this.name = n;
+        this.salary =s;
+        Random ID = new Random();
+        id = ID.nextInt(10000000);
+    }
+    public int getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public double getSalary() {
+        return salary;
+    }
+    @Override
+    //这里比较的是什么 sort方法实现的就是按照此比较的东西从小到大排列
+    public int compareTo(Employee o) {
+        if(id&lt;o.id)
+            return -1;
+        if(id&gt;o.id)
+            return 1;
+        return 0;
+    }
+}
+public class EmployeeSortTest {
+    public static void main(String[] args) {
+        Employee[] staff = new Employee[3];
+        staff[0] = new Employee(&quot;fengjiaxin&quot;,35000);
+        staff[1] = new Employee(&quot;yangqi&quot;,40000);
+        staff[2] = new Employee(&quot;james&quot;,50000);
+        //sort方法可以实现对对象数组排序，但是必须实现 Comparable接口
+        Arrays.sort(staff);
+        for(Employee e:staff)
+            System.out.println(&quot;id:&quot;+e.getId()+&quot; name:&quot;+e.getName()+&quot; salary:&quot;+e.getSalary());
+    }
+}
+</code></pre><h1 id="4-与Comparator的区别"><a href="#4-与Comparator的区别" class="headerlink" title="4.与Comparator的区别"></a>4.与Comparator的区别</h1><p>　Comparator位于包java.util下，而Comparable位于包java.lang下，Comparable接口将比较代码嵌入自身类中，而后者在一个独立的类中实现比较。<br>　如果类的设计师没有考虑到Compare的问题而没有实现Comparable接口，可以通过  Comparator来实现比较算法进行排序，并且为了使用不同的排序标准做准备，比如：升序、降序。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/19/null关键字理解/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/19/null关键字理解/" itemprop="url">
+                  null关键字理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-19T21:35:07+08:00">
+                2017-02-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　<strong>关键字</strong>是电脑语言里事先定义的，有特别意义的标识符，有时又叫保留字，还有特别意义的变量。Java的关键字对Java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等，关键字不能用作变量名、方法名、类名、包名和参数。Java语言规定了Java中的关键字不能作为标识符。那么，今天，我们来探讨一下Java中的关键字null。</p>
+<h1 id="一、null是代表不确定的对象"><a href="#一、null是代表不确定的对象" class="headerlink" title="一、null是代表不确定的对象"></a>一、null是代表不确定的对象</h1><p>　　Java中，null是一个关键字，用来标识一个不确定的对象。因此可以将null赋给引用类型变量，但不可以将null赋给基本类型变量。<br>　　比如：int a = null;是错误的。Ojbect o = null是正确的。<br>　　Java中，变量的适用都遵循一个原则，先定义，并且初始化后，才可以使用。我们不能int a后，不给a指定值，就去打印a的值。这条对对于引用类型变量也是适用的。<br>　　我们在定义一个引用类型变量时，无法给出一个确定的值，但是不指定值，程序可能会在try语句块中初始化值。但我们下面使用变量的时候就会报错。但只要先给变量指定一个null值，问题就解决了。例：</p>
+<pre><code>Connection conn = null;
+　　try {
+　　conn = DriverManager.getConnection(&quot;url&quot;, &quot;user&quot;, &quot;password&quot;);
+　　} catch (SQLException e) {
+　　e.printStackTrace();
+　　}
+    String catalog = conn.getCatalog();
+</code></pre><p>　如果刚开始的时候不指定conn = null，则最后一句就会报错。</p>
+<h1 id="二、null本身不是对象，也不是Objcet的实例"><a href="#二、null本身不是对象，也不是Objcet的实例" class="headerlink" title="二、null本身不是对象，也不是Objcet的实例"></a>二、null本身不是对象，也不是Objcet的实例</h1><p>　null本身虽然能代表一个不确定的对象，但就null本身来说，它不是对象，也不知道什么类型，也不是java.lang.Object的实例。</p>
+<h1 id="三、Java默认给变量赋值"><a href="#三、Java默认给变量赋值" class="headerlink" title="三、Java默认给变量赋值"></a>三、Java默认给变量赋值</h1><p>　在定义变量的时候，如果定义后没有给变量赋值，则Java在运行时会自动给变量赋值。赋值原则是整数类型int、byte、short、long的自动赋值为0，带小数点的float、double自动赋值为0.0，boolean的自动赋值为false，其他各供引用类型变量自动赋值为null。</p>
+<h1 id="四、null的其他作用"><a href="#四、null的其他作用" class="headerlink" title="四、null的其他作用"></a>四、null的其他作用</h1><p>1、判断一个引用类型数据是否null。 用==来判断。<br>2、释放内存，让一个非null的引用类型变量指向null。这样这个对象就不再被任何对象应用了。等待JVM垃圾回收机制去回收。</p>
+<h1 id="五、null与””的相关问题"><a href="#五、null与””的相关问题" class="headerlink" title="五、null与””的相关问题"></a>五、null与””的相关问题</h1><h2 id="问题一：null和””的区别"><a href="#问题一：null和””的区别" class="headerlink" title="问题一：null和””的区别"></a>问题一：null和””的区别</h2><pre><code>String s=null; 
+string.trim()就会抛出为空的exception 
+String s=&quot;&quot;; 
+string.trim()就不会抛,为什么? 
+</code></pre><p>　NULL代表声明了一个空对象，根本就不是一个字符串；””代表声明了一个对象实例，这个对象实例的值是一个长度为0的空字符串。<br>　NULL代表声明了一个空对象,对空对象做任何操作都不行的,除了=和==；””是一个字符串了,只是这个字符串里面没有内容了</p>
+<pre><code>String s=null;只是定义了一个句柄，也就是说你有了个引用，但是这个引用未指乡任何内存空间 
+String s=&quot;&quot;;这个引用已经指向了一块是空字符串的内存空间，是一个实际的东西。
+String s=null;//null是未分配堆内存空间 
+String a;//分配了一个内存空间,没存入任何对象 
+String a=&quot;&quot;;//分配了一个内存空间,存了一个字符串对象 
+</code></pre><h2 id="问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？"><a href="#问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？" class="headerlink" title="问题二： String s;和String s=null;和String s=”a”;有什么区别？"></a>问题二： String s;和String s=null;和String s=”a”;有什么区别？</h2><p>　针对这三种情况，使用out.println(s);的时候，第一个会出现异常，第二个会输出null.第三个则会输出a，这是为什么呢？这三句声明语句，各自作了什么呢？<br>　第一个只是定义了一个String类型变量s，并没有给它赋初值，在Java中，默认在使用一<br>个变量的时候必须赋予它初值（降低风险）。<br>　第二个和第三个都定义了String类型变量s，并赋予它初值，只不过第二个赋予的值为null（空）罢了<br>　主要要理解的是String s; <strong>s为一个引用，它不是对象</strong><br>　第一个是没有初始化的引用；<br>　第二个为空引用；<br>　第三个是在字符串池里写入一个字符’a’,然后用s指向它。<br>　另外， String s=”a”和String s=new String(“a”);是有本质上的区别的；前者是在字符串池里写入一个字符’a’,然后用s指向它；后者是在堆上创建一个内容为”a”的字符串对象。 </p>
+<pre><code>String str=&quot;aaa&quot;; //于栈上分配内存 
+String str=new String(&quot;aaa&quot;); //于堆上分配内存 
+String s; 系统会自动赋值null 
+String s;只是给s分配一个内存空间 
+String s=null;是分配的空间中存储的值为空值 
+String s=&quot;a&quot;;这句就不用我多说了分配的空间的值为字符a 
+</code></pre><h2 id="问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同"><a href="#问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同" class="headerlink" title="问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?"></a>问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?</h2><p>　如果没有给a赋过值，a==””会导致异常。<br>　在实际处理时，往往认为””和null代表相同的含义，即都代表无值。<br>　此时建议用如下语法： </p>
+<pre><code>if(a==null || a==&quot;&quot;) 
+{ 
+} 
+</code></pre><p>　如果a为null，就不会执行后面的判断，直接返回true；null是用来判断引用类型是否分配了存储空间 ，””是针对字符串的。string类型实际上是字符串指针，也即是一个引用类型 所以如果没有给a赋过值，a==””会导致异常 </p>
+<h2 id="问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？"><a href="#问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？" class="headerlink" title="问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？"></a>问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？</h2><p>1：创建一个空字符串对象。<br>2：创建一个字符串为空的字符串对象。<br>3：声明一个字符串对象，但并没有分配内存，而1，2已经分配了内存<br>　对于最后一种表示,你不能if(abc==null),或者int length = abc.length();编译的时候会提示可能没有初始化。</p>
+<pre><code>String abc=null; 
+String abc=&quot;&quot;; 
+</code></pre><p>　一般推荐使用第二种。<br>　第一种abc指向null，很多时候要判断字符串是否为空时，容易漏掉这种情况，在调用String的相关方法的时候就会出错<br>　第二种则相对简单，String的方法都可以用，判断的时候也不会出错。</p>
+<pre><code>1) String abc=null; 
+2) String abc; 
+3）String a=&quot;&quot;; 
+4) String b=&quot;&quot;; 
+5) String c=new String(&quot;&quot;); 
+6) String d=new String(&quot;&quot;); 
+
+//1)等于2），和C语言不同，**JAVA为安全原因不允许一个悬挂引用，没有赋值的引用地址一律自动赋值为NULL，以防止访问到任意内存 **  
+//3)和4)中,变量a和b将会指向同一内存地址(&quot;&quot;的地址)   
+//5)和6)中，变量c和d不会指向同一地址,而是两个&quot;&quot;内容的地址,并且和a,b不同,实际上,3)和4)相当于new String(&quot;&quot;).intern().   
+//String类维护着一个字符串池,对于像3)和4)这样的赋值方法,String会在这个池中查找字符串是否已经在池中,如果在,就直接指向该地址,   
+//如果不在,生成一个实例放入池中再指向那个地址,可见对于同样内容的字符串多次引用时3)4)的方法要比5)6)的方法剩内存,之所以这样做,是因为String是一个内容不可变的量,运用的是设计模式GOF.FlyWeight 
+</code></pre><p>　但有个关键的一点,这就是: <strong>String s;在什么情况下可以等同于String s=null;而在什么情况下又不等同？</strong><br>　考虑下面的代码: </p>
+<pre><code>//StringTest.java 
+public class StringTest { 
+    static String s; //１
+    public static void main(String[] args) { 
+    //String s; //２
+    System.out.println(s); 
+    } 
+} 
+</code></pre><p>　编译并运行上面的代码,将打印null。<br>　可见标有１号的行是自动初始化了的(s被自动初始化为null)。<br>　而如果把标有２号的行取消注释,代码将不能通过编译,这是因为这行定义的是本地变量,而本地变量是不会自动初始化的。<br><strong>由此得出结论：</strong><br>　在成员变量的定义中,String s;等同于String s=null;<br>　而在本地变量(方法变量)的定义中,String s;不等同于String s=null;,这时要使用s必须显式地赋值。     </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/16/Java反射机制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/16/Java反射机制/" itemprop="url">
+                  Java反射机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-16T21:27:01+08:00">
+                2017-02-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在学习Spring的AOP，即面向切面编程，在前些时间我用静态代理的模式演绎了代理设计模式，Java本身有一个反射机制，就是在运行期间确定类，Spring关于AOP的底层实现其中有一个模块就是JDK的动态代理，那么今天就来系统整理一下关于Java的反射机制。  </p>
+<h1 id="一、什么是反射？"><a href="#一、什么是反射？" class="headerlink" title="一、什么是反射？"></a>一、什么是反射？</h1><p>　反射(Reflection)是Java 程序开发语言的特征之一，它允许运行中的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。简而言之，通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。<br>　程序中一般的对象的类型都是在编译期就确定下来的，而Java反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以我们可以通过反射机制直接创建对象，即使这个对象的类型在编译期是未知的。<br>　<strong>反射的核心是JVM在运行时才动态加载类或调用方法/访问属性，它不需要事先（写代码的时候或编译期）知道运行对象是谁。</strong>  </p>
+<hr>
+<p>　Java反射框架主要提供以下功能：<br>1.在运行时判断任意一个对象所属的类；<br>2.在运行时构造任意一个类的对象；<br>3.在运行时判断任意一个类所具有的成员变量和方法（通过反射甚至可以调用private方法）；<br>4.在运行时调用任意一个对象的方法</p>
+<h1 id="二、反射的基本运用"><a href="#二、反射的基本运用" class="headerlink" title="二、反射的基本运用"></a>二、反射的基本运用</h1><h2 id="1、获得Class对象"><a href="#1、获得Class对象" class="headerlink" title="1、获得Class对象"></a>1、获得Class对象</h2><p>　有三种方法：<br>　(1)使用Class类的forName静态方法:  </p>
+<pre><code>/*
+ * 获取字节码对象的方式：
+ * 1，Object类中的getClass()方法的。
+ * 想要用这种方式，必须要明确具体的类，并创建对象。
+ * 麻烦 .
+ * 
+ */
+public static void getClassObject_1(){
+    Person p = new Person();
+    Class clazz = p.getClass();
+    Person p1 = new Person();
+    Class clazz1 = p1.getClass();
+    System.out.println(clazz==clazz1);
+}
+</code></pre><p>　(2)直接获取某一个对象的class</p>
+<pre><code>/*
+ * 方式二：
+ * 2，任何数据类型都具备一个静态的属性.class来获取其对应的Class对象。
+ * 相对简单，但是还是要明确用到类中的静态成员。
+ * 还是不够扩展。 
+ * 
+ */
+public static void getClassObject_2(){
+    Class class1 = Person.class;
+    Class class2 = Person.class;
+    System.out.println(class1==class2);
+}
+</code></pre><p>　(3)调用某个对象的getClass()方法</p>
+<pre><code>/*
+ * 方式三：
+ * 只要通过给定的类的 字符串名称就可以获取该类，更为扩展。
+ * 可是用Class类中的方法完成。
+ * 该方法就是forName.
+ * 这种方式只要有名称即可，更为方便，扩展性更强。 
+ */
+public static void getClassObject_3() throws ClassNotFoundException{
+    String className = &quot;Reflect.Person&quot;;
+    Class clazz = Class.forName(className);
+    System.out.println(clazz);
+}
+</code></pre><p>　附上Person.java</p>
+<pre><code>public class Person {
+    private int age;
+    private String name;
+    public Person(int age, String name) {
+        super();
+        this.age = age;
+        this.name = name;
+        System.out.println(&quot;Person param run...&quot;+this.name+&quot;:&quot;+this.age);
+    }
+    public Person() {
+        super();
+        System.out.println(&quot;Person run...&quot;);
+    }
+    public void show(){
+        System.out.println(name+&quot;....show run...&quot;+age);
+    }
+    public void paramMethod(String str,int num){
+        System.out.println(&quot;paramMethod run.....&quot;+str+&quot;:&quot;+num);
+    }
+}
+</code></pre><h2 id="2、判断是否为某个类的实例"><a href="#2、判断是否为某个类的实例" class="headerlink" title="2、判断是否为某个类的实例"></a>2、判断是否为某个类的实例</h2><p>　用instanceof关键字来判断是否为某个类的实例。同时我们也可以借助反射中Class对象的isInstance()方法来判断是否为某个类的实例，它是一个Native方法：</p>
+<pre><code>public native boolean isInstance(Object obj);
+</code></pre><h2 id="3、创建实例"><a href="#3、创建实例" class="headerlink" title="3、创建实例"></a>3、创建实例</h2><p>　通过反射来生成对象主要有两种方式。<br>（1）使用Class对象的newInstance()方法来创建Class对象对应类的实例。</p>
+<pre><code>public static void createNewObject() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
+        //早期：new时候，先根据被new的类的名称找寻该类的字节码文件，并加载进内存，
+//        并创建该字节码文件对象，并接着创建该字节文件的对应的Person对象.
+//        cn.itcast.bean.Person p = new cn.itcast.bean.Person();
+        //现在：
+        String name = &quot;Reflect.Person&quot;;
+        //找寻该名称类文件，并加载进内存，并产生Class对象。
+        Class clazz = Class.forName(name);
+        //如何产生该类的对象呢？
+        Object obj  = clazz.newInstance();
+        System.out.println(obj);
+    }
+</code></pre><p>（2）先通过Class对象获取指定的Constructor对象，再调用Constructor对象的newInstance()方法来创建实例。这种方法可以用指定的构造器构造类的实例。</p>
+<pre><code>public static void createNewObject2() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        /*
+         * 当获取指定名称对应类中的所体现的对象时，
+         * 而该对象初始化不使用空参数构造该怎么办呢？
+         * 既然是通过指定的构造 函数进行对象的初始化，
+         * 所以应该先获取到该构造函数。 通过字节码文件对象即可完成。
+         * 该方法是：getConstructor(paramterTypes);
+         * 
+         */
+        String name = &quot;Reflect.Person&quot;;
+        //找寻该名称类文件，并加载进内存，并产生Class对象。
+        Class clazz = Class.forName(name);
+        //获取到了指定的构造函数对  象。
+        Constructor constructor = clazz.getConstructor(int.class,String.class);
+        //通过该构造器对象的newInstance方法进行对象的初始化。
+        Object obj = constructor.newInstance(38,&quot;小明&quot;);
+        System.out.println(obj);
+    }
+</code></pre><h2 id="4、获取方法"><a href="#4、获取方法" class="headerlink" title="4、获取方法"></a>4、获取方法</h2><p>　获取某个Class对象的方法集合，主要有以下几个方法：<br>　getDeclaredMethods()方法返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法。<br>　getMethods()方法返回某个类的所有公用（public）方法，包括其继承类的公用方法。<br>　<strong>getMethod方法返回一个特定的方法，其中第一个参数为方法名称，后面的参数为方法的参数对应Class的对象</strong></p>
+<pre><code>public Method getMethod(String name, Class&lt;?&gt;... parameterTypes)
+</code></pre><h2 id="5、获取构造器信息"><a href="#5、获取构造器信息" class="headerlink" title="5、获取构造器信息"></a>5、获取构造器信息</h2><p>　获取类构造器的用法与上述获取方法的用法类似。主要是通过Class类的getConstructor方法得到Constructor类的一个实例，而Constructor类有一个newInstance方法可以创建一个对象实例:</p>
+<pre><code>public T newInstance(Object ... initargs)
+</code></pre><p>　此方法可以根据传入的参数来调用对应的Constructor创建对象实例</p>
+<h2 id="6、获取类的成员变量（字段）信息"><a href="#6、获取类的成员变量（字段）信息" class="headerlink" title="6、获取类的成员变量（字段）信息"></a>6、获取类的成员变量（字段）信息</h2><p>　getFiled: 访问公有的成员变量<br>　getDeclaredField：所有已声明的成员变量。但不能得到其父类的成员变量。</p>
+<h2 id="7、调用方法"><a href="#7、调用方法" class="headerlink" title="7、调用方法"></a>7、调用方法</h2><p>　当我们从类中获取了一个方法后，我们就可以用invoke()方法来调用这个方法。invoke方法的原型为:</p>
+<pre><code>public Object invoke(Object obj, Object... args)
+        throws IllegalAccessException, IllegalArgumentException,
+           InvocationTargetException
+</code></pre><p>　代码示例如下：</p>
+<pre><code>public class ReflectDemo4 {
+    public static void main(String[] args) throws Exception {
+        getMethodDemo_2();
+    }
+    public static void getMethodDemo_2() throws Exception {
+        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
+        Method method = clazz.getMethod(&quot;paramMethod&quot;, String.class,int.class);
+        Object obj = clazz.newInstance();
+        method.invoke(obj, &quot;小强&quot;,89);
+    }
+    public static void getMethodDemo_1() throws Exception{
+        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
+        Method method = clazz.getMethod(&quot;show&quot;, null);//获取空参数一般方法。
+        Constructor constructor = clazz.getConstructor(int.class,String.class);
+        Object o = constructor.newInstance(89,&quot;小明&quot;);
+        method.invoke(o, null);
+    }
+    /*
+     * 获取指定Class中的所有公共函数。
+     */
+    public static void getMethodDemo() throws Exception {
+        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
+        Method[] methods  = clazz.getMethods();//获取的都是公有的方法。 
+        methods = clazz.getDeclaredMethods();//只获取本类中所有方法，包含私有。 
+        for(Method method : methods){
+            System.out.println(method);
+        }
+    }
+}
+</code></pre><h2 id="8、取消权限，将细节全暴露"><a href="#8、取消权限，将细节全暴露" class="headerlink" title="8、取消权限，将细节全暴露"></a>8、取消权限，将细节全暴露</h2><p>　调用Field.setAccessible(true)：暴力访问，可访问全部私有变量。</p>
+<pre><code>public class ReflectDemo3 {
+    public static void main(String[] args) throws Exception {
+        getFieldDemo();
+    }
+    /*
+     * 获取字节码文件中的字段。
+     */
+    public static void getFieldDemo() throws Exception {
+        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
+        Field field = null;//clazz.getField(&quot;age&quot;);//只能获取公有的，
+        field = clazz.getDeclaredField(&quot;age&quot;);//只获取本类，但包含私有。 
+        //对私有字段的访问取消权限检查。暴力访问。
+        field.setAccessible(true);
+        Object obj = clazz.newInstance();
+        field.set(obj, 89);
+        Object o = field.get(obj);
+        System.out.println(o);
+//        cn.itcast.bean.Person p = new cn.itcast.bean.Person();
+//        p.age = 30;
+    }
+}
+</code></pre><p>三、反射的基本例子</p>
+<p>　学习了反射，为了了解优越性，我们假定一台电脑，每当添加一个设备时，我们将这些设备抽象为一个接口，当添加一个设备时，只需让该设备实现接口，并将该接口信息写入properties文件中读取即可，这个过程并不需要修改代码，只许修改配置文件即可，那么下面介绍代码：<br>　PCI接口：</p>
+<pre><code>public interface PCI {
+    public void open();
+    public void close();
+
+}
+</code></pre><p>　电脑主机:</p>
+<pre><code>public class MainBoard {
+    public void run(){
+        System.out.println(&quot;MainBoard run.......&quot;);
+    }
+    public void usePCI(PCI p){
+        p.open();
+        p.close();
+    }
+}
+</code></pre><p>　网卡：</p>
+<pre><code>public class NetCard implements PCI {
+    @Override
+    public void open() {
+        System.out.println(&quot;NetCard run......&quot;);
+    }
+    @Override
+    public void close() {
+        System.out.println(&quot;NetCard close...&quot;);
+    }
+}
+</code></pre><p>　声卡：</p>
+<pre><code>public class SoundCard implements PCI {
+    @Override
+    public void open() {
+        System.out.println(&quot;SoundCard run......&quot;);
+    }
+    @Override
+    public void close() {
+        System.out.println(&quot;SoundCard close......&quot;);
+    }
+}
+</code></pre><p>　测试文件：</p>
+<pre><code>public class ReflectTest {
+    public static void main(String[] args) throws Exception {
+        MainBoard mb = new MainBoard();
+        mb.run();
+        File configFile = new File(&quot;pci.properties&quot;);
+        Properties prop = new Properties();
+        FileInputStream fis = new FileInputStream(configFile);
+        prop.load(fis);
+        for(int i=0;i&lt;prop.size();i++){
+            String pciName = prop.getProperty(&quot;pci&quot;+(i+1));
+            Class clazz = Class.forName(pciName);
+            PCI p = (PCI) clazz.newInstance();
+            mb.usePCI(p);
+        }
+        fis.close();
+    }
+}
+</code></pre><p>　配置文件pci.prtperties：</p>
+<pre><code>pci1 = Reflect.test.NetCard
+pci2 = Reflect.test.SoundCard
+</code></pre><p>　这样我们添加设备，不需要修改代码，只需在配置文件中修改代码即可。<br>　<strong>是不是很熟悉，Spring框架为我们提供配置文件，我们只需在配置文件中写类的名称，然后Spring利用反射机制为我们建立实体类及依赖关系，这种动态机制为我们开发者开发提供了方便。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/10/Set中hashCode()学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/10/Set中hashCode()学习/" itemprop="url">
+                  Set中hashCode学习
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-10T08:48:25+08:00">
+                2017-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的<strong>hashCode()</strong>方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。</p>
+<h1 id="Hash表："><a href="#Hash表：" class="headerlink" title="Hash表："></a>Hash表：</h1><p>　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键字进行比较来进行查找。这个源于Hash表设计的特殊性，它采用了函数映射的思想将记录的存储位置与记录的关键字关联起来，从而能够很快速地进行查找。</p>
+<h2 id="1-设计思想："><a href="#1-设计思想：" class="headerlink" title="1.设计思想："></a>1.设计思想：</h2><p>　Hash表采用一个映射函数 f : key —&gt; address 将关键字映射到该记录在表中的存储位置，从而在想要查找该记录时，可以直接根据关键字和映射关系计算出该记录在表中的存储位置，通常情况下，这种映射关系称作为Hash函数，而通过Hash函数和关键字计算出来的存储位置(注意这里的存储位置只是表中的存储位置，并不是实际的物理地址)称作为Hash地址。</p>
+<h2 id="2-构造方法："><a href="#2-构造方法：" class="headerlink" title="2.构造方法："></a>2.构造方法：</h2><h3 id="1-直接定址法"><a href="#1-直接定址法" class="headerlink" title="1)直接定址法"></a>1)直接定址法</h3><p>　取关键字或者关键字的某个线性函数为Hash地址，即address(key)=a*key+b;如知道学生的学号从2000开始，最大为4000，则可以将address(key)=key-2000作为Hash地址。</p>
+<h3 id="2-平方取中法"><a href="#2-平方取中法" class="headerlink" title="2)平方取中法"></a>2)平方取中法</h3><p>　对关键字进行平方运算，然后取结果的中间几位作为Hash地址。假如有以下关键字序列{421，423，436}，平方之后的结果为{177241，178929，190096}，那么可以取{72，89，00}作为Hash地址。</p>
+<h3 id="3-折叠法"><a href="#3-折叠法" class="headerlink" title="3)折叠法"></a>3)折叠法</h3><p>　将关键字拆分成几部分，然后将这几部分组合在一起，以特定的方式进行转化形成Hash地址。假如知道图书的ISBN号为8903-241-23，可以将address(key)=89+03+24+12+3作为Hash地址。</p>
+<h3 id="4-除留取余法"><a href="#4-除留取余法" class="headerlink" title="4)除留取余法"></a>4)除留取余法</h3><p>　如果知道Hash表的最大长度为m，可以取不大于m的最大质数p，然后对关键字进行取余运算，address(key)=key%p。在这里p的选取非常关键，p选择的好的话，能够最大程度地减少冲突，p一般取不大于m的最大质数。</p>
+<h2 id="3-Hash表大小的确定"><a href="#3-Hash表大小的确定" class="headerlink" title="3.Hash表大小的确定"></a>3.Hash表大小的确定</h2><p>　Hash表大小的确定也非常关键，如果Hash表的空间远远大于最后实际存储的记录个数，则造成了很大的空间浪费，如果选取小了的话，则容易造成冲突。在实际情况中，一般需要根据最终记录存储个数和关键字的分布特点来确定Hash表的大小。还有一种情况时可能事先不知道最终需要存储的记录个数，则需要动态维护Hash表的容量，此时可能需要重新计算Hash地址。</p>
+<h2 id="4-冲突的解决"><a href="#4-冲突的解决" class="headerlink" title="4.冲突的解决"></a>4.冲突的解决</h2><p>　在上述例子中，发生了冲突现象，因此需要办法来解决，否则记录无法进行正确的存储。通常情况下有2种解决办法：</p>
+<h3 id="1-开放定址法"><a href="#1-开放定址法" class="headerlink" title="1)开放定址法"></a>1)开放定址法</h3><p>　即当一个关键字和另一个关键字发生冲突时，使用某种探测技术在Hash表中形成一个探测序列，然后沿着这个探测序列依次查找下去，当碰到一个空的单元时，则插入其中。比较常用的探测方法有线性探测法；<br>　比如有一组关键字{12，13，25，23，38，34，6，84，91}，Hash表长为14，Hash函数为address(key)=key%11，当插入12，13，25时可以直接插入，而当插入23时，地址1被占用了，因此沿着地址1依次往下探测(探测步长可以根据情况而定)，直到探测到地址4，发现为空，则将23插入其中。</p>
+<h3 id="2-链地址法"><a href="#2-链地址法" class="headerlink" title="2)链地址法"></a>2)链地址法</h3><p>　采用数组和链表相结合的办法，将Hash地址相同的记录存储在一张线性表中，而每张表的表头的序号即为计算得到的Hash地址。如上述例子中，采用链地址法形成的Hash表存储表示为：<br><img src="http://i.imgur.com/NSBvkHx.jpg" alt=""></p>
+<p>　虽然能够采用一些办法去减少冲突，但是冲突是无法完全避免的。因此需要根据实际情况选取解决冲突的办法。</p>
+<h2 id="5-Hash表的平均查找长度"><a href="#5-Hash表的平均查找长度" class="headerlink" title="5.Hash表的平均查找长度"></a>5.Hash表的平均查找长度</h2><p>　　Hash表的平均查找长度包括查找成功时的平均查找长度和查找失败时的平均查找长度。<br>　　查找成功时的平均查找长度=表中每个元素查找成功时的比较次数之和/表中元素个数；<br>　　查找不成功时的平均查找长度相当于在表中查找元素不成功时的平均比较次数，可以理解为向表中插入某个元素，该元素在每个位置都有可能，然后计算出在每个位置能够插入时需要比较的次数，再除以表长即为查找不成功时的平均查找长度。<br>　　下面举个例子：<br>　　有一组关键字{23，12，14，2，3，5}，表长为14，Hash函数为key%11，则关键字在表中的存储如下：<br>　　地址     0     1     2     3      4     5    6   7   8    9  10   11   12    13<br>　　关键字        23    12   14     2     3    5<br>　　比较次数         1      2    1     3     3     2<br>　　因此查找成功时的平均查找长度为(1+2+1+3+3+2)/6=11/6；<br>　　查找失败时的平均查找长度为(1+7+6+5+4+3+2+1+1+1+1+1+1+1)/14=38/14；<br>　　这里有一个概念装填因子=表中的记录数/哈希表的长度，如果装填因子越小，表明表中还有很多的空单元，则发生冲突的可能性越小；而装填因子越大，则发生冲突的可能性就越大，在查找时所耗费的时间就越多。因此，Hash表的平均查找长度和装填因子有关。</p>
+<h2 id="6-Hash表的优缺点"><a href="#6-Hash表的优缺点" class="headerlink" title="6.Hash表的优缺点"></a>6.Hash表的优缺点</h2><p>　Hash表存在的优点显而易见，能够在常数级的时间复杂度上进行查找，并且插入数据和删除数据比较容易。但是它也有某些缺点，比如不支持排序，一般比用线性表存储需要更多的空间，并且记录的关键字不能重复。</p>
+<hr>
+<p>　<strong>到这里Hash表我也复习的差不多，那我开始分析Object对象的hashCode()方法和set中的HashCode()方法：</strong></p>
+<h1 id="一、java对象的比较"><a href="#一、java对象的比较" class="headerlink" title="一、java对象的比较"></a>一、java对象的比较</h1><p>　<strong>等号(==)：</strong><br>对比对象实例的内存地址（也即对象实例的ID），来判断是否是同一对象实例；又可以说是判断对象实例是否物理相等；<br>　<strong>equals()：</strong><br>对比两个对象实例是否相等；当对象所属的类没有重写根类Object的equals()方法时，equals()判断的是对象实例的ID（内存地址），是否是同一对象实例；该方法就是使用的等号(==)的判断结果。<br>　当对象所属的类重写equals()方法（可能因为需要自己特有的“逻辑相等”概念)时，equals()判断的根据就因具体实现而异，有些类是需要比较对象的某些指或内容，如String类重写equals()来判断字符串的值是否相等。判断逻辑相等。<br>　<strong>hashCode():</strong><br>　计算出对象实例的哈希码，并返回哈希码，又称为散列函数。根类Object的hashCode()方法的计算依赖于对象实例的D（内存地址），故每个Object对象的hashCode都是唯一的；当然，当对象所对应的类重写了hashCode()方法时，结果就截然不同了。<br>　<strong>查看Object类中的hashCode()方法源代码：</strong></p>
+<pre><code>public native int hashCode();
+</code></pre><p>　使用<strong>native</strong>关键字说明这个方法是原生函数，也就是这个方法是用C/C++语言实现的，并且被编译成了DLL，由java去调用。<br>　这些函数的实现体在DLL中，JDK的源代码中并不包含的。对于不同的平台它们也是不同的。这也是java的底层机制，实际上java就是在不同的平台上调用不同的native方法实现对操作系统的访问的；所以native关键字的函数都是操作系统实现的，java只能调用。<br>　<strong>默认情况下，Object中的hashCode() 返回对象的32位jvm内存地址。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</strong></p>
+<h1 id="二、hashCode的作用"><a href="#二、hashCode的作用" class="headerlink" title="二、hashCode的作用"></a>二、hashCode的作用</h1><ul>
+<li>Java中的集合（Collection）有两类，一类是List，再有一类是Set。后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复，可两个元素是否重复应该依据什么来判断呢？</li>
+<li>这就是 Object.equals方法了。但是，如果每增加一个元素就检查一次，那么当元素很多时，后添加到集合中的元素比较的次数就非常多了。也就是说，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，它就要调用1000次equals方法。这显然会大大降低效率。</li>
+<li>Java采用了哈希表的原理，当集合要添加新的元素时，将对象通过哈希算法计算得到哈希值，然后将哈希值和集合长度进行&amp;运算，得到该对象在该数组存放的位置索引。如果这个位置上没有元素，它就可以直接存储在这个位置；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存，不相同就表示发生冲突，散列表对于冲突有具体的解决办法，但最终还会将新元素保存在适当的位置。<br>　这样一来，实际调用equals方法比较的次数就大大降低了，几乎只需要一两次。简而言之，在集合查找时，hashcode能大大降低对象比较次数，提高查找效率！</li>
+</ul>
+<h1 id="三、Java-对象的equal方法和hashCode方法的关系"><a href="#三、Java-对象的equal方法和hashCode方法的关系" class="headerlink" title="三、Java  对象的equal方法和hashCode方法的关系"></a>三、Java  对象的equal方法和hashCode方法的关系</h1><p>　Java对象相同指的是两个对象通过eqauls方法判断的结果为true<br>　<strong>Java对象的eqauls方法和hashCode方法是这样规定的：</strong></p>
 <ol>
-<li>当程序在进入try{}语句块之前就出现异常，会直接结束。例如在try{}之前有语句int i= 9/0;那么会直接抛出异常，导致没有执行try{}中的代码。  </li>
-<li>当程序在try{}中强制退出也不会执行。例如在try{System.exit(0)}。</li>
+<li>相等的对象必须具有相等的哈希码（或者散列码）。</li>
+<li>如果两个对象的hashCode相同，它们并不一定相同。  </li>
+</ol>
+<ul>
+<li><p><strong>关于第一点，相等（相同）的对象必须具有相等的哈希码（或者散列码），为什么？</strong><br>　想象一下，假如两个Java对象A和B，A和B相等（eqauls结果为true），但A和B的哈希码不同，则A和B存入HashMap时的哈希码计算得到的HashMap内部数组位置索引可能不同，那么A和B很有可能允许同时存入HashMap，显然相等/相同的元素是不允许同时存入HashMap，HashMap不允许存放重复元素。</p>
+</li>
+<li><p><strong>关于第二点，两个对象的hashCode相同，它们并不一定相同</strong><br>　也就是说，不同对象的hashCode可能相同；假如两个Java对象A和B，A和B不相等（eqauls结果为false），但A和B的哈希码相等，将A和B都存入HashMap时会发生哈希冲突，也就是A和B存放在HashMap内部数组的位置索引相同这时HashMap会在该位置建立一个链接表，将A和B串起来放在该位置，显然，该情况不违反HashMap的使用原则，是允许的。当然，哈希冲突越少越好，尽量采用好的哈希算法以避免哈希冲突。</p>
+</li>
+</ul>
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ol>
+<li><strong>绑定：</strong>当equals方法被重写时，通常有必要重写 hashCode 方法，以维护 hashCode 方法的常规协定，该协定声明相等对象必须具有相等的哈希码。</li>
+<li><strong>绑定原因：</strong>Hashtable实现一个哈希表，为了成功地在哈希表中存储和检索对象，用作键的对象必须实现 hashCode 方法和 equals 方法。同(1)，必须保证equals相等的对象，hashCode 也相等。因为哈希表通过hashCode检索对象。</li>
+<li><strong>默认：</strong><ul>
+<li>==默认比较对象在JVM中的地址。</li>
+<li>hashCode 默认返回对象在JVM中的存储地址。</li>
+<li>equal比较对象，默认也是比较对象在JVM中的地址，同==</li>
+</ul>
+</li>
 </ol>
 
           
@@ -1721,7 +1461,7 @@ hello world
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1764,7 +1504,7 @@ hello world
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1782,7 +1522,7 @@ hello world
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

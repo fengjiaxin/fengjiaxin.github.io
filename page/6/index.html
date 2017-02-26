@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-命令模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-命令模式/" itemprop="url">
-                  Java典型设计模式-命令模式
+                <a class="post-title-link" href="/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/" itemprop="url">
+                  抽象类（abstract class）和接口（interface）有什么异同
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:21:13+08:00">
+                2017-02-02
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -353,73 +353,549 @@
       
         
           
-            <p>　最近在学习Tomcat,Tomcat中的Connector组件是通过命令模式调用Container的，那么今天就来学习一下命令模式。</p>
-<hr>
-<p>　<strong>命令模式：将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以听、提供命令的撤销和恢复功能。</strong><br>　命令模式有以下两个角色：  </p>
-<ul>
-<li>命令角色：该角色声明一个给所有具体命令类的抽象接口，定义需要执行的命令。</li>
-<li>具体命令角色：该角色定义一个接受者和行为者之间的若耦合，实现命令方法，并调用接受者的相应操作。</li>
-<li>调用者角色：该角色负责调用命令对象执行请求。</li>
-<li>接受者角色：该角色负责具体实施和执行一个请求。</li>
-</ul>
-<p>　命令模式类图如下：<br><img src="http://i.imgur.com/OUd8uRD.png" alt=""></p>
-<p>　命令模式的优点：</p>
+            <p>　如果一个类中包含抽象方法，那么这个类就是抽象类，在Java中可以通过abstract关键字声明该类或该方法时抽象的；接口就是指一些方法的集合，接口中的所有方法都没有方法体。<br>　只要包含一个抽象方法的类就必须别声明为抽象类，抽象类可以声明方法的存在而不去实现它，被声明的抽象方法不能包含方法体，在实现时，必须包含相同的或者更低的访问级别；接口中的所有方法都是抽象的，接口中的成员变量都是static final类型。</p>
+<p>　<strong>接口与抽象类的相同点如下：</strong></p>
 <ol>
-<li>类间解耦：调用者角色与接收者角色之间没有任何依赖关系，调用者实现功能只需要调用Command中的execute()方法，不需要了解是哪个接受者执行。</li>
-<li>可扩展性：Command的子类可以非常容易的扩展，而调用者用Invoker和更高层次的模块Client不产生严重的代码耦合。</li>
-<li>命令模式结合其他模式更优秀。</li>
+<li>都不能被实例化。</li>
+<li>接口类的实现类或抽象类的子类都只有实现了接口或抽象类的方法后才能被实例化。</li>
 </ol>
-<p>　命令模式的缺点：<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</p>
+<p>　<strong>接口是抽象类的不同点如下：</strong></p>
+<ol>
+<li>接口只有定义，其方法不能在接口中实现，只有实现接口的类才能实现接口中定义的方法，而抽象类可以有定义与实现，即其方法可以在抽象类中被实现。</li>
+<li>接口需要实现，但是抽象类只能被继承。</li>
+<li>接口强调特定功能的实现，其设计理念是“has- a”关系，而抽象类强调所属关系，其设计理念为“is- a”关系。</li>
+<li>接口中定义的成员变量默认为public static final,并且必须赋给其初值，其所有成员方法都是public、abstract的；而抽象类可以有自己的数据成员变量，也可以有非抽象的成员方法。</li>
+<li>接口被用于实现比较常用的功能，便于日后的维护或添加删除方法；而抽象类更倾向于充当公共类的角色，不适用于日后重新对里面的代码进行修改。<br>　<strong>一般而言，抽象类多用于在同类事物中有无法具体描述的方法的场景，所以当子类和父类之间存在有逻辑上的层次结构时，推荐使用抽象类；而接口多用于不同类之间，定义不同类之间的通信规则。</strong></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/Java中字符串与存储的机制/" itemprop="url">
+                  Java中字符串与存储的机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T18:29:28+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>今天准备总结一下String对象的存储机制</strong></p>
+<p>　字符串的声明与初始化有如下两种情况：</p>
+<ol>
+<li>String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象</li>
+<li>String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后s2指向字符串常量池中”abc”对象的首地址。</li>
+</ol>
+<p>　具体来说：</p>
+<pre><code>String s1 = &quot;abc&quot;//把&quot;abc&quot;放到常量池中，在编译时产生
+String s2 = &quot;ab&quot;+&quot;c&quot;//把&quot;ab&quot;+&quot;c&quot;转换成字符串常量&quot;abc&quot;放到常量区中
+String s3 = new String(&quot;abc&quot;)//在运行时把&quot;abc&quot;放到堆里面
+</code></pre><ul>
+<li>String对象的intern()方法会得到字符串对象在常量池中对应的版本的引用（如果常量池中有一个字符串与String对象的equals结果是true），如果常量池中没有对应的字符串，则该字符串将被添加到常量池中，然后返回常量池中字符串的引用</li>
+<li>字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象</li>
+</ul>
 <hr>
-<p>　<strong>命令模式模板例子：</strong></p>
-<p>　Command.java：    </p>
-<pre><code>public interface Command {
-    public void execute();
-
-}
-</code></pre><p>　ComcreteCommand.java：</p>
-<pre><code>public class ComcreteCommand implements Command {
-    private Receiver receiver;
-
-    public ComcreteCommand(Receiver receiver) {
-        super();
-        this.receiver = receiver;
-    }
-
-    @Override
-    public void execute() {
-        this.receiver.action();
-    }
-}
-</code></pre><p>　Receiver.java：</p>
-<pre><code>public class Receiver {
-    public void action(){
-        System.out.println(&quot;执行动作&quot;);
-    }
-}
-</code></pre><p>　Invoker.java：</p>
-<pre><code>public class Invoker {
-    private Command command;
-
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-    public void action(){
-        this.command.execute();
-    }
-}
-</code></pre><p>　Client.java：</p>
-<pre><code>public class Client {
+<p>　在明白了以上两点，那么我们来做两道笔试题：</p>
+<ol>
+<li>什么情况下用+运算符进行字符串连接比调用StringBuffer/StringBuilder对象的append方法连接字符串性能更好？<br>StringBuffer对象适用于字符串经常操作，不产生而额外内存，而String对象不可变，一旦创建不能修改，但是操作简单，效率高，所以适用于字符串较少时，操作次数少的情况下。  </li>
+<li><p>请说出下面程序的输出。</p>
+<pre><code>class StringEqualTest {
     public static void main(String[] args) {
-        Invoker invoker = new Invoker();
-        Receiver receiver = new Receiver();
-        Command command = new ComcreteCommand(receiver);
-        invoker.setCommand(command);
-        invoker.action();
+        String s1 = &quot;Programming&quot;;
+        String s2 = new String(&quot;Programming&quot;);
+        String s3 = &quot;Program&quot;;
+        String s4 = &quot;ming&quot;;
+        String s5 = &quot;Program&quot; + &quot;ming&quot;;
+        String s6 = s3 + s4;
+        System.out.println(s1 == s2);
+        System.out.println(s1 == s5);
+        System.out.println(s1 == s6);
+        System.out.println(s1 == s6.intern());
+        System.out.println(s2 == s2.intern());
     }
 }
-</code></pre><p>　程序运行结果：</p>
-<pre><code>执行动作
+</code></pre></li>
+</ol>
+<pre><code>**结果为**
+
+    System.out.println(s1==s2);//false
+    System.out.println(s1==s5);//true
+    System.out.println(s1==s6);//false
+    System.out.println(s1==s6.intern());//true
+    System.out.println(s2==s2.intern());//false
+</code></pre><p>　　<strong>解释</strong>：字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象；</p>
+<pre><code>String s6 = s3+s4//等价于
+StringBuilder temp = s3;
+temp.append(s4);
+String s6 = temp.toString();
+</code></pre><p>　所以S6是创建一个新的StringBuilder对象的toString()方法处理成String对象，因此s1==s6为false。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中i++和++i的区别和理解/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/Java中i++和++i的区别和理解/" itemprop="url">
+                  Java中i++和++i的区别和理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T17:31:43+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　今天在做Java题时碰到了关于i++的问题，题目是这样的：</p>
+<pre><code>public class Inc { 
+    public static void main(String[] args) { 
+       Inc inc = new Inc(); 
+       int i = 0; 
+       inc.fermin(i); 
+       i= i ++; 
+       System.out.println(i);
+
+    } 
+    void fermin(int i){ 
+       i++; 
+    } 
+}
+最终答案是0。
+</code></pre><p>　关于值传递我还是理解的，但是i=i++这个语句我又有点懵了，于是找了相关资料，总结就是JVM的机制所引起的，接下来我要详细介绍一下这方面知识，也算给自己一个交代。</p>
+<hr>
+<p>　<strong>jvm里面有两个存储区，一个是暂存区（是一个堆栈，以下称为堆栈），另一个是变量区。jvm会这样运行这条语句：</strong></p>
+<ol>
+<li>JVM把count值（其值是0）拷贝到临时变量区。 </li>
+<li>count值加1，这时候count的值是1。 </li>
+<li>返回临时变量区的值。</li>
+<li>返回值赋值给count，此时count值被重置成0。  </li>
+</ol>
+<p>　所以上题的i= i++应该是下面的过程</p>
+<pre><code>int i =0;
+temp = i;//temp 为临时变量
+i =i+1;//i =1
+i = temp //i =0
+</code></pre><p>　对于自增运算++j与j++，由于加一的执行顺序不同，所以Java中有中间缓存变量来储存其单个表达式的值，而j的自增自减的结果依然保留在原来的变量储存区。因为本体是j的值，而单个表达式的值是中间产生的一个临时变量值，是在整条计算表达式结束后就可以抛弃的值，所以用个临时中间缓存变量在放就可以了。</p>
+<p>　<strong>按字面理解就是i++ 等价于</strong></p>
+<pre><code>temp =i;//jvm把i的值拷贝到临时变量temp
+i =i+1;//i自加1
+返回临时变量temp的值0作为表达式i++/++i的值
+</code></pre><p>　感觉了解了Java的自增原理，那么我们在练习一道题：</p>
+<pre><code>int j = 0;
+j =++j + j++ +j++ + j++;
+
+最终结果为7，详细解答如下
+
+j =j+1 =1;
+temp1 = j =1;
+temp2 = j =1;
+j = j+1 =2;
+temp3 = j = 2；
+j =j+1 =3;
+temp4 = j = 3;
+j = j+1 =4;
+j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
+</code></pre><p> <strong>总结</strong>：今天算是终于弄明白i++的原理了，有些问题一定要弄清楚，不能糊弄过去，加油！！！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/01/基本操作/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/01/基本操作/" itemprop="url">
+                  基本操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T19:51:36+08:00">
+                2017-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/备忘录/" itemprop="url" rel="index">
+                    <span itemprop="name">备忘录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>hexo new &quot;postName&quot; #新建文章
+hexo generate #生成静态页面至public目录
+hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）
+hexo deploy #将.deploy目录部署到GitHub
+hexo help  # 查看帮助
+hexo version  #查看Hexo的版本
+</code></pre><h3 id="命令简写"><a href="#命令简写" class="headerlink" title="命令简写"></a>命令简写</h3><pre><code>hexo n == hexo new
+hexo g == hexo generate
+hexo s == hexo server
+hexo d == hexo deploy
 </code></pre>
           
         
@@ -458,7 +934,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-装饰模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -483,8 +959,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-装饰模式/" itemprop="url">
-                  Java典型设计模式-装饰模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
+                  Java典型设计模式-观察者模式
                 </a>
               
             
@@ -560,798 +1036,87 @@
       
         
           
-            <p>　最近在复习I/O,发现很多类都是通过装饰模式进行修饰，将原来的类修饰的更强大，那么今天就来总结一下装饰模式。</p>
+            <p>　<strong>观察者模式是类和类之间的关系，不涉及到继承。</strong></p>
 <hr>
-<p>　<strong>装饰模式：动态地给一个对象添加一些额外的职责，就增加功能来说，装饰模式比生成子类更为灵活。</strong><br>装饰模式有以下四个角色：</p>
-<ul>
-<li>抽象构件角色：用于规范需要装饰的对象。</li>
-<li>具体构件角色：用于实现抽象构件接口，定义一个需要装饰的原始类。</li>
-<li>装饰角色：该角色持有一个构件对象的实例，并定义一个与抽象构件接口一致的接口。</li>
-<li>具体装饰角色：该角色负责对构件对象进行装饰</li>
-</ul>
-<p>装饰模式类图如下：<br><img src="http://i.imgur.com/aIQFA1A.png" alt=""> </p>
-<p>装饰模式的优点：</p>
-<ol>
-<li>装饰类和被装饰类可以独立发展，而不会相互耦合。</li>
-<li>装饰模式是继承关系的一个替代方式，装饰类Decorator，不管装饰多少层，返回的对象还是Component。</li>
-<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
-</ol>
-<p>装饰模式的使用场景：</p>
-<ol>
-<li>需要扩展一个类的功能，或给一个类增加附加功能。</li>
-<li>需要动态地给一个对象增加功能，这些功能可以在动态地撤销。</li>
-<li>需要为一批类进行改装或加装功能。</li>
-</ol>
-<hr>
-<p>　通过对裸车进行装饰的过程演示装饰模式的应用：<br>　Car接口：  </p>
-<pre><code>public interface Car {
-    public void show();
+<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
+<pre><code>public interface Observer {  
+    public void update();  
 }
-</code></pre><p>　Benz实现IGamePlayer接口中的方法：</p>
-<pre><code>public class Benz implements Car {
-    @Override
-    public void show() {
-        System.out.println(&quot;奔驰车默认是黑色&quot;);
-    }
+
+public class Observer1 implements Observer {  
+    @Override 
+    public void update() {  
+        System.out.println(&quot;observer1 has received!&quot;);  
+    }  
 }
-</code></pre><p>　汽车修饰类CarDecorator：</p>
-<pre><code>public abstract class CarDecorator {
-    private Car car = null;
-    public CarDecorator(Car car){
-    this.car = car;
-    }
-    public void show(){
-        this.car.show();
-    }
+
+public class Observer2 implements Observer {  
+    @Override 
+    public void update() {  
+        System.out.println(&quot;observer2 has received!&quot;);  
+    }  
 }
-</code></pre><p>　汽车修饰实现类ConcreteCarDecorator：</p>
-<pre><code>public class ConcreteCarDecorator extends CarDecorator {
-    public ConcreteCarDecorator(Car car) {
-        super(car);
-    }
 
-    public void print(){
-        System.out.println(&quot;彩绘喷漆&quot;);
-    }
-    public void setGps(){
-        System.out.println(&quot;安装GPS&quot;);
-    }
-    public void show(){
-        super.show();
-        this.print();
-        this.setGps();
-    }
+public interface Subject {  
+    /*增加观察者*/  
+    public void add(Observer observer);  
+    /*删除观察者*/  
+    public void del(Observer observer);  
+    /*通知所有的观察者*/  
+    public void notifyObservers();  
+    /*自身的操作*/ 
+    public void operation();  
 }
-</code></pre><p>　应用程序代码：</p>
-<pre><code>public class ClientDemo {
-    public static void main(String[] args) {
-        Car car = new Benz();
-        CarDecorator cd = new ConcreteCarDecorator(car);
-        cd.show();
-    }
+
+import java.util.Enumeration;
+import java.util.Vector;
+
+public abstract class AbstractSubject implements Subject {  
+
+    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
+    @Override 
+    public void add(Observer observer) {  
+        vector.add(observer);  
+    }  
+
+    @Override 
+    public void del(Observer observer) {  
+        vector.remove(observer);  
+    }  
+
+    @Override 
+    public void notifyObservers() {  
+        Enumeration&lt;Observer&gt; enumo = vector.elements();  
+        while(enumo.hasMoreElements()){  
+            enumo.nextElement().update();  
+        }  
+    }  
 }
-</code></pre><p>　程序运行结果：</p>
-<pre><code>奔驰车默认是黑色
-彩绘喷漆
-安装GPS
-</code></pre>
-          
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
+public class MySubject extends AbstractSubject {  
 
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-代理模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-代理模式/" itemprop="url">
-                  Java典型设计模式-代理模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　最近在学习Spring，Spring的两个核心是依赖注入和面向切面编程，其中面向切面编程就是在一个方法的前后位置加入其余的方法以更好地实现，那么在SpringAOP中是采用JDK动态代理实现的，动态代理就是采用代理模式技术实现的，关于JDK动态代理我稍后总结，今天就用静态代理的例子好好学习代理模式。</p>
-<hr>
-<p>　<strong>代理模式：为其他对象提供一种代理以控制对这个对象的访问。</strong><br>　代理模式有一下优点：  </p>
-<ol>
-<li>职责清晰：真实的角色实现实际的业务逻辑，不用关心其他非本职的事务，通过后期的代理完成附加的事务，附带的结果就是编程简洁清晰。    </li>
-<li>高扩展性：具体主题角色随需求的不同可能有很多种，但只要实现了接口，代理类就完全可以在不做任何修改的情况下代理各种真实主题角色。  </li>
-<li>智能化：代理类介意在运行时才确定去代理的真实主题（动态代理）。  </li>
-</ol>
-<hr>
-<p>　通过游戏代练的过程演示代理模式的应用，其类图如下所示：<br><img src="http://i.imgur.com/Q6N61ev.png" alt=""><br>　IGamePlayer接口：  </p>
-<pre><code>public interface IGamePlayer {
-    public void killBoss();
-    public void upGrade();
+    @Override 
+    public void operation() {  
+        System.out.println(&quot;update self!&quot;);  
+        notifyObservers();  
+    }  
 
 }
-</code></pre><p>　GamePlayer实现IGamePlayer接口中的方法：</p>
-<pre><code>public class GamePlayer implements IGamePlayer {
-    private String name =&quot;&quot;;
 
-
-    public GamePlayer(String name) {
-        super();
-        this.name = name;
-    }
-
-    @Override
-    public void killBoss() {
-        System.out.println(this.name+&quot;在打怪！！！！&quot;);
-    }
-
-    @Override
-    public void upGrade() {
-        System.out.println(this.name+&quot;成功升1级！！！！&quot;);
-    }
-
+public class ObserverTest {  
+    public static void main(String[] args) {  
+        Subject sub = new MySubject();  
+        sub.add(new Observer1());  
+        sub.add(new Observer2());  
+        sub.operation();  
+    }  
 }
-</code></pre><p>　GamePlayerProxy是代理类：</p>
-<pre><code>public class GamePlayerProxy implements IGamePlayer {
-    private IGamePlayer player = null;
+运行结果：
+update self!
+observer1 has received!
+observer2 has received!
+</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
 
-
-    public GamePlayerProxy(IGamePlayer player) {
-        super();
-        this.player = player;
-    }
-
-    @Override
-    public void killBoss() {
-        this.log();
-        player.killBoss();
-    }
-
-    @Override
-    public void upGrade() {
-        player.upGrade();
-        this.count();
-    }
-
-    private void log(){
-        System.out.println(&quot;打怪时间&quot;+new Date().toString());
-    }
-
-    private void count(){
-        System.out.println(&quot;升一级耗费50小时&quot;);
-    }
-
-}
-</code></pre><p>　应用程序代码：</p>
-<pre><code>public class ClientDemo {
-
-    public static void main(String[] args) {
-        IGamePlayer player = new GamePlayer(&quot;冯佳欣&quot;);
-        IGamePlayer proxy = new GamePlayerProxy(player);
-        proxy.killBoss();
-        proxy.upGrade();
-
-    }
-
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>打怪时间Sun Feb 12 17:23:41 CST 2017
-冯佳欣在打怪！！！！
-冯佳欣成功升1级！！！！
-升一级耗费50小时
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-策略模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-策略模式/" itemprop="url">
-                  Java典型设计模式-策略模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　最近在学习Spring，在Spring中有多个地方使用策略模式，如Bean定义对象的创建和代理对象的创建等，那今天学习一下策略模式。</p>
-<hr>
-<p>　<strong>策略模式：针对一组算法，将每一个算法封装到具有共同接口的的独立类中，从而使得他们可以相互替换，使得算法可以在不影响客户端的情况下发生变化。</strong>  </p>
-<p>　策略模式有以下三个角色：  </p>
-<ul>
-<li>环境角色：该角色也叫上下文角色，起到承上启下的作用，屏蔽高层模块对策略、算法的直接访问，它持有一个Strategy的引用。</li>
-<li>抽象策略角色：该角色对策略、算法进行抽象，通常定义每个策略或算法必须具有的方法和属性。</li>
-<li>具体策略角色：该角色实现抽象策略中的具体操作，含有具体的算法。</li>
-</ul>
-<p>　策略模式类图如下：<br><img src="http://i.imgur.com/lLTa3AF.png" alt=""></p>
-<p>　策略式有以下优点：  </p>
-<ol>
-<li>策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族，恰当的使用继承可以把公共的代码移到父类中，从而避免代码重复。</li>
-<li>策略模式提供了可以替换继承关系的办法，继承可以处理多种算法或行为，如果不适用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为，但是这样算法或行为的使用者和算法本身混在一起，从而不可能在独立演化。</li>
-<li>使用策略模式可以避免使用多重条件转移语句。</li>
-</ol>
-<p>　策略模式的缺点：</p>
-<ol>
-<li>客户端必须知道所有的策略类，并自行决定使用哪一个策略类。</li>
-<li>策略模式造成很多的策略类。</li>
-</ol>
-<p>　策略模式的使用场景：</p>
-<ol>
-<li>多个类只是在算法或行为上稍有不同的场景。</li>
-<li>算法需要自由切换的场景。</li>
-<li>需要屏蔽算法规则的场景。</li>
-</ol>
-<hr>
-<p>　通过图书销售中不同折扣算法演示策略模式。<br>　DiscountStrategy.java</p>
-<pre><code>public abstract class DiscountStrategy {
-    private double price = 0;
-    private int number =0;
-    public DiscountStrategy(double price, int number) {
-        super();
-        this.price = price;
-        this.number = number;
-    }
-    public double getPrice() {
-        return price;
-    }
-    public int getNumber() {
-        return number;
-    }
-    public abstract double calculateDiscount();
-}
-</code></pre><p>　NoDiscountStrategy.java</p>
-<pre><code>public class NoDiscountStrategy extends DiscountStrategy {
-    public NoDiscountStrategy(double price, int number) {
-        super(price, number);
-
-    }
-    @Override
-    public double calculateDiscount() {
-        return 0;
-    }
-}
-</code></pre><p>　FixDiscountStrategy.java</p>
-<pre><code>public class FixDiscountStrategy extends DiscountStrategy {
-    public FixDiscountStrategy(double price, int number) {
-        super(price, number);
-    }
-    @Override
-    public double calculateDiscount() {
-        return getNumber()+1;
-    }
-}
-</code></pre><p>　PercentageDiscountStrategy.java</p>
-<pre><code>public class PercentageDiscountStrategy extends DiscountStrategy {
-    public PercentageDiscountStrategy(double price, int number) {
-        super(price, number);
-    }
-    @Override
-    public double calculateDiscount() {
-        return getPrice()*getNumber()*0.15;
-    }
-}
-</code></pre><p>　ContextClient.java</p>
-<pre><code>public class ContextClient {
-    private DiscountStrategy ds = null;
-    public ContextClient(DiscountStrategy ds) {
-        super();
-        this.ds = ds;
-    }
-    public double contextCalDisc(){
-        return this.ds.calculateDiscount();
-    }
-    public static void main(String[] args) {
-        ContextClient context0 = new ContextClient(new NoDiscountStrategy(48.5, 20));
-        System.out.println(&quot;0折扣&quot;+context0.contextCalDisc());
-
-        ContextClient context1 = new ContextClient(new FixDiscountStrategy(48.5, 20));
-        System.out.println(&quot;固定折扣&quot;+context1.contextCalDisc());
-
-        ContextClient context2 = new ContextClient(new PercentageDiscountStrategy(48.5, 20));
-        System.out.println(&quot;15%折扣&quot;+context2.contextCalDisc());
-    }
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>0折扣0.0
-固定折扣21.0
-15%折扣145.5
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-责任链模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-责任链模式/" itemprop="url">
-                  Java典型设计模式-责任链模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　最近在学习Tomcat,Tomcat中最容易发现的设计模式就是责任链设计模式，这个设计模式也是在Tomcat中Container设计的基础，整个容器就是通过一个链连接在一起的，这个链一直将请求正确地传递给最终处理请求的Servlet，那么就学习一下责任链设计模式。</p>
-<hr>
-<p>　<strong>责任链模式：使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理为止。</strong><br>　责任链模式有以下两个角色：  </p>
-<ul>
-<li>抽象处理者角色：该角色对请求进行抽象，并定义一个方法以设定和返回对下一个处理者的引用。</li>
-<li>具体处理者角色：该角色接到请求后，可以选择将请求处理掉，或者将请求传给下一个处理者。</li>
-</ul>
-<p>　责任链模式类图如下：<br><img src="http://i.imgur.com/4jm2jrS.png" alt=""></p>
-<p>　责任链模式的优点：</p>
-<ol>
-<li>责任链模式将请求和处理分开，请求者不知道是谁处理的，处理者可以不用知道请求的全貌。</li>
-<li>提高系统的灵活性。</li>
-</ol>
-<p>　责任链模式的缺点：</p>
-<ol>
-<li>降低程序的性能，每个请求都是从链头遍历到链尾，当链比较长的时候，性能会大幅下降。</li>
-<li>不易于调试，由于采用类似递归的方式，调试的时候逻辑比较复杂。<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</li>
-</ol>
-<p>　责任链模式的使用场景：</p>
-<ol>
-<li>一个请求需要一系列的处理工作。</li>
-<li>业务流的处理。</li>
-<li>对系统进行补充扩展。</li>
-</ol>
-<hr>
-<p>　<strong>击鼓传花演示责任链模式板例子：</strong></p>
-<p>　Player.java：    </p>
-<pre><code>public abstract class Player {
-    private Player successor;
-    public abstract void handle(int i);
-    protected void setSuccessor(Player aSuccessor){
-        this.successor = aSuccessor;
-    }
-    //传给下一个
-    public void next(int index){
-        if(successor!=null)
-            successor.handle(index);
-        else
-            System.out.println(&quot;游戏结束&quot;);
-    }
-}
-</code></pre><p>　PlayerAjava：</p>
-<pre><code>public class PlayerA extends Player {
-    public PlayerA(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==1)
-            System.out.println(&quot;PlayerA喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerA把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　PlayerB.java：</p>
-<pre><code>public class PlayerB extends Player {
-    public PlayerB(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==2)
-            System.out.println(&quot;PlayerB喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerB把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　PlayerC.java：</p>
-<pre><code>public class PlayerC extends Player {
-    public PlayerC(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==3)
-            System.out.println(&quot;PlayerC喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerC把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　PlayerD.java：</p>
-<pre><code>public class PlayerD extends Player {
-    public PlayerD(Player successor){
-        this.setSuccessor(successor);
-    }
-    @Override
-    public void handle(int i) {
-        if(i==4)
-            System.out.println(&quot;PlayerD喝酒&quot;);
-        else{
-            System.out.println(&quot;PlayerD把花向下传&quot;);
-            next(i);
-        }
-    }
-}
-</code></pre><p>　DrumBeater.java：</p>
-<pre><code>public class DrumBeater {
-    public static void main(String[] args) {
-        Player player = new PlayerA(new PlayerB(new PlayerC(new PlayerD(null))));
-        player.handle(3);
-    }
-}
-</code></pre><p>　程序运行结果：</p>
-<pre><code>PlayerA把花向下传
-PlayerB把花向下传
-PlayerC喝酒
-</code></pre>
           
         
       
@@ -1384,7 +1149,7 @@ PlayerC喝酒
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1427,7 +1192,7 @@ PlayerC喝酒
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1445,7 +1210,7 @@ PlayerC喝酒
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

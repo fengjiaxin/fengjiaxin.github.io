@@ -1,0 +1,970 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TreeMap," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今天来介绍下TreeMap,TreeMap是基于红黑树结构实现的一种Map，要分析TreeMap的实现首先就要对红黑树有所了解。构造图如下:蓝色线条：继承绿色线条：接口实现  
+　　　　　　　
+　TreeMap底层是基于红黑树（Red-Black tree）实现，所以在学习TreeMap之前我们先来了解下红黑树。　红黑树又称红-黑二叉树，它首先是一颗二叉树，它具有二叉树所有的特性，同时红黑树更是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TreeMap源码学习(一)">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/25/TreeMap源码学习 (一)/index.html">
+<meta property="og:site_name" content="冯佳欣的博客">
+<meta property="og:description" content="今天来介绍下TreeMap,TreeMap是基于红黑树结构实现的一种Map，要分析TreeMap的实现首先就要对红黑树有所了解。构造图如下:蓝色线条：继承绿色线条：接口实现  
+　　　　　　　
+　TreeMap底层是基于红黑树（Red-Black tree）实现，所以在学习TreeMap之前我们先来了解下红黑树。　红黑树又称红-黑二叉树，它首先是一颗二叉树，它具有二叉树所有的特性，同时红黑树更是">
+<meta property="og:image" content="http://i.imgur.com/tbVLx4S.png">
+<meta property="og:image" content="http://i.imgur.com/EflscuZ.png">
+<meta property="og:image" content="http://i.imgur.com/AshlJx5.jpg">
+<meta property="og:image" content="http://i.imgur.com/qVvJg1i.jpg">
+<meta property="og:image" content="http://i.imgur.com/t789vwG.png">
+<meta property="og:image" content="http://i.imgur.com/WshgKMY.png">
+<meta property="og:image" content="http://i.imgur.com/7rjwPLu.png">
+<meta property="og:image" content="http://i.imgur.com/hffyrxI.png">
+<meta property="og:image" content="http://i.imgur.com/YcWZ7ib.png">
+<meta property="og:image" content="http://i.imgur.com/dZMBOgK.png">
+<meta property="og:image" content="http://i.imgur.com/RXraOcO.png">
+<meta property="og:image" content="http://i.imgur.com/Xowq8Kw.png">
+<meta property="og:image" content="http://i.imgur.com/ywiyoRq.png">
+<meta property="og:image" content="http://i.imgur.com/sS9UHhn.png">
+<meta property="og:image" content="http://i.imgur.com/BSBuXOA.png">
+<meta property="og:image" content="http://i.imgur.com/49XsG3E.png">
+<meta property="og:image" content="http://i.imgur.com/Dbw5gmW.png">
+<meta property="og:image" content="http://i.imgur.com/wpRD30l.png">
+<meta property="og:updated_time" content="2017-02-26T12:02:16.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TreeMap源码学习(一)">
+<meta name="twitter:description" content="今天来介绍下TreeMap,TreeMap是基于红黑树结构实现的一种Map，要分析TreeMap的实现首先就要对红黑树有所了解。构造图如下:蓝色线条：继承绿色线条：接口实现  
+　　　　　　　
+　TreeMap底层是基于红黑树（Red-Black tree）实现，所以在学习TreeMap之前我们先来了解下红黑树。　红黑树又称红-黑二叉树，它首先是一颗二叉树，它具有二叉树所有的特性，同时红黑树更是">
+<meta name="twitter:image" content="http://i.imgur.com/tbVLx4S.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/25/TreeMap源码学习 (一)/"/>
+
+
+
+
+
+  <title> TreeMap源码学习(一) | 冯佳欣的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">冯佳欣的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">滴水穿石</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/25/TreeMap源码学习 (一)/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TreeMap源码学习(一)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-25T15:46:58+08:00">
+                2017-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　今天来介绍下TreeMap,TreeMap是基于红黑树结构实现的一种Map，要分析TreeMap的实现首先就要对红黑树有所了解。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现  </p>
+<p>　　　　　　　<img src="http://i.imgur.com/tbVLx4S.png" alt=""></p>
+<p>　TreeMap底层是基于<strong>红黑树（Red-Black tree）</strong>实现，所以在学习TreeMap之前我们先来了解下红黑树。<br>　红黑树又称红-黑二叉树，它首先是一颗二叉树，它具有二叉树所有的特性，同时红黑树更是一颗自平衡的排序二叉树。  </p>
+<p>　平衡二叉树必须具备如下特性：它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。也就是说该二叉树的任何一个等等子节点，其左右子树的高度都相近。</p>
+<p>　红黑树顾名思义就是节点是红色或者黑色的平衡二叉树，它通过颜色的约束来维持着二叉树的平衡。对于一棵有效的红黑树二叉树而言我们必须增加如下规则：</p>
+<ol>
+<li>每个节点都只能是红色或者黑色</li>
+<li>根节点是黑色</li>
+<li>每个叶节点（NIL节点，空节点）是黑色的。</li>
+<li>如果一个结点是红的，则它两个子节点都是黑的。也就是说在一条路径上不能出现相邻的两个红色结点。</li>
+<li>从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点。</li>
+</ol>
+<p>　红黑树示意图如下：</p>
+<p>　　　　<img src="http://i.imgur.com/EflscuZ.png" alt=""></p>
+<p>　但是在在添加或删除节点后，红黑树就发生了变化，可能不再满足上面的5个特性，为了保持红黑树的以上特性，就有了三个动作：左旋、右旋、着色。</p>
+<p>　下面来看下什么是红黑树的左旋和右旋：</p>
+<p>　　<img src="http://i.imgur.com/AshlJx5.jpg" alt=""></p>
+<p>　对x进行左旋，意味着”将x变成一个左节点”。</p>
+<p>　　<img src="http://i.imgur.com/qVvJg1i.jpg" alt=""></p>
+<p>　对y进行右旋，意味着”将y变成一个右节点”。</p>
+<h1 id="TreeMap源码解析-基于JDK1-6-0-45"><a href="#TreeMap源码解析-基于JDK1-6-0-45" class="headerlink" title="TreeMap源码解析(基于JDK1.6.0_45)"></a>TreeMap源码解析(基于JDK1.6.0_45)</h1><p>　红黑树的添加原理及TreeMap的put实现<br>　将一个节点添加到红黑树中，通常需要下面几个步骤：</p>
+<ol>
+<li>将红黑树当成一颗二叉查找树，将节点插入.</li>
+<li>将新插入的节点设置为红色<br>为什么新插入的节点一定要是红色的，因为新插入节点为红色，不会违背红黑规则第（5）条，少违背一条就少处理一种情况。</li>
+<li>通过旋转和着色，使它恢复平衡，重新变成一颗符合规则的红黑树。</li>
+</ol>
+<p>　要想知道怎么样进行左旋和右旋，首先就要知道为什么要进行左旋和右旋。<br>　我们来对比下红黑树的规则和新插入节点后的情况，看下新插入节点会违背哪些规则。<br>　（1）节点是红色或黑色。<br>　这一点肯定是不会违背的了。<br>　（2）根节点是黑色。<br>　这一点也不会违背了，如果是根节点，只需将根节点插入就好了，因为默认是黑色。<br>　（3）每个叶节点（NIL节点，空节点）是黑色的。<br>　这一点也不会违背的，我们插入的是非空的节点，不会影响空节点。<br>　（4）每个红色节点的两个子节点都是黑色。(从每个叶子到根的所有路径上不能有两个连续的红色节点)<br>　这一点是有可能违背的，我们将新插入的节点都设置成红色，如果其父节点也是红色的话，那就产生冲突了。<br>　（5）从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点。<br>　这一点也不会违背，因为我们将新插入的节点都设置成红色。  </p>
+<p>　了解了红黑树左旋和右旋操作，以及新插入节点主要是可能会违背红黑树的规则（4）后，我们来分析下，添加新节点的过程有哪几种情况：</p>
+<p>（1）新插入节点为根节点。这种情况直接将新插入节点设置为根节点即可，无需进行后续的旋转和着色处理。<br>（2）新插入节点的父节点是黑色。这种情况直接将新节点插入即可，不会违背规则（4）。<br>（3）新插入节点的父节点是红色。这种情况会违背规则（4），而这种情况又分为了以下几种，下面进行图解：  </p>
+<h2 id="1-新插入节点N的父节点P是祖父节点G的左孩子"><a href="#1-新插入节点N的父节点P是祖父节点G的左孩子" class="headerlink" title="1 新插入节点N的父节点P是祖父节点G的左孩子:"></a>1 新插入节点N的父节点P是祖父节点G的左孩子:</h2><p>　那么有一下三种情况<br>　①新插入节点N的父节点P和叔叔节点U都是红色。方法是：将祖父节点G设置为红色，父节点P和叔叔节点U设置为黑色，这时候就看似平衡了。但是，如果祖父节点G的父节点也是红色，这时候又违背规则（4）了，怎么办，方法是：将GPUZ这一组看成一个新的节点，按照前面的方案递归；又但是根节点为红就违反规则（2）了，怎么办，方法是直接将根节点设置为黑色（两个连续黑色是没问题的）。</p>
+<p><img src="http://i.imgur.com/t789vwG.png" alt="">   <img src="http://i.imgur.com/WshgKMY.png" alt=""></p>
+<p>　②新插入节点Z的父节点P是红色，叔叔节点U是黑色或者缺少，且新节点N是P的右孩子。方法是：左旋父节点P。左旋后N和P角色互换，但是P和N还是连续的两个红色节点，还没有平衡，怎么办，看第三种情况。</p>
+<p><img src="http://i.imgur.com/7rjwPLu.png" alt=""><img src="http://i.imgur.com/hffyrxI.png" alt=""></p>
+<p>　③新插入节点N的父节点P是红色，叔叔节点U是黑色或者缺少，且新节点Z是P的左孩子。方法是：右旋祖父节点G，然后将P设置为黑色，G设置为红色，达到平衡。此时父节点P是黑色，所有不用担心P的父节点是红色。</p>
+<p><img src="http://i.imgur.com/YcWZ7ib.png" alt=""><img src="http://i.imgur.com/dZMBOgK.png" alt=""><img src="http://i.imgur.com/RXraOcO.png" alt=""></p>
+<h2 id="2-新插入节点N的父节点P是祖父节点G的右孩子"><a href="#2-新插入节点N的父节点P是祖父节点G的右孩子" class="headerlink" title="2 新插入节点N的父节点P是祖父节点G的右孩子:"></a>2 新插入节点N的父节点P是祖父节点G的右孩子:</h2><p>　①新插入节点N的父节点P和叔叔节点U都是红色。方法是：将祖父节点G设置为红色，父节点P和叔叔节点U设置为黑色，这时候就看似平衡了。但是，如果祖父节点G的父节点也是红色，这时候又违背规则（4）了，怎么办，方法是：将GPUZ这一组看成一个新的节点，按照前面的方案递归；又但是根节点为红就违反规则（2）了，怎么办，方法是直接将根节点设置为黑色（两个连续黑色是没问题的）。</p>
+<p><img src="http://i.imgur.com/Xowq8Kw.png" alt=""><img src="http://i.imgur.com/ywiyoRq.png" alt=""></p>
+<p>　②新插入节点Z的父节点P是红色，叔叔节点U是黑色或者缺少，且新节点Z是P的左孩子。方法是：左旋父节点P。左旋后Z和P角色互换，但是P和N还是连续的两个红色节点，还没有平衡，怎么办，看第三种情况。</p>
+<p><img src="http://i.imgur.com/sS9UHhn.png" alt=""> <img src="http://i.imgur.com/BSBuXOA.png" alt=""></p>
+<p>　③新插入节点Z的父节点P是红色，叔叔节点U是黑色或者缺少，且新节点Z是P的右孩子。方法是：右旋祖父节点G，然后将P设置为黑色，G设置为红色，达到平衡。此时父节点P是黑色，所有不用担心P的父节点是红色。</p>
+<p><img src="http://i.imgur.com/49XsG3E.png" alt=""> <img src="http://i.imgur.com/Dbw5gmW.png" alt=""><img src="http://i.imgur.com/wpRD30l.png" alt=""></p>
+<p>　上面分析了这么多，到底TreeMap是怎么实现的呢，我们来看下：</p>
+<pre><code>public V put(K key, V value) {
+        // 根节点
+        Entry&lt;K,V&gt; t = root;
+        // 如果根节点为空，则直接创建一个根节点，返回
+        if (t == null) {
+           // TBD:
+           // 5045147: (coll) Adding null to an empty TreeSet should
+           // throw NullPointerException
+           //
+           // compare(key, key); // type check
+            root = new Entry&lt;K,V&gt;(key, value, null);
+            size = 1;
+            modCount++;
+            return null;
+        }
+        // 记录比较结果
+        int cmp;
+        Entry&lt;K,V&gt; parent;
+        // split comparator and comparable paths
+        // 当前使用的比较器
+        Comparator&lt;? super K&gt; cpr = comparator ;
+        // 如果比较器不为空，就是用指定的比较器来维护TreeMap的元素顺序
+        if (cpr != null) {
+             // do while循环，查找key要插入的位置（也就是新节点的父节点是谁）
+            do {
+                // 记录上次循环的节点t
+                parent = t;
+                // 比较当前节点的key和新插入的key的大小
+                cmp = cpr.compare(key, t. key);
+                 // 新插入的key小的话，则以当前节点的左孩子节点为新的比较节点
+                if (cmp &lt; 0)
+                    t = t. left;
+                // 新插入的key大的话，则以当前节点的右孩子节点为新的比较节点
+                else if (cmp &gt; 0)
+                    t = t. right;
+                else
+              // 如果当前节点的key和新插入的key想的的话，则覆盖map的value，返回
+                    return t.setValue(value);
+            // 只有当t为null，也就是没有要比较节点的时候，代表已经找到新节点要插入的位置
+            } while (t != null);
+        }
+        else {
+            // 如果比较器为空，则使用key作为比较器进行比较
+            // 这里要求key不能为空，并且必须实现Comparable接口
+            if (key == null)
+                throw new NullPointerException();
+            Comparable&lt;? super K&gt; k = (Comparable&lt;? super K&gt;) key;
+            // 和上面一样，喜欢查找新节点要插入的位置
+            do {
+                parent = t;
+                cmp = k.compareTo(t. key);
+                if (cmp &lt; 0)
+                    t = t. left;
+                else if (cmp &gt; 0)
+                    t = t. right;
+                else
+                    return t.setValue(value);
+            } while (t != null);
+        }
+        // 找到新节点的父节点后，创建节点对象
+        Entry&lt;K,V&gt; e = new Entry&lt;K,V&gt;(key, value, parent);
+        // 如果新节点key的值小于父节点key的值，则插在父节点的左侧
+        if (cmp &lt; 0)
+            parent. left = e;
+        // 如果新节点key的值大于父节点key的值，则插在父节点的右侧
+        else
+            parent. right = e;
+        // 插入新的节点后，为了保持红黑树平衡，对红黑树进行调整
+        fixAfterInsertion(e);
+        // map元素个数+1
+        size++;
+        modCount++;
+        return null;
+    }
+
+
+/** 新增节点后对红黑树的调整方法 */
+private void fixAfterInsertion(Entry&lt;K,V&gt; x) {
+    // 将新插入节点的颜色设置为红色
+    x. color = RED;
+
+    // while循环，保证新插入节点x不是根节点或者新插入节点x的父节点不是红色（这两种情况不需要调整）
+    while (x != null &amp;&amp; x != root &amp;&amp; x. parent.color == RED) {
+        // 如果新插入节点x的父节点是祖父节点的左孩子
+        if (parentOf(x) == leftOf(parentOf (parentOf(x)))) {
+            // 取得新插入节点x的叔叔节点
+            Entry&lt;K,V&gt; y = rightOf(parentOf (parentOf(x)));
+            // 如果新插入x的父节点是红色-------------------①
+            if (colorOf(y) == RED) {
+                // 将x的父节点设置为黑色
+                setColor(parentOf (x), BLACK);
+                // 将x的叔叔节点设置为黑色
+                setColor(y, BLACK);
+                // 将x的祖父节点设置为红色
+                setColor(parentOf (parentOf(x)), RED);
+                // 将x指向祖父节点，如果x的祖父节点的父节点是红色，按照上面的步奏继续循环
+                x = parentOf(parentOf (x));
+            } else {
+                // 如果新插入x的叔叔节点是黑色或缺少，且x的父节点是祖父节点的右孩子-------------------②
+                if (x == rightOf( parentOf(x))) {
+                    // 左旋父节点
+                    x = parentOf(x);
+                    rotateLeft(x);
+                }
+                // 如果新插入x的叔叔节点是黑色或缺少，且x的父节点是祖父节点的左孩子-------------------③
+                // 将x的父节点设置为黑色
+                setColor(parentOf (x), BLACK);
+                // 将x的祖父节点设置为红色
+                setColor(parentOf (parentOf(x)), RED);
+                // 右旋x的祖父节点
+                rotateRight( parentOf(parentOf (x)));
+            }
+        } else { // 如果新插入节点x的父节点是祖父节点的右孩子，下面的步奏和上面的相似，只不过左旋右旋的区分，不在细讲
+            Entry&lt;K,V&gt; y = leftOf(parentOf (parentOf(x)));
+            if (colorOf(y) == RED) {
+                setColor(parentOf (x), BLACK);
+                setColor(y, BLACK);
+                setColor(parentOf (parentOf(x)), RED);
+                x = parentOf(parentOf (x));
+            } else {
+                if (x == leftOf( parentOf(x))) {
+                    x = parentOf(x);
+                    rotateRight(x);
+                }
+                setColor(parentOf (x), BLACK);
+                setColor(parentOf (parentOf(x)), RED);
+                rotateLeft( parentOf(parentOf (x)));
+            }
+        }
+    }
+    // 最后将根节点设置为黑色，不管当前是不是红色，反正根节点必须是黑色
+    root.color = BLACK;
+}
+
+/**
+ * 对红黑树的节点(x)进行左旋转
+ *
+ * 左旋示意图(对节点x进行左旋)：
+ *      px                              px
+ *     /                               /
+ *    x                               y               
+ *   /  \      --(左旋)--           / \                
+ *  lx   y                          x  ry    
+ *     /   \                       /  \
+ *    ly   ry                     lx  ly 
+ *
+ */
+private void rotateLeft(Entry&lt;K,V&gt; p) {
+    if (p != null) {
+        // 取得要选择节点p的右孩子
+        Entry&lt;K,V&gt; r = p. right;
+        // &quot;p&quot;和&quot;r的左孩子&quot;的相互指向...
+        // 将&quot;r的左孩子&quot;设为&quot;p的右孩子&quot;
+        p. right = r.left ;
+        // 如果r的左孩子非空，将&quot;p&quot;设为&quot;r的左孩子的父亲&quot;
+        if (r.left != null)
+            r. left.parent = p;
+
+        // &quot;p的父亲&quot;和&quot;r&quot;的相互指向...
+        // 将&quot;p的父亲&quot;设为&quot;y的父亲&quot;
+        r. parent = p.parent ;
+        // 如果&quot;p的父亲&quot;是空节点，则将r设为根节点
+        if (p.parent == null)
+            root = r;
+        // 如果p是它父节点的左孩子，则将r设为&quot;p的父节点的左孩子&quot;
+        else if (p.parent. left == p)
+            p. parent.left = r;
+        else             
+            // 如果p是它父节点的左孩子，则将r设为&quot;p的父节点的左孩子&quot;
+            p. parent.right = r;
+        // &quot;p&quot;和&quot;r&quot;的相互指向...
+        // 将&quot;p&quot;设为&quot;r的左孩子&quot;
+        r. left = p;
+        // 将&quot;p的父节点&quot;设为&quot;r&quot;
+        p. parent = r;
+    }
+}
+
+
+/**
+ * 对红黑树的节点进行右旋转
+ *
+ * 右旋示意图(对节点y进行右旋)：
+ *            py                               py
+ *           /                                /
+ *          y                                x                 
+ *         /  \      --(右旋)--            /  \                     
+ *        x   ry                           lx   y 
+ *       / \                                   / \                   
+ *      lx  rx                                rx  ry
+ *
+ */
+private void rotateRight(Entry&lt;K,V&gt; p) {
+    if (p != null) {
+        // 取得要选择节点p的左孩子
+        Entry&lt;K,V&gt; l = p. left;           
+        // 将&quot;l的右孩子&quot;设为&quot;p的左孩子&quot;
+        p. left = l.right ;
+        // 如果&quot;l的右孩子&quot;不为空的话，将&quot;p&quot;设为&quot;l的右孩子的父亲&quot;
+        if (l.right != null) l. right.parent = p;
+        // 将&quot;p的父亲&quot;设为&quot;l的父亲&quot;
+        l. parent = p.parent ;
+        // 如果&quot;p的父亲&quot;是空节点，则将l设为根节点
+        if (p.parent == null)
+            root = l;      
+        // 如果p是它父节点的右孩子，则将l设为&quot;p的父节点的右孩子&quot;
+        else if (p.parent. right == p)
+            p. parent.right = l;
+        //如果p是它父节点的左孩子，将l设为&quot;p的父节点的左孩子&quot;
+        else p.parent .left = l;
+        // 将&quot;p&quot;设为&quot;l的右孩子&quot;
+        l. right = p;
+        // 将&quot;l&quot;设为&quot;p父节点&quot;
+        p. parent = l;
+    }
+}
+</code></pre><p>　<strong>我花了一天多的时间看源代码，手动画图才弄懂，当然我也不能一直记住，那么就先写到这里吧，下一篇文章写关于删除的情况，删除更加复制，路漫漫其修远兮啊！</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TreeMap/" rel="tag"># TreeMap</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/25/HashSet源码学习/" rel="next" title="HashSet源码学习">
+                <i class="fa fa-chevron-left"></i> HashSet源码学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/26/TreeMap源码学习 (二) /" rel="prev" title="TreeMap源码学习(二)">
+                TreeMap源码学习(二) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="冯佳欣" />
+          <p class="site-author-name" itemprop="name">冯佳欣</p>
+          <p class="site-description motion-element" itemprop="description">记录一点一滴</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TreeMap源码解析-基于JDK1-6-0-45"><span class="nav-text">TreeMap源码解析(基于JDK1.6.0_45)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-新插入节点N的父节点P是祖父节点G的左孩子"><span class="nav-text">1 新插入节点N的父节点P是祖父节点G的左孩子:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-新插入节点N的父节点P是祖父节点G的右孩子"><span class="nav-text">2 新插入节点N的父节点P是祖父节点G的右孩子:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冯佳欣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

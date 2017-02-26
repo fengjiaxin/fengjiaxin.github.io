@@ -1,0 +1,833 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="HashSet," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言
+今天来介绍下HashSet。前面，我们已经系统的对List和Map进行了学习。接下来，我们开始可以学习Set。相信经过Map的了解之后，学习Set会容易很多。毕竟，Set的实现类都是基于Map来实现的(HashSet是通过HashMap实现的)。构造图如下:蓝色线条：继承绿色线条：接口实现
+正文
+对于HashSet而言，它是基于HashMap来实现的，底层采用HashMap来保存元素。所以如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashSet源码学习">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/25/HashSet源码学习/index.html">
+<meta property="og:site_name" content="冯佳欣的博客">
+<meta property="og:description" content="前言
+今天来介绍下HashSet。前面，我们已经系统的对List和Map进行了学习。接下来，我们开始可以学习Set。相信经过Map的了解之后，学习Set会容易很多。毕竟，Set的实现类都是基于Map来实现的(HashSet是通过HashMap实现的)。构造图如下:蓝色线条：继承绿色线条：接口实现
+正文
+对于HashSet而言，它是基于HashMap来实现的，底层采用HashMap来保存元素。所以如">
+<meta property="og:updated_time" content="2017-02-25T01:01:51.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HashSet源码学习">
+<meta name="twitter:description" content="前言
+今天来介绍下HashSet。前面，我们已经系统的对List和Map进行了学习。接下来，我们开始可以学习Set。相信经过Map的了解之后，学习Set会容易很多。毕竟，Set的实现类都是基于Map来实现的(HashSet是通过HashMap实现的)。构造图如下:蓝色线条：继承绿色线条：接口实现
+正文
+对于HashSet而言，它是基于HashMap来实现的，底层采用HashMap来保存元素。所以如">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/25/HashSet源码学习/"/>
+
+
+
+
+
+  <title> HashSet源码学习 | 冯佳欣的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">冯佳欣的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">滴水穿石</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/25/HashSet源码学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                HashSet源码学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-25T09:00:35+08:00">
+                2017-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前言</p>
+<p>今天来介绍下HashSet。前面，我们已经系统的对List和Map进行了学习。接下来，我们开始可以学习Set。相信经过Map的了解之后，学习Set会容易很多。毕竟，Set的实现类都是基于Map来实现的(HashSet是通过HashMap实现的)。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现</p>
+<p>正文</p>
+<p>对于HashSet而言，它是基于HashMap来实现的，底层采用HashMap来保存元素。所以如果对HashMap比较熟悉，那么HashSet是so easy!!</p>
+<p>HashSet简介</p>
+<p>HashSet定义</p>
+<p>public class HashSet<e><br>     extends AbstractSet<e><br>     implements Set<e>, Cloneable, java.io.Serializable<br>HashSet 是一个没有重复元素的集合。<br>它是由HashMap实现的，不保证元素的顺序，而且HashSet允许使用 null 元素。<br>HashSet是非同步的。如果多个线程同时访问一个哈希 set，而其中至少一个线程修改了该 set，那么它必须 保持外部同步。这通常是通过对自然封装该 set 的对象执行同步操作来完成的。如果不存在这样的对象，则应该使用 Collections.synchronizedSet 方法来“包装” set。最好在创建时完成这一操作，以防止对该 set 进行意外的不同步访问：</e></e></e></p>
+<p>Set s = Collections.synchronizedSet(new HashSet(…));<br>HashSet通过iterator()返回的迭代器是fail-fast的。</p>
+<p>HashSet属性</p>
+<p>// 底层使用HashMap来保存HashSet的元素<br>    private transient HashMap<e,object> map;<br>    // Dummy value to associate with an Object in the backing Map<br>    // 由于Set只使用到了HashMap的key，所以此处定义一个静态的常量Object类，来充当HashMap的value<br>    private static final Object PRESENT = new Object();<br>看到这里就明白了，和我们前面说的一样，HashSet是用HashMap来保存数据，而主要使用到的就是HashMap的key。</e,object></p>
+<p>看到private static final Object PRESENT = new Object();不知道你有没有一点疑问呢。这里使用一个静态的常量Object类来充当HashMap的value，既然这里map的value是没有意义的，为什么不直接使用null值来充当value呢？比如写成这样子private final Object PRESENT = null;我们都知道的是，Java首先将变量PRESENT分配在栈空间，而将new出来的Object分配到堆空间，这里的new Object()是占用堆内存的（一个空的Object对象占用8byte），而null值我们知道，是不会在堆空间分配内存的。那么想一想这里为什么不使用null值。想到什么吗，看一个异常类java.lang.NullPointerException， 噢买尬，这绝对是Java程序员的一个噩梦，这是所有Java程序猿都会遇到的一个异常，你看到这个异常你以为很好解决，但是有些时候也不是那么容易解决，Java号称没有指针，但是处处碰到NullPointerException。所以啊，为了从根源上避免NullPointerException的出现，浪费8个byte又怎么样，在下面的代码中我再也不会写这样的代码啦if (xxx == null) { … } else {….}，好爽。</p>
+<p>HashSet构造函数</p>
+<p>/**</p>
+<pre><code> * 使用HashMap的默认容量大小16和默认加载因子0.75初始化map，构造一个HashSet
+ */
+public HashSet() {
+    map = new HashMap&lt;E,Object&gt;();
+}
+
+/**
+ * 构造一个指定Collection参数的HashSet，这里不仅仅是Set，只要实现Collection接口的容器都可以
+ */
+public HashSet(Collection&lt;? extends E&gt; c) {
+    map = new HashMap&lt;E,Object&gt;(Math. max((int) (c.size()/.75f) + 1, 16));
+   // 使用Collection实现的Iterator迭代器，将集合c的元素一个个加入HashSet中
+   addAll(c);
+}
+
+/**
+ * 使用指定的初始容量大小和加载因子初始化map，构造一个HashSet
+ */
+public HashSet( int initialCapacity, float loadFactor) {
+    map = new HashMap&lt;E,Object&gt;(initialCapacity, loadFactor);
+}
+
+/**
+ * 使用指定的初始容量大小和默认的加载因子0.75初始化map，构造一个HashSet
+ */
+public HashSet( int initialCapacity) {
+    map = new HashMap&lt;E,Object&gt;(initialCapacity);
+}
+
+/**
+ * 不对外公开的一个构造方法（默认default修饰），底层构造的是LinkedHashMap，dummy只是一个标示参数，无具体意义
+ */
+HashSet( int initialCapacity, float loadFactor, boolean dummy) {
+    map = new LinkedHashMap&lt;E,Object&gt;(initialCapacity, loadFactor);
+</code></pre><p>}<br>从构造方法可以很轻松的看出，HashSet的底层是一个HashMap，理解了HashMap后，这里没什么可说的。只有最后一个构造方法有写区别，这里构造的是LinkedHashMap，该方法不对外公开，实际上是提供给LinkedHashSet使用的，而第三个参数dummy是无意义的，只是为了区分其他构造方法。</p>
+<p>API方法摘要</p>
+<p>HashSet源码解析(基于JDK1.6.0_45)</p>
+<p>增加和删除</p>
+<p>/**</p>
+<pre><code> * 利用HashMap的put方法实现add方法
+ */
+public boolean add(E e) {
+    return map .put(e, PRESENT)== null;
+}
+
+/**
+ * 利用HashMap的remove方法实现remove方法
+ */
+public boolean remove(Object o) {
+    return map .remove(o)==PRESENT;
+}
+
+/**
+ * 添加一个集合到HashSet中，该方法在AbstractCollection中
+ */
+public boolean addAll(Collection&lt;? extends E&gt; c) {
+    boolean modified = false;
+   // 取得集合c迭代器Iterator
+   Iterator&lt;? extends E&gt; e = c.iterator();
+   // 遍历迭代器
+    while (e.hasNext()) {
+       // 将集合c的每个元素加入到HashSet中
+       if (add(e.next()))
+          modified = true;
+   }
+    return modified;
+}
+
+/**
+ * 删除指定集合c中的所有元素，该方法在AbstractSet中
+ */
+public boolean removeAll(Collection&lt;?&gt; c) {
+    boolean modified = false;
+
+    // 判断当前HashSet元素个数和指定集合c的元素个数，目的是减少遍历次数
+    if (size() &gt; c.size()) {
+        // 如果当前HashSet元素多，则遍历集合c，将集合c中的元素一个个删除
+        for (Iterator&lt;?&gt; i = c.iterator(); i.hasNext(); )
+            modified |= remove(i.next());
+    } else {
+        // 如果集合c元素多，则遍历当前HashSet，将集合c中包含的元素一个个删除
+        for (Iterator&lt;?&gt; i = iterator(); i.hasNext(); ) {
+            if (c.contains(i.next())) {
+                i.remove();
+                modified = true;
+            }
+        }
+    }
+    return modified;
+</code></pre><p>}<br>是否包含</p>
+<p>/**</p>
+<pre><code> * 利用HashMap的containsKey方法实现contains方法
+ */
+public boolean contains(Object o) {
+    return map .containsKey(o);
+}
+
+/**
+ * 检查是否包含指定集合中所有元素，该方法在AbstractCollection中
+ */
+public boolean containsAll(Collection&lt;?&gt; c) {
+   // 取得集合c的迭代器Iterator
+   Iterator&lt;?&gt; e = c.iterator();
+   // 遍历迭代器，只要集合c中有一个元素不属于当前HashSet，则返回false
+    while (e.hasNext())
+       if (!contains(e.next()))
+           return false;
+    return true;
+</code></pre><p>}<br>由于HashMap基于hash表实现，hash表实现的容器最重要的一点就是可以快速存取，那么HashSet对于contains方法，利用HashMap的containsKey方法，效率是非常之快的。在我看来，这个方法也是HashSet最核心的卖点方法之一。</p>
+<p>容量检查</p>
+<p>/**</p>
+<pre><code> * Returns the number of elements in this set (its cardinality).
+ *
+ * @return the number of elements in this set (its cardinality)
+ */
+public int size() {
+    return map .size();
+}
+
+/**
+ * Returns &lt;tt&gt;true&lt;/tt&gt; if this set contains no elements.
+ *
+ * @return &lt;tt&gt; true&lt;/tt&gt; if this set contains no elements
+ */
+public boolean isEmpty() {
+    return map .isEmpty();
+}
+</code></pre><p>HashSet遍历方式</p>
+<p>通过Iterator遍历HashSet</p>
+<p>第一步：根据iterator()获取HashSet的迭代器。<br>第二步：遍历迭代器获取各个元素。</p>
+<p>// 假设set是HashSet对象<br>for(Iterator iterator = set.iterator();<br>       iterator.hasNext(); ) {<br>    iterator.next();<br>}<br>通过for-each遍历HashSet</p>
+<p>第一步：根据toArray()获取HashSet的元素集合对应的数组。<br>第二步：遍历数组，获取各个元素。</p>
+<p>// 假设set是HashSet对象，并且set中元素是String类型<br>String[] arr = (String[])set.toArray(new String[0]);<br>for (String str:arr)<br>    System.out.printf(“for each : %s\n”, str);<br>HashSet示例</p>
+<p>下面我们通过实例学习如何使用HashSet</p>
+<p>import java.util.Iterator;<br>import java.util.HashSet;</p>
+<p>/*</p>
+<ul>
+<li>@desc HashSet常用API的使用。<br>*</li>
+<li>@author skywang<br>*/<br>public class HashSetTest {<br> public static void main(String[] args) {<pre><code>// HashSet常用API
+testHashSetAPIs() ;
+</code></pre> }<br> /*<ul>
+<li>HashSet除了iterator()和add()之外的其它常用API<br>*/<br>private static void testHashSetAPIs() {<br> // 新建HashSet<br> HashSet set = new HashSet();<br> // 将元素添加到Set中<br> set.add(“a”);<br> set.add(“b”);<br> set.add(“c”);<br> set.add(“d”);<br> set.add(“e”);<br> // 打印HashSet的实际大小<br> System.out.printf(“size : %d\n”, set.size());<br> // 判断HashSet是否包含某个值<br> System.out.printf(“HashSet contains a :%s\n”, set.contains(“a”));<br> System.out.printf(“HashSet contains g :%s\n”, set.contains(“g”));<br> // 删除HashSet中的“e”<br> set.remove(“e”);<br> // 将Set转换为数组<br> String[] arr = (String[])set.toArray(new String[0]);<br> for (String str:arr)<pre><code>System.out.printf(&quot;for each : %s\n&quot;, str);
+</code></pre> // 新建一个包含b、c、f的HashSet<br> HashSet otherset = new HashSet();<br> otherset.add(“b”);<br> otherset.add(“c”);<br> otherset.add(“f”);<br> // 克隆一个removeset，内容和set一模一样<br> HashSet removeset = (HashSet)set.clone();<br> // 删除“removeset中，属于otherSet的元素”<br> removeset.removeAll(otherset);<br> // 打印removeset<br> System.out.printf(“removeset : %s\n”, removeset);<br> // 克隆一个retainset，内容和set一模一样<br> HashSet retainset = (HashSet)set.clone();<br> // 保留“retainset中，属于otherSet的元素”<br> retainset.retainAll(otherset);<br> // 打印retainset<br> System.out.printf(“retainset : %s\n”, retainset);<br> // 遍历HashSet<br> for(Iterator iterator = set.iterator();iterator.hasNext();) <pre><code>System.out.printf(&quot;iterator : %s\n&quot;, iterator.next());
+</code></pre> // 清空HashSet<br> set.clear();<br> // 输出HashSet是否为空<br> System.out.printf(“%s\n”, set.isEmpty()?”set is empty”:”set is not empty”);<br>}</li>
+</ul>
+</li>
+</ul>
+<p>}<br>运行结果：</p>
+<p>size : 5<br>HashSet contains a :true<br>HashSet contains g :false<br>for each : d<br>for each : b<br>for each : c<br>for each : a<br>removeset : [d, a]<br>retainset : [b, c]<br>iterator : d<br>iterator : b<br>iterator : c<br>iterator : a<br>set is empty<br>总结</p>
+<p>HashSet和HashMap、Hashtable的区别</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HashSet/" rel="tag"># HashSet</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/25/LinkedList源码学习/" rel="next" title="LinkedList源码学习">
+                <i class="fa fa-chevron-left"></i> LinkedList源码学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/25/TreeMap源码学习 (一)/" rel="prev" title="TreeMap源码学习(一)">
+                TreeMap源码学习(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="冯佳欣" />
+          <p class="site-author-name" itemprop="name">冯佳欣</p>
+          <p class="site-description motion-element" itemprop="description">记录一点一滴</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冯佳欣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

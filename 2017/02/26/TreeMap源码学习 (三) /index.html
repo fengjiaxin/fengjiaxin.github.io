@@ -1,0 +1,838 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TreeMap," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在将红黑树增加删除查询这几个难点解决掉后，就剩下一些基本的知识了，就今天进行整理。
+TreeMap基本知识TreeMap定义public class TreeMap&amp;lt;K,V&amp;gt;
+    extends AbstractMap&amp;lt;K,V&amp;gt;
+    implements NavigableMap&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializabl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TreeMap源码学习(三)">
+<meta property="og:url" content="https://fengjiaxin.github.io/2017/02/26/TreeMap源码学习 (三) /index.html">
+<meta property="og:site_name" content="冯佳欣的博客">
+<meta property="og:description" content="在将红黑树增加删除查询这几个难点解决掉后，就剩下一些基本的知识了，就今天进行整理。
+TreeMap基本知识TreeMap定义public class TreeMap&amp;lt;K,V&amp;gt;
+    extends AbstractMap&amp;lt;K,V&amp;gt;
+    implements NavigableMap&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializabl">
+<meta property="og:updated_time" content="2017-02-26T12:17:57.536Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TreeMap源码学习(三)">
+<meta name="twitter:description" content="在将红黑树增加删除查询这几个难点解决掉后，就剩下一些基本的知识了，就今天进行整理。
+TreeMap基本知识TreeMap定义public class TreeMap&amp;lt;K,V&amp;gt;
+    extends AbstractMap&amp;lt;K,V&amp;gt;
+    implements NavigableMap&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializabl">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://fengjiaxin.github.io/2017/02/26/TreeMap源码学习 (三) /"/>
+
+
+
+
+
+  <title> TreeMap源码学习(三) | 冯佳欣的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">冯佳欣的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">滴水穿石</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/26/TreeMap源码学习 (三) /">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TreeMap源码学习(三)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-26T17:46:58+08:00">
+                2017-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　在将红黑树增加删除查询这几个难点解决掉后，就剩下一些基本的知识了，就今天进行整理。</p>
+<h1 id="TreeMap基本知识"><a href="#TreeMap基本知识" class="headerlink" title="TreeMap基本知识"></a>TreeMap基本知识</h1><h2 id="TreeMap定义"><a href="#TreeMap定义" class="headerlink" title="TreeMap定义"></a>TreeMap定义</h2><pre><code>public class TreeMap&lt;K,V&gt;
+    extends AbstractMap&lt;K,V&gt;
+    implements NavigableMap&lt;K,V&gt;, Cloneable, java.io.Serializable
+</code></pre><p>TreeMap 是一个有序的key-value集合，它是通过红黑树实现的。<br>TreeMap 继承于AbstractMap，所以它是一个Map，即一个key-value集合。<br>TreeMap 实现了NavigableMap接口，意味着它支持一系列的导航方法。比如返回有序的key集合。<br>TreeMap 实现了Cloneable接口，意味着它能被克隆。<br>TreeMap 实现了java.io.Serializable接口，意味着它支持序列化。  </p>
+<p>TreeMap基于红黑树（Red-Black tree）实现。<br>该映射根据其键的自然顺序进行排序，或者根据创建映射时提供的Comparator进行排序，具体取决于使用的构造方法。<br>TreeMap的基本操作 containsKey、get、put 和 remove 的时间复杂度是 log(n) 。<br>另外，TreeMap是非同步的。 它的iterator 方法返回的迭代器是<strong>fail-fast</strong>的；关于迭代器的fail-fast机制将会另起一篇文章进行讲解。</p>
+<h2 id="TreeMap属性"><a href="#TreeMap属性" class="headerlink" title="TreeMap属性"></a>TreeMap属性</h2><pre><code>// 比较器
+private final Comparator&lt;? super K&gt; comparator;
+
+// 红黑树根节点
+private transient Entry&lt;K,V&gt; root = null;
+
+// 集合元素数量
+private transient int size = 0;
+
+// &quot;fail-fast&quot;集合修改记录
+private transient int modCount = 0;
+</code></pre><p>　TreeMap的本质是R-B Tree(红黑树)，它包含几个重要的成员变量： root, size, comparator。</p>
+<p>　root是红黑数的根节点。它是Entry类型，Entry是红黑数的节点，它包含了红黑数的6个基本组成成分：key(键)、value(值)、left(左孩子)、right(右孩子)、parent(父节点)、color(颜色)。</p>
+<ul>
+<li>Entry节点根据key进行排序，Entry节点包含的内容为value。</li>
+<li>红黑数排序时，根据Entry中的key进行排序；</li>
+<li>Entry中的key比较大小是根据比较器comparator来进行判断的。<br>size是红黑数中节点的个数。</li>
+</ul>
+<p>　Entry是树的节点类，我们来看一下Entry的定义：</p>
+<pre><code>static final class Entry&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
+       K key;
+        V value;
+        // 左孩子节点
+        Entry&lt;K,V&gt; left = null;
+        // 右孩子节点
+        Entry&lt;K,V&gt; right = null;
+        // 父节点
+        Entry&lt;K,V&gt; parent;
+        // 红黑树用来表示节点颜色的属性，默认为黑色
+        boolean color = BLACK;
+
+        /**
+         * 用key，value和父节点构造一个Entry，默认为黑色
+         */
+        Entry(K key, V value, Entry&lt;K,V&gt; parent) {
+            this.key = key;
+            this.value = value;
+            this.parent = parent;
+        }
+
+        public K getKey() {
+            return key ;
+        }
+
+        public V getValue() {
+            return value ;
+        }
+
+        public V setValue(V value) {
+            V oldValue = this.value ;
+            this.value = value;
+            return oldValue;
+        }
+
+        public boolean equals(Object o) {
+            if (!(o instanceof Map.Entry))
+                return false;
+            Map.Entry&lt;?,?&gt; e = (Map.Entry&lt;?,?&gt;)o;
+
+            return valEquals( key,e.getKey()) &amp;&amp; valEquals( value,e.getValue());
+        }
+
+        public int hashCode() {
+            int keyHash = (key ==null ? 0 : key.hashCode());
+            int valueHash = (value ==null ? 0 : value.hashCode());
+            return keyHash ^ valueHash;
+        }
+
+        public String toString() {
+            return key + &quot;=&quot; + value;
+        }
+    }
+</code></pre><p>　Entry类主要是定义了树的孩子和父亲节点引用，和红黑颜色属性，并对equals和hashCode进行重写，以利于比较是否相等。</p>
+<h2 id="HashMap构造函数"><a href="#HashMap构造函数" class="headerlink" title="HashMap构造函数"></a>HashMap构造函数</h2><pre><code>/**
+ * 默认构造方法，comparator为空，代表使用key的自然顺序来维持TreeMap的顺序，这里要求key必须实现Comparable接口
+ */
+public TreeMap() {
+    comparator = null;
+}
+
+/**
+ * 用指定的比较器构造一个TreeMap
+ */
+public TreeMap(Comparator&lt;? super K&gt; comparator) {
+    this.comparator = comparator;
+}
+
+/**
+ * 构造一个指定map的TreeMap，同样比较器comparator为空，使用key的自然顺序排序
+ */
+public TreeMap(Map&lt;? extends K, ? extends V&gt; m) {
+    comparator = null;
+    putAll(m);
+}
+
+/**
+ * 构造一个指定SortedMap的TreeMap，根据SortedMap的比较器来来维持TreeMap的顺序
+ */
+public TreeMap(SortedMap&lt;K, ? extends V&gt; m) {
+    comparator = m.comparator();
+    try {
+        buildFromSorted(m.size(), m.entrySet().iterator(), null, null);
+    } catch (java.io.IOException cannotHappen) {
+    } catch (ClassNotFoundException cannotHappen) {
+    }
+}
+</code></pre><p>　从构造方法中可以看出，要创建一个红黑树实现的TreeMap必须要有一个用于比较大小的比较器，因为只有能够比较大小才能实现红黑树的左孩子&lt;树根&lt;右孩子的特点。</p>
+<h1 id="TreeMap遍历方式"><a href="#TreeMap遍历方式" class="headerlink" title="TreeMap遍历方式"></a>TreeMap遍历方式</h1><h2 id="遍历TreeMap的键值对"><a href="#遍历TreeMap的键值对" class="headerlink" title="遍历TreeMap的键值对"></a>遍历TreeMap的键值对</h2><p>第一步：根据entrySet()获取TreeMap的“键值对”的Set集合。<br>第二步：通过Iterator迭代器遍历“第一步”得到的集合。</p>
+<pre><code>// 假设map是TreeMap对象
+// map中的key是String类型，value是Integer类型
+Integer integ = null;
+Iterator iter = map.entrySet().iterator();
+while(iter.hasNext()) {
+    Map.Entry entry = (Map.Entry)iter.next();
+    // 获取key
+    key = (String)entry.getKey();
+        // 获取value
+    integ = (Integer)entry.getValue();
+}
+</code></pre><h2 id="遍历TreeMap的键"><a href="#遍历TreeMap的键" class="headerlink" title="遍历TreeMap的键"></a>遍历TreeMap的键</h2><p>第一步：根据keySet()获取TreeMap的“键”的Set集合。<br>第二步：通过Iterator迭代器遍历“第一步”得到的集合。  </p>
+<pre><code>// 假设map是TreeMap对象
+// map中的key是String类型，value是Integer类型
+String key = null;
+Integer integ = null;
+Iterator iter = map.keySet().iterator();
+while (iter.hasNext()) {
+        // 获取key
+    key = (String)iter.next();
+        // 根据key，获取value
+    integ = (Integer)map.get(key);
+}
+</code></pre><h2 id="遍历TreeMap的值"><a href="#遍历TreeMap的值" class="headerlink" title="遍历TreeMap的值"></a>遍历TreeMap的值</h2><p>第一步：根据value()获取TreeMap的“值”的集合。<br>第二步：通过Iterator迭代器遍历“第一步”得到的集合。</p>
+<pre><code>// 假设map是TreeMap对象
+// map中的key是String类型，value是Integer类型
+Integer value = null;
+Collection c = map.values();
+Iterator iter= c.iterator();
+while (iter.hasNext()) {
+    value = (Integer)iter.next();
+}
+</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>　<strong>耗时4天的源代码分析工作终于搞定了，又更加深入的理解了红黑树的插入和删除，但是情况太多，必须画图来理解思想，看源代码真的很棒，比我高出一大截，慢慢学习吧，有句话说的好，中国人很多，但是平庸的人更多，每天坚持一点，一定会成功的。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TreeMap/" rel="tag"># TreeMap</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/26/TreeMap源码学习 (二) /" rel="next" title="TreeMap源码学习(二)">
+                <i class="fa fa-chevron-left"></i> TreeMap源码学习(二)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="冯佳欣" />
+          <p class="site-author-name" itemprop="name">冯佳欣</p>
+          <p class="site-description motion-element" itemprop="description">记录一点一滴</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TreeMap基本知识"><span class="nav-text">TreeMap基本知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap定义"><span class="nav-text">TreeMap定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap属性"><span class="nav-text">TreeMap属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap构造函数"><span class="nav-text">HashMap构造函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TreeMap遍历方式"><span class="nav-text">TreeMap遍历方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历TreeMap的键值对"><span class="nav-text">遍历TreeMap的键值对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历TreeMap的键"><span class="nav-text">遍历TreeMap的键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历TreeMap的值"><span class="nav-text">遍历TreeMap的值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冯佳欣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

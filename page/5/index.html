@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/finally块中的代码什么时候被执行/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/02/Java中字符串与存储的机制/" itemprop="url">
-                  Java中字符串与存储的机制
+                <a class="post-title-link" href="/2017/02/03/finally块中的代码什么时候被执行/" itemprop="url">
+                  finally块中的代码什么时候被执行
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T18:29:28+08:00">
-                2017-02-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T18:08:53+08:00">
+                2017-02-03
               </time>
             
 
@@ -353,55 +353,100 @@
       
         
           
-            <p><strong>今天准备总结一下String对象的存储机制</strong></p>
-<p>　字符串的声明与初始化有如下两种情况：</p>
-<ol>
-<li>String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象</li>
-<li>String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后s2指向字符串常量池中”abc”对象的首地址。</li>
-</ol>
-<p>　具体来说：</p>
-<pre><code>String s1 = &quot;abc&quot;//把&quot;abc&quot;放到常量池中，在编译时产生
-String s2 = &quot;ab&quot;+&quot;c&quot;//把&quot;ab&quot;+&quot;c&quot;转换成字符串常量&quot;abc&quot;放到常量区中
-String s3 = new String(&quot;abc&quot;)//在运行时把&quot;abc&quot;放到堆里面
-</code></pre><ul>
-<li>String对象的intern()方法会得到字符串对象在常量池中对应的版本的引用（如果常量池中有一个字符串与String对象的equals结果是true），如果常量池中没有对应的字符串，则该字符串将被添加到常量池中，然后返回常量池中字符串的引用</li>
-<li>字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象</li>
-</ul>
-<hr>
-<p>　在明白了以上两点，那么我们来做两道笔试题：</p>
-<ol>
-<li>什么情况下用+运算符进行字符串连接比调用StringBuffer/StringBuilder对象的append方法连接字符串性能更好？<br>StringBuffer对象适用于字符串经常操作，不产生而额外内存，而String对象不可变，一旦创建不能修改，但是操作简单，效率高，所以适用于字符串较少时，操作次数少的情况下。  </li>
-<li><p>请说出下面程序的输出。</p>
-<pre><code>class StringEqualTest {
+            <p>　在上篇文章明白异常处理机制后，我们知道一般捕获异常用try/catch,一般情况下会有finally块，那么今天我就整理一下finally代码块的相关知识。<br>　那么我们提出一个问题：try{}里有一个return语句，那么紧跟try的finally{}的代码是否会被执行？如果会的话，什么时候被执行，在return前还是return后？<br>　解答：在Java语言的异常处理中，<strong>finally块的作用就是为了保证无论出现什么情况，finally中的代码一定会被执行</strong>，因此任何语句要执行都只能在return前执行（<strong>除非碰到exit函数</strong>），因此finally块中的代码在return前执行。此外，如果try-finally或catch-finally中都有return,那么<strong>finally块中的return语句将会覆盖别处的return语句</strong>，最终返回到调用者那里的是finally中的return值。<br>　代码示例如下：</p>
+<pre><code>public class TestFinally1 {
+
+    public static int testfinally(){
+        try{
+            return 1;
+        }catch(Exception e){
+            return 0;
+        }finally{
+            System.out.println(&quot;execute finally&quot;);
+        }
+    }
+
     public static void main(String[] args) {
-        String s1 = &quot;Programming&quot;;
-        String s2 = new String(&quot;Programming&quot;);
-        String s3 = &quot;Program&quot;;
-        String s4 = &quot;ming&quot;;
-        String s5 = &quot;Program&quot; + &quot;ming&quot;;
-        String s6 = s3 + s4;
-        System.out.println(s1 == s2);
-        System.out.println(s1 == s5);
-        System.out.println(s1 == s6);
-        System.out.println(s1 == s6.intern());
-        System.out.println(s2 == s2.intern());
+
+        int result = testfinally();
+        System.out.println(result);
+
+    }
+
+}
+
+结果运行如下：
+execute finally
+1
+</code></pre><p>　从上面的例子中可以看出，在执行return语句之前确实执行了finally块中的代码；那么如果在finally块中放置return语句，会不会覆盖呢？<br>　代码示例如下：</p>
+<pre><code>public static int testfinally2(){
+    try {
+        return 1;
+    } catch (Exception e) {
+        return 0;
+    }finally{
+        System.out.println(&quot;execute finally2&quot;);
+        return 3;
     }
 }
-</code></pre></li>
-</ol>
-<pre><code>**结果为**
 
-    System.out.println(s1==s2);//false
-    System.out.println(s1==s5);//true
-    System.out.println(s1==s6);//false
-    System.out.println(s1==s6.intern());//true
-    System.out.println(s2==s2.intern());//false
-</code></pre><p>　　<strong>解释</strong>：字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象；</p>
-<pre><code>String s6 = s3+s4//等价于
-StringBuilder temp = s3;
-temp.append(s4);
-String s6 = temp.toString();
-</code></pre><p>　所以S6是创建一个新的StringBuilder对象的toString()方法处理成String对象，因此s1==s6为false。</p>
+public static void main(String[] args) {
+
+    int result = testfinally2();
+    System.out.println(result);
+
+}
+
+结果运行如下：
+execute finally2
+3
+</code></pre><p>　<strong>从上面的例子中可以看出，当finally块中有return语句时，将会覆盖函数中其它return语句；此外，由于在一个方法体中内部定义的变量都存储在栈中，在这个函数结束后，其对应的栈会被回收，此时在其方法体中定义的变量将不存在了，因此return在返回时不是直接返回变量的值，而是复制一份，然后返回。因此，对于基本类型的数据，在finally块中改变return的值对返回值没有任何影响，而对引用类型的数据会有影响。</strong><br>　代码示例如下：</p>
+<pre><code>public class TestReturn {
+
+    public static int testFinally1(){
+        int result =1;
+        try{
+            result =2;
+            return result;
+        }catch(Exception e){
+            return 0;
+        }finally{
+            result = 3;
+            System.out.println(&quot;excuate testFinally1&quot;);
+        }
+    }
+
+    public static StringBuffer testFinally2(){
+        StringBuffer s = new StringBuffer(&quot;hello&quot;);
+        try{
+            return s;
+        }catch(Exception e){
+            return null;
+        }finally{
+            s.append(&quot; world&quot;);
+            System.out.println(&quot;excuate testFinally2&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(testFinally1());
+        System.out.println(testFinally2());
+    }
+
+}
+
+结果运行如下：
+excuate testFinally1
+2
+excuate testFinally2
+hello world
+</code></pre><p>　解析：程序在执行return时会首先将返回值存储在一个指定的位置，其次去执行finally块，最后在返回。<br>　在testFinally1()方法调用return前，先把result的值1存储在一个指定的位置，然后再去执行finally块中的代码，此时修改result的值将不会影响到程序的返回结果。<br>　testFinally2()中，在调用return前先把s存储在一个指定的位置，由于s为引用类型，因此在finally块中修改s将会修改程序的返回结果。</p>
+<hr>
+<p>　写了这么多，总结的也应该比较到位，那我在网上找一道相关的面试题进行解答。<br>　<strong>出现在Java程序中的finally块是不是一定会被执行？</strong><br>　答:不一定，以下两种情况都不会。  </p>
+<ol>
+<li>当程序在进入try{}语句块之前就出现异常，会直接结束。例如在try{}之前有语句int i= 9/0;那么会直接抛出异常，导致没有执行try{}中的代码。  </li>
+<li>当程序在try{}中强制退出也不会执行。例如在try{System.exit(0)}。</li>
+</ol>
 
           
         
@@ -440,7 +485,7 @@ String s6 = temp.toString();
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中i++和++i的区别和理解/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/Java异常机制及相关问题/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -465,8 +510,8 @@ String s6 = temp.toString();
             
               
                 
-                <a class="post-title-link" href="/2017/02/02/Java中i++和++i的区别和理解/" itemprop="url">
-                  Java中i++和++i的区别和理解
+                <a class="post-title-link" href="/2017/02/03/Java异常机制及相关问题/" itemprop="url">
+                  Java异常机制及原理
                 </a>
               
             
@@ -482,7 +527,231 @@ String s6 = temp.toString();
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T17:31:43+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T11:48:39+08:00">
+                2017-02-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　<strong>编写看这么多Java代码，有时候需要对可能出现的异常进行捕捉，有时候直接抛出，懵懵懂懂，那么今天重新看一遍关于Java异常处理机制，进行系统的总结。</strong></p>
+<h2 id="1、异常机制概述"><a href="#1、异常机制概述" class="headerlink" title="1、异常机制概述"></a>1、异常机制概述</h2><p>　异常机制是指当程序出现错误后，程序如何处理。具体来说，异常机制提供了程序退出的安全通道。当出现错误后，程序执行的流程发生改变，程序的控制权转移到异常处理器。</p>
+<h2 id="2-、异常处理的流程"><a href="#2-、异常处理的流程" class="headerlink" title="2 、异常处理的流程"></a>2 、异常处理的流程</h2><p>　当程序中抛出一个异常后，程序从程序中导致异常的代码处跳出，java虚拟机检测寻找和try关键字匹配的处理该异常的catch块，如果找到，将控制权交到catch块中的代码，然后继续往下执行程序，try块中发生异常的代码不会被重新执行。如果没有找到处理该异常的catch块，在所有的finally块代码被执行和当前线程的所属的ThreadGroup的uncaughtException方法被调用后，遇到异常的当前线程被中止。</p>
+<h2 id="3、异常的结构"><a href="#3、异常的结构" class="headerlink" title="3、异常的结构"></a>3、异常的结构</h2><p>　异常的继承结构：Throwable为基类，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception。Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。<br><img src="http://i.imgur.com/tQtFlXu.jpg" alt=""></p>
+<h2 id="４、Error异常"><a href="#４、Error异常" class="headerlink" title="４、Error异常"></a>４、Error异常</h2><p>　Error表示程序在运行期间出现了十分严重、不可恢复的错误，在这种情况下应用程序只能中止运行，例如JAVA 虚拟机出现错误。Error是一种unchecked Exception，编译器不会检查Error是否被处理，在程序中不用捕获Error类型的异常。一般情况下，在程序中也不应该抛出Error类型的异常。</p>
+<h2 id="5、RuntimeException异常"><a href="#5、RuntimeException异常" class="headerlink" title="5、RuntimeException异常"></a>5、RuntimeException异常</h2><p>　Exception异常包括RuntimeException异常和其他非RuntimeException的异常。<br>RuntimeException 是一种Unchecked Exception，即表示编译器不会检查程序是否对RuntimeException作了处理，在程序中不必捕获RuntimException类型的异常，也不必在方法体声明抛出RuntimeException类。RuntimeException发生的时候，表示程序中出现了编程错误，所以应该找出错误修改程序，而不是去捕获RuntimeException。</p>
+<p>　出现RuntimeException后，系统会把异常一直往上层抛出，知道遇到处理代码为止。若没有处理块，则抛到最上层；如果是多线程就用Thread.run()方法抛出，如果是单线程，就用main()方法抛出。抛出之后，如果是线程，那么这个线程退出了。如果是主程序抛出的异常，那么整个程序就退出了。</p>
+<h2 id="6、Checked-Exception异常"><a href="#6、Checked-Exception异常" class="headerlink" title="6、Checked Exception异常"></a>6、Checked Exception异常</h2><p>　Checked Exception异常，这也是在编程中使用最多的Exception，所有继承自Exception并且不是RuntimeException的异常都是checked Exception，上图中的IOException和ClassNotFoundException。JAVA 语言规定必须对checked Exception作处理，编译器会对此作检查，要么在方法体中声明抛出checked Exception，要么使用catch语句捕获checked Exception进行处理，不然不能通过编译。</p>
+<h2 id="7、应该在声明方法抛出异常还是在方法中捕获异常？"><a href="#7、应该在声明方法抛出异常还是在方法中捕获异常？" class="headerlink" title="7、应该在声明方法抛出异常还是在方法中捕获异常？"></a>7、应该在声明方法抛出异常还是在方法中捕获异常？</h2><p>　<strong>处理原则</strong>：捕捉并处理哪些知道如何处理的异常，而传递哪些不知道如何处理的异常。</p>
+<h2 id="8、使用finally块释放资源"><a href="#8、使用finally块释放资源" class="headerlink" title="8、使用finally块释放资源"></a>8、使用finally块释放资源</h2><p>　finally关键字保证无论程序使用任何方式离开try块，finally中的语句都会被执行。在以下三种情况下会进入finally块：</p>
+<ol>
+<li>try块中的代码正常执行完毕。</li>
+<li>在try块中抛出异常。</li>
+<li>在try块中执行return、break、continue。</li>
+</ol>
+<p>　因此，当你需要一个地方来执行在任何情况下都必须执行的代码时，就可以将这些代码放入finally块中。当你的程序中使用了外界资源，如数据库连接，文件等，必须将释放这些资源的代码写入finally块中。</p>
+<p>　必须注意的是：在finally块中不能抛出异常。JAVA异常处理机制保证无论在任何情况下必须先执行finally块然后再离开try块，因此在try块中发生异常的时候，JAVA虚拟机先转到finally块执行finally块中的代码，finally块执行完毕后，再向外抛出异常。如果在finally块中抛出异常，try块捕捉的异常就不能抛出，外部捕捉到的异常就是finally块中的异常信息，而try块中发生的真正的异常堆栈信息则丢失了。</p>
+<p>　<strong>示例代码如下：</strong></p>
+<pre><code>Connection  con = null;
+try
+{
+    con = dataSource.getConnection();
+    ……
+}
+catch(SQLException e)
+{
+    ……
+    throw e;//进行一些处理后再将数据库异常抛出给调用者处理
+}
+finally
+{
+    try
+    {
+        con.close();
+    }
+    catch(SQLException e)
+{
+    e.printStackTrace();
+    ……
+}
+}
+</code></pre><p>　<strong>运行程序后，调用者得到的信息如下：</strong></p>
+<p>　java.lang.NullPointerException<br>　at myPackage.MyClass.method1(methodl.java:266)<br>　而不是我们期望得到的数据库异常。这是因为这里的con是null的关系，在finally语句中抛出了NullPointerException，在finally块中增加对con是否为null的判断可以避免产生这种情况。</p>
+<h2 id="9、在使用异常处理时，还需要注意以下几个问题："><a href="#9、在使用异常处理时，还需要注意以下几个问题：" class="headerlink" title="9、在使用异常处理时，还需要注意以下几个问题："></a>9、在使用异常处理时，还需要注意以下几个问题：</h2><ol>
+<li>Java异常用到了多态的概念，在进行异常捕捉时，先捕捉子类，再捕捉基类的异常信息，否则，捕获子类的代码块永远不会执行。</li>
+<li>今早抛出异常，同时对捕捉的异常进行处理；而对于运行时异常，根本不需要理会。</li>
+<li>可以根据实际需求自定义异常类，只要继承Exception类即可。</li>
+<li>异常能处理就处理，不能处理就抛出。对于一般异常，如果不能进行有效的处理，最好转换为运行时异常抛出，对于最终没有处理的异常，JVM会进行处理。</li>
+</ol>
+<h2 id="10、在声明方法时候抛出异常"><a href="#10、在声明方法时候抛出异常" class="headerlink" title="10、在声明方法时候抛出异常"></a>10、在声明方法时候抛出异常</h2><p>　语法：throws（略）</p>
+<p>　<strong>为什么要在声明方法抛出异常？</strong></p>
+<p>　方法是否抛出异常与方法返回值的类型一样重要。假设方法抛出异常却没有声明该方法将抛出异常，那么客户程序员可以调用这个方法而且不用编写处理异常的代码。那么，一旦出现异常，那么这个异常就没有合适的异常控制器来解决。</p>
+<p>　<strong>为什么抛出的异常一定是已检查异常？</strong></p>
+<p>　RuntimeException与Error可以在任何代码中产生，它们不需要由程序员显示的抛出，一旦出现错误，那么相应的异常会被自动抛出。遇到Error，程序员一般是无能为力的；遇到RuntimeException，那么一定是程序存在逻辑错误，要对程序进行修改；只有已检查异常才是程序员所关心的，程序应该且仅应该抛出或处理已检查异常。而已检查异常是由程序员抛出的，这分为两种情况：客户程序员调用会抛出异常的库函数；客户程序员自己使用throw语句抛出异常。</p>
+<p>　<strong>注意：</strong><br>　覆盖父类某方法的子类方法不能抛出比父类方法更多的异常，所以，有时设计父类的方法时会声明抛出异常，但实际的实现方法的代码却并不抛出异常，这样做的目的就是为了方便子类方法覆盖父类方法时可以抛出异常。</p>
+<h2 id="11、在方法中如何抛出异常"><a href="#11、在方法中如何抛出异常" class="headerlink" title="11、在方法中如何抛出异常"></a>11、在方法中如何抛出异常</h2><p>　语法：throw（略）</p>
+<p>　<strong>抛出什么异常？</strong></p>
+<p>　对于一个异常对象，真正有用的信息是异常的对象类型，而异常对象本身毫无意义。比如一个异常对象的类型是ClassCastException，那么这个类名就是唯一有用的信息。所以，在选择抛出什么异常时，最关键的就是选择异常的类名能够明确说明异常情况的类。</p>
+<p>　异常对象通常有两种构造函数：一种是无参数的构造函数；另一种是带一个字符串的构造函数，这个字符串将作为这个异常对象除了类型名以外的额外说明。</p>
+<hr>
+<p>　<strong>那么总结了这么多，我们做几道题进行热身：</strong></p>
+<p><strong>1、Error和Exception有什么区别</strong></p>
+<p>　答：Error表示系统级的错误和程序不必处理的异常，是恢复不是不可能但很困难的情况下的一种严重问题；比如内存溢出，不可能指望程序能处理这样的情况；Exception表示需要捕捉或者需要程序进行处理的异常，是一种设计或实现问题；也就是说，它表示如果程序运行正常，从不会发生的情况。</p>
+<p><strong>2、列出一些你常见的运行时异常？</strong></p>
+<ul>
+<li>ArithmeticException（算术异常） </li>
+<li>ClassCastException （类转换异常） </li>
+<li>IllegalArgumentException （非法参数异常） </li>
+<li>IndexOutOfBoundsException （下标越界异常） </li>
+<li>NullPointerException （空指针异常） </li>
+<li>SecurityException （安全异常）</li>
+</ul>
+<p><strong>3、运行时异常与受检异常有何异同？</strong></p>
+<p>　答：异常表示程序运行过程中可能出现的非正常状态，运行时异常表示虚拟机的通常操作中可能遇到的异常，是一种常见运行错误，只要程序设计得没有问题通常就不会发生。受检异常跟程序运行的上下文环境有关，即使程序设计无误，仍然可能因使用的问题而引发。Java编译器要求方法必须声明抛出可能发生的受检异常，但是并不要求必须声明抛出未被捕获的运行时异常。</p>
+<p><strong>4、TimedOutException不是一个RuntimeException，下面的那些选项载入程序中，使程序可以正常运行？</strong></p>
+<pre><code>A public void final()
+B public void final() throws Exception
+C public void final() throws TimedOutException
+D public void final() throw TimedOutException
+E public throw TimedOutException void final() 
+</code></pre><p>　答案：BC</p>
+<p>　<strong>试题分析：</strong></p>
+<p>　如果一个程序在运行时候有异常发生，而这个异常又不是RuntimeException或者Error，那么程序必须对这个异常进行捕获处理或者声明抛出该异常。捕获异常使用try-catch-finally，而声明异常则是在声明方法的同时将会发生的异常进行声明，使用关键字throws。</p>
+<p>　A项没有使用关键字声明异常，所以是错误的。由于Exception是所有异常的父类，当然也可以代表TimedOutException，所以B项是正确的。C项符合声明异常的格式，是正确的。在D项中，throw是抛出异常，而不是声明异常，关键字使用错误，所以D项是错的。E项的语法格式是错误的。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/如何实现对象的clone/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/如何实现对象的clone/" itemprop="url">
+                  如何实现对象的clone
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T21:38:30+08:00">
                 2017-02-02
               </time>
             
@@ -542,56 +811,153 @@ String s6 = temp.toString();
       
         
           
-            <p>　今天在做Java题时碰到了关于i++的问题，题目是这样的：</p>
-<pre><code>public class Inc { 
-    public static void main(String[] args) { 
-       Inc inc = new Inc(); 
-       int i = 0; 
-       inc.fermin(i); 
-       i= i ++; 
-       System.out.println(i);
+            <p>有两种方式：</p>
+<p>　1. 实现Cloneable接口并重写Object类中的clone()方法；<br>　Java中所有的类默认继承自Object类，而Object类提供了讴歌clone()方法，这个方法的作用是返回一个Object对象的复制，这个复制函数返回的是一个新的对象而不是一个引用，那么如何使用呢？代码如下：</p>
+<pre><code>class Obj implements Cloneable{
+    private int aInt =0;
+    public int getInt(){
+        return aInt;
+    }
 
-    } 
-    void fermin(int i){ 
-       i++; 
-    } 
+    public void setAInt(int int1){
+        aInt = int1;
+    }
+
+    public void changeInt(){
+        this.aInt =1;
+    }
+
+    public Object clone(){
+        Object o = null;
+        try {
+            o = (Object)super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
 }
-最终答案是0。
-</code></pre><p>　关于值传递我还是理解的，但是i=i++这个语句我又有点懵了，于是找了相关资料，总结就是JVM的机制所引起的，接下来我要详细介绍一下这方面知识，也算给自己一个交代。</p>
+public class TestRef {
+    public static void main(String[] args) {
+        Obj a = new Obj();
+        Obj b = (Obj) a.clone();
+        b.changeInt();
+        System.out.println(a.getInt());//0
+        System.out.println(b.getInt());//1
+
+    }
+}
+</code></pre><p>　2. 实现Serializable接口，通过对象的序列化和反序列化实现克隆，可以实现真正的深度克隆;代码如下：</p>
+<pre><code>import java.io.Serializable;
+public class Employee implements Serializable {
+    private static final long serialVersionUID = -6470090944414208496L;
+    private String name;
+    private int id;
+    transient private int salary;
+
+    @Override
+    public String toString(){
+        return &quot;Employee{name=&quot;+name+&quot;,id=&quot;+id+&quot;,salary=&quot;+salary+&quot;}&quot;;
+    }
+
+    //getter and setter methods
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+}
+</code></pre><p>　<strong>注意</strong>：static代笔类的静态成员，transient代表对象的临时数据，因此被声明为这两种类型的数据成员是不能够被序列化的。</p>
 <hr>
-<p>　<strong>jvm里面有两个存储区，一个是暂存区（是一个堆栈，以下称为堆栈），另一个是变量区。jvm会这样运行这条语句：</strong></p>
-<ol>
-<li>JVM把count值（其值是0）拷贝到临时变量区。 </li>
-<li>count值加1，这时候count的值是1。 </li>
-<li>返回临时变量区的值。</li>
-<li>返回值赋值给count，此时count值被重置成0。  </li>
-</ol>
-<p>　所以上题的i= i++应该是下面的过程</p>
-<pre><code>int i =0;
-temp = i;//temp 为临时变量
-i =i+1;//i =1
-i = temp //i =0
-</code></pre><p>　对于自增运算++j与j++，由于加一的执行顺序不同，所以Java中有中间缓存变量来储存其单个表达式的值，而j的自增自减的结果依然保留在原来的变量储存区。因为本体是j的值，而单个表达式的值是中间产生的一个临时变量值，是在整条计算表达式结束后就可以抛弃的值，所以用个临时中间缓存变量在放就可以了。</p>
-<p>　<strong>按字面理解就是i++ 等价于</strong></p>
-<pre><code>temp =i;//jvm把i的值拷贝到临时变量temp
-i =i+1;//i自加1
-返回临时变量temp的值0作为表达式i++/++i的值
-</code></pre><p>　感觉了解了Java的自增原理，那么我们在练习一道题：</p>
-<pre><code>int j = 0;
-j =++j + j++ +j++ + j++;
+<p>　现在我们假设需要把我们的对象写入文件，之后从相同的文件中将其反序列化，因此我们需要一些工具方法，通过使用ObjectInputStream和ObjectOutputStream来达到序列化的目的。</p>
+<pre><code>import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-最终结果为7，详细解答如下
+/**
+ * A simple class with generic serialize and deserialize method implementations
+ * 
+ * 
+ */
+public class SerializationUtil {
 
-j =j+1 =1;
-temp1 = j =1;
-temp2 = j =1;
-j = j+1 =2;
-temp3 = j = 2；
-j =j+1 =3;
-temp4 = j = 3;
-j = j+1 =4;
-j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
-</code></pre><p> <strong>总结</strong>：今天算是终于弄明白i++的原理了，有些问题一定要弄清楚，不能糊弄过去，加油！！！</p>
+    // deserialize to Object from given file
+    public static Object deserialize(String fileName) throws IOException,
+            ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(fileName);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object obj = ois.readObject();
+        ois.close();
+        return obj;
+    }
+
+    // serialize the given object and save it to file
+    public static void serialize(Object obj, String fileName)
+            throws IOException {
+        FileOutputStream fos = new FileOutputStream(fileName);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(obj);
+
+        fos.close();
+    }
+
+}
+</code></pre><p>　<strong>测试程序：</strong></p>
+<pre><code>import java.io.IOException;
+
+public class SerializationTest {
+
+    public static void main(String[] args) {
+        String fileName=&quot;employee.ser&quot;;
+        Employee emp = new Employee();
+        emp.setId(100);
+        emp.setName(&quot;Pankaj&quot;);
+        emp.setSalary(5000);
+
+        //serialize to file
+        try {
+            SerializationUtil.serialize(emp, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Employee empNew = null;
+        try {
+            empNew = (Employee) SerializationUtil.deserialize(fileName);
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(&quot;emp Object::&quot;+emp);
+        System.out.println(&quot;empNew Object::&quot;+empNew);
+    }
+
+}
+</code></pre><p>　运行以上测试程序，可以得到以下输出。</p>
+<pre><code>emp Object::Employee{name=Pankaj,id=100,salary=5000}
+empNew Object::Employee{name=Pankaj,id=100,salary=0}
+</code></pre><p>　<strong>由于salary是一个transient变量，它的值不会被存入文件中，因此也不会在新的对象中被恢复。类似的，静态变量的值也不会被序列化，因为他们是属于类而非对象的。</strong></p>
 
           
         
@@ -630,7 +996,7 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/01/基本操作/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -655,8 +1021,8 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
             
               
                 
-                <a class="post-title-link" href="/2017/02/01/基本操作/" itemprop="url">
-                  基本操作
+                <a class="post-title-link" href="/2017/02/02/hibernate如何提高性能和二级缓存的含义/" itemprop="url">
+                  hibernate如何提高性能和二级缓存的含义
                 </a>
               
             
@@ -672,8 +1038,8 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T19:51:36+08:00">
-                2017-02-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T20:37:04+08:00">
+                2017-02-02
               </time>
             
 
@@ -695,8 +1061,8 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/备忘录/" itemprop="url" rel="index">
-                    <span itemprop="name">备忘录</span>
+                  <a href="/categories/Web总结/" itemprop="url" rel="index">
+                    <span itemprop="name">Web总结</span>
                   </a>
                 </span>
 
@@ -732,236 +1098,20 @@ j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
       
         
           
-            <h2 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>hexo new &quot;postName&quot; #新建文章
-hexo generate #生成静态页面至public目录
-hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）
-hexo deploy #将.deploy目录部署到GitHub
-hexo help  # 查看帮助
-hexo version  #查看Hexo的版本
-</code></pre><h3 id="命令简写"><a href="#命令简写" class="headerlink" title="命令简写"></a>命令简写</h3><pre><code>hexo n == hexo new
-hexo g == hexo generate
-hexo s == hexo server
-hexo d == hexo deploy
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
-                  Java典型设计模式-观察者模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　<strong>观察者模式是类和类之间的关系，不涉及到继承。</strong></p>
+            <p>　之前编写了hibernate的一些相关代码，现在总结一些细节。<br><strong>问题： 在使用Hibernate时如何提高性能？</strong>  </p>
+<ol>
+<li>延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。  </li>
+<li>缓存技术。hibernate提供了一级缓存与二级缓存，合理的利用缓存有助于提高系统的性能，通过合理配置缓存的参数可以避免不合理的利用缓存导致内存的过度消耗降低系统的性能。  </li>
+<li>优化查询语句。<br>　说了这么多，那么什么是hibernate的二级缓存？<br>　<strong>缓存的目的</strong>是为了通过减少应用程序对物理数据源访问的次数来提高程序运行的效率，<strong>原理</strong>则是把当前或接下来一段时间可能会用到的数据保存在内存中，在使用时直接从内存中读取。</li>
+</ol>
 <hr>
-<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
-<pre><code>public interface Observer {  
-    public void update();  
-}
-
-public class Observer1 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer1 has received!&quot;);  
-    }  
-}
-
-public class Observer2 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer2 has received!&quot;);  
-    }  
-}
-
-public interface Subject {  
-    /*增加观察者*/  
-    public void add(Observer observer);  
-    /*删除观察者*/  
-    public void del(Observer observer);  
-    /*通知所有的观察者*/  
-    public void notifyObservers();  
-    /*自身的操作*/ 
-    public void operation();  
-}
-
-import java.util.Enumeration;
-import java.util.Vector;
-
-public abstract class AbstractSubject implements Subject {  
-
-    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
-    @Override 
-    public void add(Observer observer) {  
-        vector.add(observer);  
-    }  
-
-    @Override 
-    public void del(Observer observer) {  
-        vector.remove(observer);  
-    }  
-
-    @Override 
-    public void notifyObservers() {  
-        Enumeration&lt;Observer&gt; enumo = vector.elements();  
-        while(enumo.hasMoreElements()){  
-            enumo.nextElement().update();  
-        }  
-    }  
-}
-
-public class MySubject extends AbstractSubject {  
-
-    @Override 
-    public void operation() {  
-        System.out.println(&quot;update self!&quot;);  
-        notifyObservers();  
-    }  
-
-}
-
-public class ObserverTest {  
-    public static void main(String[] args) {  
-        Subject sub = new MySubject();  
-        sub.add(new Observer1());  
-        sub.add(new Observer2());  
-        sub.operation();  
-    }  
-}
-运行结果：
-update self!
-observer1 has received!
-observer2 has received!
-</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
+<p>　<strong>在hibernate中有一级缓存和二级缓存的概念，一级缓存由Session来管理，二级缓存由SessionFactory来管理，在使用时二级缓存可有可无，但是一级缓存必不可少。</strong><br>　一级缓存的使用场合如下：当使用session查询数据时，首先会在Session内部查找该对象是否存在，若存在，直接返回，否则，到数据库中区查询，并将查询结果缓存起来以便后期使用；缺点是当使用Session来表示一次会话中，它的生命周期较短，并且它是线程不安全的，不能够被多个线程共享，因此在实际使用中对效率的提升并不明显。<br>　二级缓存用来为Hibernate配置一种全局的缓存，以便实现多个线程和事物共享。在使用了二级缓存机制后，当查询数据时，会首先在内部缓存中去查找，如果不存在，接着在二级缓存中查找，最后才去数据库中查找，与一级缓存相比，二级缓存是独立于hibernate的软件部件，属于第三方的产品，hibernate3以后默认使用的产品是EhCache.<br>　二级缓存一般适用于以下几种情况：  </p>
+<ol>
+<li>数据量较小，如果数据量较大，缓存太多，大量消耗内存，造成内存资源短缺，从而降低系统的性能。  </li>
+<li>对数据的修改较少，如果进行大量的修改，就需要频繁的同步，也会影响系统的性能。  </li>
+<li>不会被大量的应用共享的数据，如果数据被大量线程或事物共享，多线程访问的同步机制会影响系统的性能。  </li>
+<li>不是很重要的数据，如果数据非常重要，对数据的准确性要求非常高，最好不要使用二级缓存。</li>
+</ol>
 
           
         
@@ -1000,7 +1150,7 @@ observer2 has received!
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-外观模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1025,8 +1175,8 @@ observer2 has received!
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-外观模式/" itemprop="url">
-                  Java典型设计模式-外观模式
+                <a class="post-title-link" href="/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/" itemprop="url">
+                  静态嵌套类(Static Nested Class)和内部类（Inner Class）的不同
                 </a>
               
             
@@ -1042,8 +1192,8 @@ observer2 has received!
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
-                2017-01-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:55:46+08:00">
+                2017-02-02
               </time>
             
 
@@ -1065,8 +1215,8 @@ observer2 has received!
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA设计模式</span>
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
                   </a>
                 </span>
 
@@ -1102,94 +1252,99 @@ observer2 has received!
       
         
           
-            <p>　最近在学习Tomcat,Tomcat中多处使用外观（门面）模式，那么今天系统学习一下外观模式，以便更好地学习Tomcat。</p>
-<hr>
-<p>　<strong>外观模式：要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行，外观模式提供一个更高层次的接口，使得子系统轻易使用。</strong><br>外观模式有以下两个角色：  </p>
-<ul>
-<li>外观角色：客户端可以调用该角色的方法，该角色知晓相关子系统的功能和责任；正常情况下，本角色会将所有从客户端发来的请求委派到相应的子系统，该角色没有实际的业务逻辑，只是一个委托类。</li>
-<li>子系统角色：可以同时有一个或多个子系统，每一个子系统都不是一个单独的类，而是一个类的集合。子系统不知道外观角色的存在，对于子系统而言，外观角色仅是另一个客户端。</li>
-</ul>
-<p>外观模式类图如下：<br><img src="http://i.imgur.com/bnRLavr.png" alt=""> </p>
-<p>外观模式的优点：</p>
-<ol>
-<li>减少系统的相互依赖，所有的依赖都是对Facade对象的依赖，与子系统无关。</li>
-<li>提高灵活性，不管子系统如何变化，只要不影响Facade对象，任何活动都是自由的。</li>
-<li>提高安全性，Facade为提供的方法，外界就无法访问，提高系统的安全性。</li>
-<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
-</ol>
-<p>外观模式的使用场景：</p>
-<ol>
-<li>为一个浮渣的模块或子系统提供一个供外界访问的接口。</li>
-<li>子系统相对独立，外界对子系统的访问只要黑箱操作即可。</li>
-<li>预防风险扩散，使用Facade进行访问操作控制。</li>
-</ol>
-<hr>
-<p>　<strong>使用外观模式模拟秘书为老板准备工作的过程：</strong></p>
-<p>　Airport.java：    </p>
-<pre><code>public class Airport {
-    public void bookTicket(String from,String to){
-        System.out.println(&quot;订购了从&quot;+from+&quot;到&quot;+to+&quot;的机票&quot;);
+            <p>　Static Nested Class是被声明为静态（static）的内部类，它可以不依赖于外部类实例被实例化。而通常的内部类需要在外部类实例化后才能实例化。</p>
+<p>　<strong>代码示例如下：</strong></p>
+<pre><code>/**
+ * 扑克类（一副扑克）
+ *
+ */
+public class Poker {
+    private static String[] suites = {&quot;黑桃&quot;, &quot;红桃&quot;, &quot;草花&quot;, &quot;方块&quot;};
+    private static int[] faces = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    private Card[] cards;
+    /**
+     * 构造器
+     * 
+     */
+    public Poker() {
+        cards = new Card[52];
+        for(int i = 0; i &lt; suites.length; i++) {
+            for(int j = 0; j &lt; faces.length; j++) {
+                cards[i * 13 + j] = new Card(suites[i], faces[j]);
+            }
+        }
+    }
+    /**
+     * 洗牌 （随机乱序）
+     * 
+     */
+    public void shuffle() {
+        for(int i = 0, len = cards.length; i &lt; len; i++) {
+            int index = (int) (Math.random() * len);
+            Card temp = cards[index];
+            cards[index] = cards[i];
+            cards[i] = temp;
+        }
+    }
+    /**
+     * 发牌
+     * @param index 发牌的位置
+     * 
+     */
+    public Card deal(int index) {
+        return cards[index];
+    }
+    /**
+     * 卡片类（一张扑克）
+     * [内部类]
+     *
+     */
+    public class Card {
+        private String suite;   // 花色
+        private int face;       // 点数
+        public Card(String suite, int face) {
+            this.suite = suite;
+            this.face = face;
+        }
+        @Override
+        public String toString() {
+            String faceStr = &quot;&quot;;
+            switch(face) {
+            case 1: faceStr = &quot;A&quot;; break;
+            case 11: faceStr = &quot;J&quot;; break;
+            case 12: faceStr = &quot;Q&quot;; break;
+            case 13: faceStr = &quot;K&quot;; break;
+            default: faceStr = String.valueOf(face);
+            }
+            return suite + faceStr;
+        }
     }
 }
-</code></pre><p>　Hotel.java：</p>
-<pre><code>public class Hotel {
-    public void reserve(int days){
-        System.out.println(&quot;订了&quot;+days+&quot;天的房间&quot;);
-    }
-}
-</code></pre><p>　Restaurant.java：</p>
-<pre><code>public class Restaurant {
-    public void reserve(int num){
-        System.out.println(&quot;定了一座&quot;+num+&quot;个人的酒席&quot;);
-    }
-}
-</code></pre><p>　Driver.java：</p>
-<pre><code>public class Driver {
-    public void drive(String to){
-        System.out.println(&quot;司机开车到&quot;+to);
-    }
-}
-</code></pre><p>　Secretary.java：</p>
-<pre><code>public class Secretary {
-    private Driver driver = new Driver();
-    private Hotel hotel = new Hotel();
-    private Restaurant res = new Restaurant();
-    private Airport air = new Airport();
+</code></pre><p>　测试代码如下：</p>
+<pre><code>class PokerTest {
+    public static void main(String[] args) {
+        Poker poker = new Poker();
+        poker.shuffle();                // 洗牌
+        Poker.Card c1 = poker.deal(0);  // 发第一张牌
+        // 对于非静态内部类Card
+        // 只有通过其外部类Poker对象才能创建Card对象
+        Poker.Card c2 = poker.new Card(&quot;红心&quot;, 1);    // 自己创建一张牌
 
-    //安排出差
-    public void trip(String to,int days){
-        air.bookTicket(&quot;青岛&quot;, to);
-        driver.drive(&quot;机场&quot;);
-        hotel.reserve(days);
-    }
-
-    //安排饭局
-    public void repast(int num){
-        res.reserve(num);
-        driver.drive(&quot;酒店&quot;);
+        System.out.println(c1);     // 洗牌后的第一张
+        System.out.println(c2);     // 打印: 红心A
     }
 }
-</code></pre><p>　Boss.java</p>
-<pre><code>public class Boss {
-    public static void main(String[] args){
-        Secretary se = new Secretary();
-        System.out.println(&quot;老板告诉秘书要去上海出差10天&quot;);
-        se.trip(&quot;上海&quot;, 10);
-        System.out.println(&quot;................&quot;);
-        System.out.println(&quot;老板告诉秘书邀请8个人吃饭&quot;);
-        se.repast(8);
+</code></pre><p>　<strong>面试题：下面的代码哪些地方会产生编译错误？</strong></p>
+<pre><code>class Outer {
+    class Inner {}
+    pｕblic static void foo() { new Inner(); }
+    public void bar() { new Inner(); }
+    public static void main(String[] args) {
+        new Inner();
     }
-
 }
-</code></pre><p>　程序运行结果：</p>
-<pre><code>老板告诉秘书要去上海出差10天
-订购了从青岛到上海的机票
-司机开车到机场
-订了10天的房间
-................
-老板告诉秘书邀请8个人吃饭
-定了一座8个人的酒席
-司机开车到酒店
+</code></pre><p>　解答：Java中非静态内部类对象的创建要依赖其外部类对象，上面的面试题中foo和main方法都是静态方法，静态方法中没有this，也就是说没有所谓的外部类对象，因此无法创建内部类对象，如果要在静态方法中创建内部类对象，可以这样做：</p>
+<pre><code>new Outer().new Inner();
 </code></pre>
           
         
@@ -1223,7 +1378,7 @@ observer2 has received!
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1266,7 +1421,7 @@ observer2 has received!
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1284,7 +1439,7 @@ observer2 has received!
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
