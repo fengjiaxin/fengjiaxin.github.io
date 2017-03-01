@@ -1443,20 +1443,25 @@ private void rotateRight(Entry&lt;K,V&gt; p) {
       
         
           
-            <p>前言</p>
-<p>今天来介绍下HashSet。前面，我们已经系统的对List和Map进行了学习。接下来，我们开始可以学习Set。相信经过Map的了解之后，学习Set会容易很多。毕竟，Set的实现类都是基于Map来实现的(HashSet是通过HashMap实现的)。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现</p>
-<p>正文</p>
-<p>对于HashSet而言，它是基于HashMap来实现的，底层采用HashMap来保存元素。所以如果对HashMap比较熟悉，那么HashSet是so easy!!</p>
-<p>HashSet简介</p>
-<p>HashSet定义</p>
-<p>public class HashSet<e><br>     extends AbstractSet<e><br>     implements Set<e>, Cloneable, java.io.Serializable<br>HashSet 是一个没有重复元素的集合。<br>它是由HashMap实现的，不保证元素的顺序，而且HashSet允许使用 null 元素。<br>HashSet是非同步的。如果多个线程同时访问一个哈希 set，而其中至少一个线程修改了该 set，那么它必须 保持外部同步。这通常是通过对自然封装该 set 的对象执行同步操作来完成的。如果不存在这样的对象，则应该使用 Collections.synchronizedSet 方法来“包装” set。最好在创建时完成这一操作，以防止对该 set 进行意外的不同步访问：</e></e></e></p>
-<p>Set s = Collections.synchronizedSet(new HashSet(…));<br>HashSet通过iterator()返回的迭代器是fail-fast的。</p>
-<p>HashSet属性</p>
-<p>// 底层使用HashMap来保存HashSet的元素<br>    private transient HashMap<e,object> map;<br>    // Dummy value to associate with an Object in the backing Map<br>    // 由于Set只使用到了HashMap的key，所以此处定义一个静态的常量Object类，来充当HashMap的value<br>    private static final Object PRESENT = new Object();<br>看到这里就明白了，和我们前面说的一样，HashSet是用HashMap来保存数据，而主要使用到的就是HashMap的key。</e,object></p>
-<p>看到private static final Object PRESENT = new Object();不知道你有没有一点疑问呢。这里使用一个静态的常量Object类来充当HashMap的value，既然这里map的value是没有意义的，为什么不直接使用null值来充当value呢？比如写成这样子private final Object PRESENT = null;我们都知道的是，Java首先将变量PRESENT分配在栈空间，而将new出来的Object分配到堆空间，这里的new Object()是占用堆内存的（一个空的Object对象占用8byte），而null值我们知道，是不会在堆空间分配内存的。那么想一想这里为什么不使用null值。想到什么吗，看一个异常类java.lang.NullPointerException， 噢买尬，这绝对是Java程序员的一个噩梦，这是所有Java程序猿都会遇到的一个异常，你看到这个异常你以为很好解决，但是有些时候也不是那么容易解决，Java号称没有指针，但是处处碰到NullPointerException。所以啊，为了从根源上避免NullPointerException的出现，浪费8个byte又怎么样，在下面的代码中我再也不会写这样的代码啦if (xxx == null) { … } else {….}，好爽。</p>
-<p>HashSet构造函数</p>
-<p>/**</p>
-<pre><code> * 使用HashMap的默认容量大小16和默认加载因子0.75初始化map，构造一个HashSet
+            <p>　今天学习一下HashSet,HashSet是通过HashMap实现的。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现  </p>
+<p><img src="jpg/HashSet/1.png" alt=""></p>
+<h1 id="HashSet定义"><a href="#HashSet定义" class="headerlink" title="HashSet定义"></a>HashSet定义</h1><pre><code>public class HashSet&lt;E&gt;
+     extends AbstractSet&lt;E&gt;
+     implements Set&lt;E&gt;, Cloneable, java.io.Serializable
+</code></pre><p>1.HashSet 是一个<strong>没有重复元素</strong>的集合。<br>2.由HashMap实现的，<strong>不保证元素的顺序</strong>，而且HashSet允许使用 null元素。<br>3.HashSet是<strong>非同步</strong>的。如果多个线程同时访问一个哈希set，而其中至少一个线程修改了该set，那么它必须保持外部同步。这通常是通过对自然封装该 set 的对象执行同步操作来完成的。如果不存在这样的对象，则应该使用<strong>Collections.synchronizedSet</strong>方法来“包装”set。  </p>
+<pre><code>Set s = Collections.synchronizedSet(new HashSet(...));
+</code></pre><p>4.HashSet通过iterator()返回的迭代器是<strong>fail-fast</strong>的。</p>
+<h1 id="HashSet属性"><a href="#HashSet属性" class="headerlink" title="HashSet属性"></a>HashSet属性</h1><pre><code>// 底层使用HashMap来保存HashSet的元素
+    private transient HashMap&lt;E,Object&gt; map;
+    // Dummy value to associate with an Object in the backing Map
+    // 由于Set只使用到了HashMap的key，所以此处定义一个静态的常量Object类，来充当HashMap的value
+    private static final Object PRESENT = new Object();
+</code></pre><p>　HashSet是用HashMap来保存数据，而主要使用到的就是HashMap的key。</p>
+<p>　看到private static final Object PRESENT = new Object();这里使用一个静态的常量Object类来充当HashMap的value。  </p>
+<p>　<strong>既然这里map的value是没有意义的，为什么不直接使用null值来充当value呢？</strong>  </p>
+<p>　Java首先将变量PRESENT分配在栈空间，而将new出来的Object分配到堆空间，这里的new Object()是占用堆内存的（一个空的Object对象占用8byte），而null值我们知道，是不会在堆空间分配内存的；从根源上避免NullPointerException的出现。</p>
+<h1 id="HashSet构造函数"><a href="#HashSet构造函数" class="headerlink" title="HashSet构造函数"></a>HashSet构造函数</h1><pre><code>/**
+ * 使用HashMap的默认容量大小16和默认加载因子0.75初始化map，构造一个HashSet
  */
 public HashSet() {
     map = new HashMap&lt;E,Object&gt;();
@@ -1490,12 +1495,12 @@ public HashSet( int initialCapacity) {
  */
 HashSet( int initialCapacity, float loadFactor, boolean dummy) {
     map = new LinkedHashMap&lt;E,Object&gt;(initialCapacity, loadFactor);
-</code></pre><p>}<br>从构造方法可以很轻松的看出，HashSet的底层是一个HashMap，理解了HashMap后，这里没什么可说的。只有最后一个构造方法有写区别，这里构造的是LinkedHashMap，该方法不对外公开，实际上是提供给LinkedHashSet使用的，而第三个参数dummy是无意义的，只是为了区分其他构造方法。</p>
-<p>API方法摘要</p>
-<p>HashSet源码解析(基于JDK1.6.0_45)</p>
-<p>增加和删除</p>
-<p>/**</p>
-<pre><code> * 利用HashMap的put方法实现add方法
+}
+</code></pre><p>　从构造方法可以很轻松的看出，HashSet的底层是一个HashMap，理解了HashMap后，这里没什么可说的。只有最后一个构造方法有写区别，这里构造的是LinkedHashMap，该方法不对外公开，实际上是提供给LinkedHashSet使用的，而第三个参数dummy是无意义的，只是为了区分其他构造方法。</p>
+<h1 id="API方法摘要"><a href="#API方法摘要" class="headerlink" title="API方法摘要"></a>API方法摘要</h1><p><img src="jpg/HashSet/3.png" alt=""></p>
+<h1 id="HashSet源码解析-基于JDK1-6-0-45"><a href="#HashSet源码解析-基于JDK1-6-0-45" class="headerlink" title="HashSet源码解析(基于JDK1.6.0_45)"></a>HashSet源码解析(基于JDK1.6.0_45)</h1><p><strong>增加和删除</strong></p>
+<pre><code>/**
+ * 利用HashMap的put方法实现add方法
  */
 public boolean add(E e) {
     return map .put(e, PRESENT)== null;
@@ -1545,9 +1550,10 @@ public boolean removeAll(Collection&lt;?&gt; c) {
         }
     }
     return modified;
-</code></pre><p>}<br>是否包含</p>
-<p>/**</p>
-<pre><code> * 利用HashMap的containsKey方法实现contains方法
+}
+</code></pre><p><strong>是否包含</strong></p>
+<pre><code>/**
+ * 利用HashMap的containsKey方法实现contains方法
  */
 public boolean contains(Object o) {
     return map .containsKey(o);
@@ -1564,10 +1570,11 @@ public boolean containsAll(Collection&lt;?&gt; c) {
        if (!contains(e.next()))
            return false;
     return true;
-</code></pre><p>}<br>由于HashMap基于hash表实现，hash表实现的容器最重要的一点就是可以快速存取，那么HashSet对于contains方法，利用HashMap的containsKey方法，效率是非常之快的。在我看来，这个方法也是HashSet最核心的卖点方法之一。</p>
-<p>容量检查</p>
-<p>/**</p>
-<pre><code> * Returns the number of elements in this set (its cardinality).
+}
+</code></pre><p>　由于HashMap基于hash表实现，hash表实现的容器最重要的一点就是可以快速存取，那么HashSet对于contains方法，利用HashMap的containsKey方法，效率是非常之快的。在我看来，这个方法也是HashSet最核心的卖点方法之一。</p>
+<p><strong>容量检查</strong></p>
+<pre><code>/**
+ * Returns the number of elements in this set (its cardinality).
  *
  * @return the number of elements in this set (its cardinality)
  */
@@ -1583,29 +1590,18 @@ public int size() {
 public boolean isEmpty() {
     return map .isEmpty();
 }
-</code></pre><p>HashSet遍历方式</p>
-<p>通过Iterator遍历HashSet</p>
-<p>第一步：根据iterator()获取HashSet的迭代器。<br>第二步：遍历迭代器获取各个元素。</p>
-<p>// 假设set是HashSet对象<br>for(Iterator iterator = set.iterator();<br>       iterator.hasNext(); ) {<br>    iterator.next();<br>}<br>通过for-each遍历HashSet</p>
-<p>第一步：根据toArray()获取HashSet的元素集合对应的数组。<br>第二步：遍历数组，获取各个元素。</p>
-<p>// 假设set是HashSet对象，并且set中元素是String类型<br>String[] arr = (String[])set.toArray(new String[0]);<br>for (String str:arr)<br>    System.out.printf(“for each : %s\n”, str);<br>HashSet示例</p>
-<p>下面我们通过实例学习如何使用HashSet</p>
-<p>import java.util.Iterator;<br>import java.util.HashSet;</p>
-<p>/*</p>
-<ul>
-<li>@desc HashSet常用API的使用。<br>*</li>
-<li>@author skywang<br>*/<br>public class HashSetTest {<br> public static void main(String[] args) {<pre><code>// HashSet常用API
-testHashSetAPIs() ;
-</code></pre> }<br> /*<ul>
-<li>HashSet除了iterator()和add()之外的其它常用API<br>*/<br>private static void testHashSetAPIs() {<br> // 新建HashSet<br> HashSet set = new HashSet();<br> // 将元素添加到Set中<br> set.add(“a”);<br> set.add(“b”);<br> set.add(“c”);<br> set.add(“d”);<br> set.add(“e”);<br> // 打印HashSet的实际大小<br> System.out.printf(“size : %d\n”, set.size());<br> // 判断HashSet是否包含某个值<br> System.out.printf(“HashSet contains a :%s\n”, set.contains(“a”));<br> System.out.printf(“HashSet contains g :%s\n”, set.contains(“g”));<br> // 删除HashSet中的“e”<br> set.remove(“e”);<br> // 将Set转换为数组<br> String[] arr = (String[])set.toArray(new String[0]);<br> for (String str:arr)<pre><code>System.out.printf(&quot;for each : %s\n&quot;, str);
-</code></pre> // 新建一个包含b、c、f的HashSet<br> HashSet otherset = new HashSet();<br> otherset.add(“b”);<br> otherset.add(“c”);<br> otherset.add(“f”);<br> // 克隆一个removeset，内容和set一模一样<br> HashSet removeset = (HashSet)set.clone();<br> // 删除“removeset中，属于otherSet的元素”<br> removeset.removeAll(otherset);<br> // 打印removeset<br> System.out.printf(“removeset : %s\n”, removeset);<br> // 克隆一个retainset，内容和set一模一样<br> HashSet retainset = (HashSet)set.clone();<br> // 保留“retainset中，属于otherSet的元素”<br> retainset.retainAll(otherset);<br> // 打印retainset<br> System.out.printf(“retainset : %s\n”, retainset);<br> // 遍历HashSet<br> for(Iterator iterator = set.iterator();iterator.hasNext();) <pre><code>System.out.printf(&quot;iterator : %s\n&quot;, iterator.next());
-</code></pre> // 清空HashSet<br> set.clear();<br> // 输出HashSet是否为空<br> System.out.printf(“%s\n”, set.isEmpty()?”set is empty”:”set is not empty”);<br>}</li>
-</ul>
-</li>
-</ul>
-<p>}<br>运行结果：</p>
-<p>size : 5<br>HashSet contains a :true<br>HashSet contains g :false<br>for each : d<br>for each : b<br>for each : c<br>for each : a<br>removeset : [d, a]<br>retainset : [b, c]<br>iterator : d<br>iterator : b<br>iterator : c<br>iterator : a<br>set is empty<br>总结</p>
-<p>HashSet和HashMap、Hashtable的区别</p>
+</code></pre><h1 id="HashSet遍历方式"><a href="#HashSet遍历方式" class="headerlink" title="HashSet遍历方式"></a>HashSet遍历方式</h1><h2 id="通过Iterator遍历HashSet"><a href="#通过Iterator遍历HashSet" class="headerlink" title="通过Iterator遍历HashSet"></a>通过Iterator遍历HashSet</h2><p>1.根据iterator()获取HashSet的迭代器。<br>2.遍历迭代器获取各个元素。  </p>
+<pre><code>// 假设set是HashSet对象
+for(Iterator iterator = set.iterator();
+       iterator.hasNext(); ) { 
+    iterator.next();
+}
+</code></pre><h2 id="通过for-each遍历HashSet"><a href="#通过for-each遍历HashSet" class="headerlink" title="通过for-each遍历HashSet"></a>通过for-each遍历HashSet</h2><p>1.根据toArray()获取HashSet的元素集合对应的数组。<br>2.遍历数组，获取各个元素。  </p>
+<pre><code>// 假设set是HashSet对象，并且set中元素是String类型
+String[] arr = (String[])set.toArray(new String[0]);
+for (String str:arr)
+    System.out.printf(&quot;for each : %s\n&quot;, str);
+</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>　<strong>HashSet和HashMap、Hashtable的区别</strong><br><img src="jpg/HashSet/2.png" alt=""></p>
 
           
         
@@ -1746,49 +1742,101 @@ testHashSetAPIs() ;
       
         
           
-            <p>今天就来分析一下Java中的LinkedList源代码，看看Java中的代码是如何编写的。</p>
-<p>前言</p>
-<p>今天来介绍下LinkedList，在集合框架整体框架一章中，我们介绍了List接口，LinkedList与ArrayList一样实现List接口，只是ArrayList是List接口的大小可变数组的实现，LinkedList是List接口链表的实现。基于链表实现的方式使得LinkedList在插入和删除时更优于ArrayList，而随机访问则比ArrayList逊色些。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现</p>
-<p>正文</p>
-<p>LinkedList是基于链表结构的一种List，在分析LinkedList源码前有必要对链表结构进行说明。</p>
-<p>1.链表的概念<br>链表是由一系列非连续的节点组成的存储结构，简单分下类的话，链表又分为单向链表和双向链表，而单向/双向链表又可以分为循环链表和非循环链表，下面简单就这四种链表进行图解说明。</p>
-<p>1.1.单向链表<br>单向链表就是通过每个结点的指针指向下一个结点从而链接起来的结构，最后一个节点的next指向null。</p>
-<p>1.2.单向循环链表<br>单向循环链表和单向列表的不同是，最后一个节点的next不是指向null，而是指向head节点，形成一个“环”。</p>
-<p>1.3.双向链表<br>从名字就可以看出，双向链表是包含两个指针的，pre指向前一个节点，next指向后一个节点，但是第一个节点head的pre指向null，最后一个节点的tail指向null。</p>
-<p>1.4.双向循环链表<br>双向循环链表和双向链表的不同在于，第一个节点的pre指向最后一个节点，最后一个节点的next指向第一个节点，也形成一个“环”。而LinkedList就是基于双向循环链表设计的。</p>
-<p>LinkedList简介</p>
-<p>LinkedList定义</p>
-<p>public class LinkedList<e><br>    extends AbstractSequentialList<e><br>    implements List<e>, Deque<e>, Cloneable, java.io.Serializable<br>LinkedList 是一个继承于AbstractSequentialList的双向循环链表。它也可以被当作堆栈、队列或双端队列进行操作。<br>LinkedList 实现 List 接口，能对它进行队列操作。<br>LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。<br>LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。<br>LinkedList 实现java.io.Serializable接口，这意味着LinkedList支持序列化，能通过序列化去传输。<br>LinkedList 是非同步的。</e></e></e></e></p>
-<p>LinkedList属性</p>
-<p>明白了上面的链表概念，以及LinkedList是基于双向循环链表设计的，下面在具体来看看LinkedList的底层的属性</p>
-<p>private transient Entry<e> header = new Entry<e>(null, null, null);<br>2 private transient int size = 0;<br>LinkedList中提供了上面两个属性，其中size和ArrayList中一样用来计数，表示list的元素数量，而header则是链表的头结点，Entry则是链表的节点对象。</e></e></p>
-<p>private static class Entry<e> {<br>    E element;  // 当前存储元素<br>    Entry<e> next;  // 下一个元素节点<br>    Entry<e> previous;  // 上一个元素节点<br>    Entry(E element, Entry<e> next, Entry<e> previous) {<br>        this.element = element;<br>        this.next = next;<br>        this.previous = previous;<br>    }<br>}<br>Entry为LinkedList 的内部类，其中定义了当前存储的元素，以及该元素的上一个元素和下一个元素。结合上面双向链表的示意图很容易看懂。</e></e></e></e></e></p>
-<p>LinkedList构造函数</p>
+            <p>　今天来介绍下LinkedList，LinkedList与ArrayList一样实现List接口，只是ArrayList是List接口的大小可变数组的实现，LinkedList是List接口链表的实现。基于链表实现的方式使得LinkedList在插入和删除时更优于ArrayList，而随机访问则比ArrayList逊色些。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现<br><img src="jpg/LinkedList/1.png" alt=""><br>LinkedList是基于链表结构的一种List，在分析LinkedList源码前有必要对链表结构进行说明。</p>
+<h1 id="1-链表的概念"><a href="#1-链表的概念" class="headerlink" title="1.链表的概念"></a>1.链表的概念</h1><p>　链表是由一系列非连续的节点组成的存储结构，简单分下类的话，链表又分为单向链表和双向链表，而单向/双向链表又可以分为循环链表和非循环链表，下面简单就这四种链表进行图解说明。</p>
+<h2 id="1-1-单向链表"><a href="#1-1-单向链表" class="headerlink" title="1.1.单向链表"></a>1.1.单向链表</h2><p>单向链表就是通过每个结点的指针指向下一个结点从而链接起来的结构，最后一个节点的next指向null。</p>
+<p><img src="jpg/LinkedList/2.jpg" alt=""></p>
+<h2 id="1-2-单向循环链表"><a href="#1-2-单向循环链表" class="headerlink" title="1.2.单向循环链表"></a>1.2.单向循环链表</h2><p>单向循环链表和单向列表的不同是，最后一个节点的next不是指向null，而是指向head节点，形成一个“环”。</p>
+<p><img src="jpg/LinkedList/3.jpg" alt=""></p>
+<h2 id="1-3-双向链表"><a href="#1-3-双向链表" class="headerlink" title="1.3.双向链表"></a>1.3.双向链表</h2><p>从名字就可以看出，双向链表是包含两个指针的，pre指向前一个节点，next指向后一个节点，但是第一个节点head的pre指向null，最后一个节点的tail指向null。</p>
+<p><img src="jpg/LinkedList/4.jpg" alt=""></p>
+<h2 id="1-4-双向循环链表"><a href="#1-4-双向循环链表" class="headerlink" title="1.4.双向循环链表"></a>1.4.双向循环链表</h2><p>双向循环链表和双向链表的不同在于，第一个节点的pre指向最后一个节点，最后一个节点的next指向第一个节点，也形成一个“环”。而LinkedList就是基于双向循环链表设计的。</p>
+<p><img src="jpg/LinkedList/5.jpg" alt=""></p>
+<h1 id="LinkedList简介"><a href="#LinkedList简介" class="headerlink" title="LinkedList简介"></a>LinkedList简介</h1><h2 id="LinkedList定义"><a href="#LinkedList定义" class="headerlink" title="LinkedList定义"></a>LinkedList定义</h2><pre><code>public class LinkedList&lt;E&gt;
+    extends AbstractSequentialList&lt;E&gt;
+    implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable
+</code></pre><ol>
+<li>LinkedList 是一个继承于AbstractSequentialList的双向循环链表。它也可以被当作堆栈、队列或双端队列进行操作。</li>
+<li>LinkedList 实现 List 接口，能对它进行队列操作。</li>
+<li>LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。</li>
+<li>LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。</li>
+<li>LinkedList 实现java.io.Serializable接口，这意味着LinkedList支持序列化，能通过序列化去传输。</li>
+<li>LinkedList 是非同步的。</li>
+</ol>
+<h2 id="LinkedList属性"><a href="#LinkedList属性" class="headerlink" title="LinkedList属性"></a>LinkedList属性</h2><p>看看LinkedList的底层的属性</p>
+<pre><code>private transient Entry&lt;E&gt; header = new Entry&lt;E&gt;(null, null, null);
+private transient int size = 0;
+</code></pre><p>LinkedList中提供了上面两个属性，其中size和ArrayList中一样用来计数，表示list的元素数量，而header则是链表的头结点，Entry则是链表的节点对象。</p>
+<pre><code>private static class Entry&lt;E&gt; {
+    E element;  // 当前存储元素
+    Entry&lt;E&gt; next;  // 下一个元素节点
+    Entry&lt;E&gt; previous;  // 上一个元素节点
+    Entry(E element, Entry&lt;E&gt; next, Entry&lt;E&gt; previous) {
+        this.element = element;
+        this.next = next;
+        this.previous = previous;
+    }
+}
+</code></pre><p>Entry为LinkedList 的内部类，其中定义了当前存储的元素，以及该元素的上一个元素和下一个元素。结合上面双向链表的示意图很容易看懂。</p>
+<h2 id="LinkedList构造函数"><a href="#LinkedList构造函数" class="headerlink" title="LinkedList构造函数"></a>LinkedList构造函数</h2><pre><code>/**
+* 构造一个空的LinkedList .
+*/
+public LinkedList() {
+    //将header节点的前一节点和后一节点都设置为自身
+    header.next = header. previous = header ;
+}
+
+/**
+* 构造一个包含指定 collection 中的元素的列表，这些元素按其 collection 的迭代器返回的顺序排列
+*/
+public LinkedList(Collection&lt;? extends E&gt; c) {
+    this();
+    addAll(c);
+}
+需要注意的是空的LinkedList构造方法，它将header节点的前一节点和后一节点都设置为自身，这里便说明LinkedList 是一个双向循环链表，如果只是单存的双向链表而不是循环链表，他的实现应该是这样的：
+
+public LinkedList() {
+    header.next = null;
+    header. previous = null;
+}
+</code></pre><p>非循环链表的情况应该是header节点的前一节点和后一节点均为null。</p>
+<h1 id="LinkedList源码解析-基于JDK1-6-0-45"><a href="#LinkedList源码解析-基于JDK1-6-0-45" class="headerlink" title="LinkedList源码解析(基于JDK1.6.0_45)"></a>LinkedList源码解析(基于JDK1.6.0_45)</h1><p><strong>增加</strong></p>
+<pre><code>/**
+ * 将一个元素添加至list尾部
+ */
+public boolean add(E e) {
+   // 在header前添加元素e，header前就是最后一个结点，就是在最后一个结点的后面添加元素e
+   addBefore(e, header);
+    return true;
+}
+/**
+ * 在指定位置添加元素
+ */
+public void add(int index, E element) {
+    // 如果index等于list元素个数，则在队尾添加元素(header之前)，否则在index节点前添加元素
+    addBefore(element, (index== size ? header : entry(index)));
+}
+
+private Entry&lt;E&gt; addBefore(E e, Entry&lt;E&gt; entry) {
+    // 用entry创建一个要添加的新节点，next为entry，previous为entry.previous，意思就是新节点插入entry前面，确定自身的前后引用，
+    Entry&lt;E&gt; newEntry = new Entry&lt;E&gt;(e, entry, entry.previous);
+     // 下面修改newEntry的前后节点的引用，确保其链表的引用关系是正确的
+    // 将上一个节点的next指向自己
+    newEntry. previous.next = newEntry;
+    // 将下一个节点的previous指向自己
+    newEntry. next.previous = newEntry;
+    // 计数+1
+     size++;
+     modCount++;
+     return newEntry;
+}
+</code></pre><p><strong>header作为双向循环链表的头结点是不保存数据的，也就是说hedaer中的element永远等于null。</strong></p>
 <p>/**</p>
 <ul>
-<li>构造一个空的LinkedList .<br>*/<br>public LinkedList() {<br>  //将header节点的前一节点和后一节点都设置为自身<br>  header.next = header. previous = header ;<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>构造一个包含指定 collection 中的元素的列表，这些元素按其 collection 的迭代器返回的顺序排列<br>*/<br>public LinkedList(Collection&lt;? extends E&gt; c) {<br>  this();<br>  addAll(c);<br>}<br>需要注意的是空的LinkedList构造方法，它将header节点的前一节点和后一节点都设置为自身，这里便说明LinkedList 是一个双向循环链表，如果只是单存的双向链表而不是循环链表，他的实现应该是这样的：</li>
-</ul>
-<p>public LinkedList() {<br>    header.next = null;<br>    header. previous = null;<br>}<br>非循环链表的情况应该是header节点的前一节点和后一节点均为null（参见链表图解）。</p>
-<p>API方法摘要</p>
-<p>LinkedList源码解析(基于JDK1.6.0_45)</p>
-<p>增加</p>
-<p>增加方法的代码读起来比较不容易理解，需要的时候请结合链表图解。</p>
-<p>/**</p>
-<ul>
-<li>将一个元素添加至list尾部<br><em>/<br>public boolean add(E e) {<br>// 在header前添加元素e，header前就是最后一个结点啦，就是在最后一个结点的后面添加元素e<br>addBefore(e, header);<br> return true;<br>}<br>/*</em></li>
-<li>在指定位置添加元素<br>*/<br>public void add(int index, E element) {<br> // 如果index等于list元素个数，则在队尾添加元素(header之前)，否则在index节点前添加元素<br> addBefore(element, (index== size ? header : entry(index)));<br>}</li>
-</ul>
-<p>private Entry<e> addBefore(E e, Entry<e> entry) {<br>    // 用entry创建一个要添加的新节点，next为entry，previous为entry.previous，意思就是新节点插入entry前面，确定自身的前后引用，<br>    Entry<e> newEntry = new Entry<e>(e, entry, entry.previous);<br>     // 下面修改newEntry的前后节点的引用，确保其链表的引用关系是正确的<br>    // 将上一个节点的next指向自己<br>    newEntry. previous.next = newEntry;<br>    // 将下一个节点的previous指向自己<br>    newEntry. next.previous = newEntry;<br>    // 计数+1<br>     size++;<br>     modCount++;<br>     return newEntry;<br>}<br>到这里可以发现一点疑虑，header作为双向循环链表的头结点是不保存数据的，也就是说hedaer中的element永远等于null。</e></e></e></e></p>
-<p>/**</p>
-<ul>
-<li>添加一个集合元素到list中<br>*/<br>public boolean addAll(Collection&lt;? extends E&gt; c) {<pre><code>// 将集合元素添加到list最后的尾部
-</code></pre> return addAll(size , c);<br>}</li>
-</ul>
-<p>/**</p>
+<li><p>添加一个集合元素到list中<br>*/<br>public boolean addAll(Collection&lt;? extends E&gt; c) {</p>
+<pre><code>// 将集合元素添加到list最后的尾部
+</code></pre><p> return addAll(size , c);<br>}</p>
+<p> /**</p>
 <ul>
 <li><p>在指定位置添加一个集合元素到list中<br>*/<br>public boolean addAll(int index, Collection&lt;? extends E&gt; c) {<br> // 越界检查<br> if (index &lt; 0 || index &gt; size)</p>
 <pre><code>throw new IndexOutOfBoundsException( &quot;Index: &quot;+index+
@@ -1796,7 +1844,7 @@ testHashSetAPIs() ;
 </code></pre><p> Object[] a = c.toArray();<br> // 要插入元素的个数<br> int numNew = a.length ;<br> if (numNew==0)</p>
 <pre><code>return false;
 </code></pre><p> modCount++;</p>
-<p> // 找出要插入元素的前后节点<br> // 获取要插入index位置的下一个节点，如果index正好是lsit尾部的位置那么下一个节点就是header，否则需要查找index位置的节点<br> Entry<e> successor = (index== size ? header : entry(index));<br> // 获取要插入index位置的上一个节点，因为是插入，所以上一个点击就是未插入前下一个节点的上一个<br> Entry<e> predecessor = successor. previous;<br> // 循环插入<br> for (int i=0; i&lt;numNew; i++) {</e></e></p>
+<p> // 找出要插入元素的前后节点<br> // 获取要插入index位置的下一个节点，如果index正好是list尾部的位置那么下一个节点就是header，否则需要查找index位置的节点<br> Entry<e> successor = (index== size ? header : entry(index));<br> // 获取要插入index位置的上一个节点，因为是插入，所以上一个点击就是未插入前下一个节点的上一个<br> Entry<e> predecessor = successor. previous;<br> // 循环插入<br> for (int i=0; i&lt;numNew; i++) {</e></e></p>
 <pre><code>// 构造一个节点，确认自身的前后引用
 Entry&lt;E&gt; e = new Entry&lt;E&gt;((E)a[i], successor, predecessor);
 // 将插入位置上一个节点的下一个元素引用指向当前元素（这里不修改下一个节点的上一个元素引用，是因为下一个节点随着循环一直在变）
@@ -1807,166 +1855,266 @@ predecessor = e;
 <p> // 修改计数器<br> size += numNew;<br> return true;<br>}</p>
 </li>
 </ul>
-<p>删除</p>
-<p>/**</p>
-<ul>
-<li>删除第一个匹配的指定元素<br>*/<br>public boolean remove(Object o) {<br>  // 遍历链表找到要被删除的节点<br> if (o==null) {<pre><code>for (Entry&lt;E&gt; e = header .next; e != header; e = e.next ) {
-    if (e.element ==null) {
-        remove(e);
-        return true;
-    }
-}
-</code></pre> } else {<pre><code>for (Entry&lt;E&gt; e = header .next; e != header; e = e.next ) {
-    if (o.equals(e.element )) {
-        remove(e);
-        return true;
-    }
-}
-</code></pre> }<br> return false;<br>}</li>
-</ul>
-<p>private E remove(Entry<e> e) {<br>    if (e == header )<br>       throw new NoSuchElementException();</e></p>
-<p>   // 被删除的元素，供返回<br>    E result = e. element;<br>   // 下面修正前后对该节点的引用<br>   // 将该节点的上一个节点的next指向该节点的下一个节点<br>   e. previous.next = e.next;<br>   // 将该节点的下一个节点的previous指向该节点的上一个节点<br>   e. next.previous = e.previous;<br>   // 修正该节点自身的前后引用<br>    e. next = e.previous = null;<br>   // 将自身置空，让gc可以尽快回收<br>    e. element = null;<br>   // 计数器减一<br>    size–;<br>    modCount++;<br>    return result;<br>}</p>
-<p>修改</p>
-<p>/**</p>
-<ul>
-<li>修改指定位置索引位置的元素<br>*/<br>public E set( int index, E element) {<br> // 查找index位置的节点<br> Entry<e> e = entry(index);<br> // 取出该节点的元素，供返回使用<br> E oldVal = e. element;<br> // 用新元素替换旧元素<br> e. element = element;<br> // 返回旧元素<br> return oldVal;<br>}<br>set方法看起来简单了很多，只要修改该节点上的元素就好了，但是不要忽略了这里的entry()方法，重点就是它。</e></li>
-</ul>
-<p>查询</p>
-<p>终于到查询了，终于发现了上面经常出现的那个方法entry()根据index查询节点，我们知道数组是有下标的，通过下标操作天然的支持根据index查询元素，而链表中是没有index概念呢，那么怎么样才能通过index查询到对应的元素呢，下面就来看看LinkedList是怎么实现的。</p>
-<p>/**</p>
-<ul>
-<li>查找指定索引位置的元素<br>*/<br>public E get( int index) {<br> return entry(index).element ;<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>返回指定索引位置的节点<br>*/<br>private Entry<e> entry( int index) {<br> // 越界检查<br> if (index &lt; 0 || index &gt;= size)<pre><code>throw new IndexOutOfBoundsException( &quot;Index: &quot;+index+
-                                    &quot;, Size: &quot;+size );
-</code></pre> // 取出头结点<br> Entry<e> e = header;<br> // size&gt;&gt;1右移一位代表除以2，这里使用简单的二分方法，判断index与list的中间位置的距离<br> if (index &lt; (size &gt;&gt; 1)) {<pre><code>// 如果index距离list中间位置较近，则从头部向后遍历(next)
-for (int i = 0; i &lt;= index; i++)
-    e = e. next;
-</code></pre> } else {<pre><code>// 如果index距离list中间位置较远，则从头部向前遍历(previous)
-for (int i = size; i &gt; index; i--)
-    e = e. previous;
-</code></pre> }<br> return e;<br>}<br>现在知道了，LinkedList是通过从header开始index计为0，然后一直往下遍历（next），直到到底index位置。为了优化查询效率，LinkedList采用了二分查找（这里说的二分只是简单的一次二分），判断index与size中间位置的距离，采取从header向后还是向前查找。<br>到这里我们明白，基于双向循环链表实现的LinkedList，通过索引Index的操作时低效的，index所对应的元素越靠近中间所费时间越长。而向链表两端插入和删除元素则是非常高效的（如果不是两端的话，都需要对链表进行遍历查找）。</e></e></li>
-</ul>
-<p>是否包含</p>
-<p>// 判断LinkedList是否包含元素(o)<br>public boolean contains(Object o) {<br>    return indexOf(o) != -1;<br>}</p>
-<p>// 从前向后查找，返回“值为对象(o)的节点对应的索引”<br>// 不存在就返回-1<br>public int indexOf(Object o) {<br>    int index = 0;<br>    if (o==null) {<br>        for (Entry e = header .next; e != header; e = e.next ) {<br>            if (e.element ==null)<br>                return index;<br>            index++;<br>        }<br>    } else {<br>        for (Entry e = header .next; e != header; e = e.next ) {<br>            if (o.equals(e.element ))<br>                return index;<br>            index++;<br>        }<br>    }<br>    return -1;<br>}</p>
-<p>// 从后向前查找，返回“值为对象(o)的节点对应的索引”<br>// 不存在就返回-1<br>public int lastIndexOf(Object o) {<br>    int index = size ;<br>    if (o==null) {<br>        for (Entry e = header .previous; e != header; e = e.previous ) {<br>            index–;<br>            if (e.element ==null)<br>                return index;<br>        }<br>    } else {<br>        for (Entry e = header .previous; e != header; e = e.previous ) {<br>            index–;<br>            if (o.equals(e.element ))<br>                return index;<br>        }<br>    }<br>    return -1;<br>}<br>和public boolean remove(Object o) 一样，indexOf查询元素位于容器的索引位置，都是需要对链表进行遍历操作，当然也就是低效了啦。</p>
-<p>判断容量</p>
-<p>/**</p>
-<ul>
-<li>Returns the number of elements in this list.<br>*</li>
-<li>@return the number of elements in this list<br>*/<br>public int size() {<br> return size ;<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>{@inheritDoc}<br>*</li>
-<li><p>This implementation returns <tt>size() == 0 </tt>.<br>*/<br>public boolean isEmpty() {<br> return size() == 0;<br>}<br>和ArrayList一样，基于计数器size操作，容量判断很方便。<br>到这里LinkedList就分析完了，不对好像还差些什么对不对？是什么呢，就是最开始说的Deque双端队列，明白了链表原理和LinkedList的基本crud操作，Deque的LinkedList实现就已经是so easy了，我们简单看下。</p></li>
-</ul>
-<p>LinkedList实现的Deque双端队列</p>
-<p>/**</p>
-<ul>
-<li>Adds the specified element as the tail (last element) of this list.<br>*</li>
-<li>@param e the element to add</li>
-<li>@return <tt> true</tt> (as specified by {@link Queue#offer})</li>
-<li>@since 1.5<br>*/<br>public boolean offer(E e) {<br> return add(e);<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>Retrieves and removes the head (first element) of this list</li>
-<li>@return the head of this list, or <tt>null </tt> if this list is empty</li>
-<li>@since 1.5<br>*/<br>public E poll() {<br> if (size ==0)<pre><code>return null;
-</code></pre> return removeFirst();<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>Removes and returns the first element from this list.<br>*</li>
-<li>@return the first element from this list</li>
-<li>@throws NoSuchElementException if this list is empty<br>*/<br>public E removeFirst() {<br> return remove(header .next);<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>Retrieves, but does not remove, the head (first element) of this list.</li>
-<li>@return the head of this list, or <tt>null </tt> if this list is empty</li>
-<li>@since 1.5<br>*/<br>public E peek() {<br> if (size ==0)<pre><code>return null;
-</code></pre> return getFirst();<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>Returns the first element in this list.<br>*</li>
-<li>@return the first element in this list</li>
-<li><p>@throws NoSuchElementException if this list is empty<br>*/<br>public E getFirst() {<br> if (size ==0)</p>
-<pre><code>throw new NoSuchElementException();
-</code></pre><p> return header .next. element;<br>}</p>
 </li>
 </ul>
-<p>/**</p>
-<ul>
-<li>Pushes an element onto the stack represented by this list.  In other</li>
-<li>words, inserts the element at the front of this list.<br>*</li>
-<li><p>This method is equivalent to {@link #addFirst}.<br>*</p></li>
-<li>@param e the element to push</li>
-<li>@since 1.6<br>*/<br>public void push(E e) {<br> addFirst(e);<br>}</li>
-</ul>
-<p>/**</p>
-<ul>
-<li>Inserts the specified element at the beginning of this list.<br>*</li>
-<li>@param e the element to add<br>*/<br>public void addFirst(E e) {<br>addBefore(e, header.next );<br>}<br>看看Deque 的实现是不是很简单，逻辑都是基于上面讲的链表操作的，对于队列的一些概念我不打算在这里讲，是因为后面队列会单独拿出来分析啦，这里只要理解基于链表实现的list内部是怎么操作的就可以啦。</li>
-</ul>
-<p>总结：<br>(01) LinkedList 实际上是通过双向链表去实现的。<br>它包含一个非常重要的内部类：Entry。Entry是双向链表节点所对应的数据结构，它包括的属性有：当前节点所包含的值，上一个节点，下一个节点。<br>(02) 从LinkedList的实现方式中可以发现，它不存在LinkedList容量不足的问题。<br>(03) LinkedList的克隆函数，即是将全部元素克隆到一个新的LinkedList对象中。<br>(04) LinkedList实现java.io.Serializable。当写入到输出流时，先写入“容量”，再依次写入“每一个节点保护的值”；当读出输入流时，先读取“容量”，再依次读取“每一个元素”。<br>(05) 由于LinkedList实现了Deque，而Deque接口定义了在双端队列两端访问元素的方法。提供插入、移除和检查元素的方法。每种方法都存在两种形式：一种形式在操作失败时抛出异常，另一种形式返回一个特殊值（null 或 false，具体取决于操作）。</p>
-<p>对LinkedList以及ArrayList的迭代效率比较</p>
-<p>先说结论：ArrayList使用最普通的for循环遍历比较快，LinkedList使用foreach循环比较快。</p>
+<p><img src="jpg/LinkedList/6.jpg" alt=""><br><img src="jpg/LinkedList/7.jpg" alt=""></p>
+<p><strong>删除</strong></p>
+<pre><code>/**
+ * 删除第一个匹配的指定元素
+ */
+public boolean remove(Object o) {
+     // 遍历链表找到要被删除的节点
+    if (o==null) {
+        for (Entry&lt;E&gt; e = header .next; e != header; e = e.next ) {
+            if (e.element ==null) {
+                remove(e);
+                return true;
+            }
+        }
+    } else {
+        for (Entry&lt;E&gt; e = header .next; e != header; e = e.next ) {
+            if (o.equals(e.element )) {
+                remove(e);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+private E remove(Entry&lt;E&gt; e) {
+    if (e == header )
+       throw new NoSuchElementException();
+
+   // 被删除的元素，供返回
+    E result = e. element;
+   // 下面修正前后对该节点的引用
+   // 将该节点的上一个节点的next指向该节点的下一个节点
+   e. previous.next = e.next;
+   // 将该节点的下一个节点的previous指向该节点的上一个节点
+   e. next.previous = e.previous;
+   // 修正该节点自身的前后引用
+    e. next = e.previous = null;
+   // 将自身置空，让gc可以尽快回收
+    e. element = null;
+   // 计数器减一
+    size--;
+    modCount++;
+    return result;
+}
+</code></pre><p><strong>修改</strong></p>
+<pre><code>/**
+ * 修改指定位置索引位置的元素
+ */
+public E set( int index, E element) {
+    // 查找index位置的节点
+    Entry&lt;E&gt; e = entry(index);
+    // 取出该节点的元素，供返回使用
+    E oldVal = e. element;
+    // 用新元素替换旧元素
+    e. element = element;
+    // 返回旧元素
+    return oldVal;
+}
+</code></pre><p>set方法看起来简单了很多，只要修改该节点上的元素就好了，但是不要忽略了这里的<strong>entry()</strong>方法，重点就是它。</p>
+<p><strong>查询</strong></p>
+<p>方法entry()根据index查询节点，我们知道数组是有下标的，通过下标操作天然的支持根据index查询元素，而链表中是没有index概念呢，那么怎么样才能通过index查询到对应的元素呢，下面就来看看LinkedList是怎么实现的。</p>
+<pre><code>/**
+ * 查找指定索引位置的元素
+ */
+public E get( int index) {
+    return entry(index).element ;
+}
+
+/**
+ * 返回指定索引位置的节点
+ */
+private Entry&lt;E&gt; entry( int index) {
+    // 越界检查
+    if (index &lt; 0 || index &gt;= size)
+        throw new IndexOutOfBoundsException( &quot;Index: &quot;+index+
+                                            &quot;, Size: &quot;+size );
+    // 取出头结点
+    Entry&lt;E&gt; e = header;
+    // size&gt;&gt;1右移一位代表除以2，这里使用简单的二分方法，判断index与list的中间位置的距离
+    if (index &lt; (size &gt;&gt; 1)) {
+        // 如果index距离list中间位置较近，则从头部向后遍历(next)
+        for (int i = 0; i &lt;= index; i++)
+            e = e. next;
+    } else {
+        // 如果index距离list中间位置较远，则从头部向前遍历(previous)
+        for (int i = size; i &gt; index; i--)
+            e = e. previous;
+    }
+    return e;
+}
+</code></pre><p>　现在知道了，LinkedList是通过从header开始index计为0，然后一直往下遍历（next），直到到底index位置。为了优化查询效率，LinkedList采用了二分查找（这里说的二分只是简单的一次二分），判断index与size中间位置的距离，采取从header向后还是向前查找。</p>
+<p>　基于双向循环链表实现的LinkedList，通过索引Index的操作时低效的，index所对应的元素越靠近中间所费时间越长。而向链表两端插入和删除元素则是非常高效的（如果不是两端的话，都需要对链表进行遍历查找）。</p>
+<p><strong>是否包含</strong></p>
+<pre><code>// 判断LinkedList是否包含元素(o)
+public boolean contains(Object o) {
+    return indexOf(o) != -1;
+}
+
+// 从前向后查找，返回“值为对象(o)的节点对应的索引”
+// 不存在就返回-1
+public int indexOf(Object o) {
+    int index = 0;
+    if (o==null) {
+        for (Entry e = header .next; e != header; e = e.next ) {
+            if (e.element ==null)
+                return index;
+            index++;
+        }
+    } else {
+        for (Entry e = header .next; e != header; e = e.next ) {
+            if (o.equals(e.element ))
+                return index;
+            index++;
+        }
+    }
+    return -1;
+}
+
+// 从后向前查找，返回“值为对象(o)的节点对应的索引”
+// 不存在就返回-1
+public int lastIndexOf(Object o) {
+    int index = size ;
+    if (o==null) {
+        for (Entry e = header .previous; e != header; e = e.previous ) {
+            index--;
+            if (e.element ==null)
+                return index;
+        }
+    } else {
+        for (Entry e = header .previous; e != header; e = e.previous ) {
+            index--;
+            if (o.equals(e.element ))
+                return index;
+        }
+    }
+    return -1;
+}
+</code></pre><p>　和public boolean remove(Object o) 一样，indexOf查询元素位于容器的索引位置，都是需要对链表进行遍历操作，很低效。</p>
+<p><strong>判断容量</strong></p>
+<pre><code>/**
+ * Returns the number of elements in this list.
+ *
+ * @return the number of elements in this list
+ */
+public int size() {
+    return size ;
+}
+
+/**
+ * {@inheritDoc}
+ *
+ * &lt;p&gt;This implementation returns &lt;tt&gt;size() == 0 &lt;/tt&gt;.
+ */
+public boolean isEmpty() {
+    return size() == 0;
+}
+</code></pre><p>　和ArrayList一样，基于计数器size操作，容量判断很方便。</p>
+<hr>
+<h2 id="LinkedList实现的Deque双端队列"><a href="#LinkedList实现的Deque双端队列" class="headerlink" title="LinkedList实现的Deque双端队列"></a>LinkedList实现的Deque双端队列</h2><pre><code>/**
+ * Adds the specified element as the tail (last element) of this list.
+ *
+ * @param e the element to add
+ * @return &lt;tt&gt; true&lt;/tt&gt; (as specified by {@link Queue#offer})
+ * @since 1.5
+ */
+public boolean offer(E e) {
+    return add(e);
+}
+
+/**
+ * Retrieves and removes the head (first element) of this list
+ * @return the head of this list, or &lt;tt&gt;null &lt;/tt&gt; if this list is empty
+ * @since 1.5
+ */
+public E poll() {
+    if (size ==0)
+        return null;
+    return removeFirst();
+}
+
+/**
+ * Removes and returns the first element from this list.
+ *
+ * @return the first element from this list
+ * @throws NoSuchElementException if this list is empty
+ */
+public E removeFirst() {
+    return remove(header .next);
+}
+
+/**
+ * Retrieves, but does not remove, the head (first element) of this list.
+ * @return the head of this list, or &lt;tt&gt;null &lt;/tt&gt; if this list is empty
+ * @since 1.5
+ */
+public E peek() {
+    if (size ==0)
+        return null;
+    return getFirst();
+}
+
+/**
+ * Returns the first element in this list.
+ *
+ * @return the first element in this list
+ * @throws NoSuchElementException if this list is empty
+ */
+public E getFirst() {
+    if (size ==0)
+       throw new NoSuchElementException();
+
+    return header .next. element;
+}
+
+/**
+ * Pushes an element onto the stack represented by this list.  In other
+ * words, inserts the element at the front of this list.
+ *
+ * &lt;p&gt;This method is equivalent to {@link #addFirst}.
+ *
+ * @param e the element to push
+ * @since 1.6
+ */
+public void push(E e) {
+    addFirst(e);
+}
+
+/**
+ * Inserts the specified element at the beginning of this list.
+ *
+ * @param e the element to add
+ */
+public void addFirst(E e) {
+   addBefore(e, header.next );
+}
+</code></pre><h2 id="对LinkedList以及ArrayList的迭代效率比较"><a href="#对LinkedList以及ArrayList的迭代效率比较" class="headerlink" title="对LinkedList以及ArrayList的迭代效率比较"></a>对LinkedList以及ArrayList的迭代效率比较</h2><p><strong>结论</strong>：ArrayList使用最普通的for循环遍历比较快，LinkedList使用foreach循环比较快。</p>
 <p>看一下两个List的定义：</p>
-<p>public class ArrayList<e> extends AbstractList<e><br>        implements List<e>, RandomAccess, Cloneable, java.io.Serializable<br>public class LinkedList<e><br>    extends AbstractSequentialList<e><br>    implements List<e>, Deque<e>, Cloneable, java.io.Serializable<br>注意到ArrayList是实现了RandomAccess接口而LinkedList则没有实现这个接口，关于RandomAccess这个接口的作用，看一下JDK API上的说法：</e></e></e></e></e></e></e></p>
-<p>为此，我写一段代码证明一下这一点，注意，虽然上面的例子用的Iterator，但是做foreach循环的时候，编译器默认会使用这个集合的Iterator。测试代码如下：</p>
-<p>public class TestMain<br>{<br>    private static int SIZE = 111111;</p>
-<pre><code>private static void loopList(List&lt;Integer&gt; list)
-{
-    long startTime = System.currentTimeMillis();
-    for (int i = 0; i &lt; list.size(); i++)
-    {
-        list.get(i);
-    }
-    System.out.println(list.getClass().getSimpleName() + &quot;使用普通for循环遍历时间为&quot; + 
-            (System.currentTimeMillis() - startTime) + &quot;ms&quot;);
-
-    startTime = System.currentTimeMillis();
-    for (Integer i : list)
-    {
-
-    }
-    System.out.println(list.getClass().getSimpleName() + &quot;使用foreach循环遍历时间为&quot; + 
-            (System.currentTimeMillis() - startTime) + &quot;ms&quot;);
-}
-
-public static void main(String[] args)
-{
-    List&lt;Integer&gt; arrayList = new ArrayList&lt;Integer&gt;(SIZE);
-    List&lt;Integer&gt; linkedList = new LinkedList&lt;Integer&gt;();
-
-    for (int i = 0; i &lt; SIZE; i++)
-    {
-        arrayList.add(i);
-        linkedList.add(i);
-    }
-
-    loopList(arrayList);
-    loopList(linkedList);
-    System.out.println();
-}
-</code></pre><p>}<br>我截取三次运行结果：</p>
-<p>ArrayList使用普通for循环遍历时间为10ms<br>ArrayList使用foreach循环遍历时间为36ms<br>LinkedList使用普通for循环遍历时间为21841ms<br>LinkedList使用foreach循环遍历时间为34ms<br>ArrayList使用普通for循环遍历时间为11ms<br>ArrayList使用foreach循环遍历时间为27ms<br>LinkedList使用普通for循环遍历时间为20500ms<br>LinkedList使用foreach循环遍历时间为27ms<br>ArrayList使用普通for循环遍历时间为10ms<br>ArrayList使用foreach循环遍历时间为22ms<br>LinkedList使用普通for循环遍历时间为20237ms<br>LinkedList使用foreach循环遍历时间为38ms<br>有了JDK API的解释，这个结果并不让人感到意外，最最想要提出的一点是：如果使用普通for循环遍历LinkedList，其遍历速度将慢得令人发指。</p>
-<p>总结</p>
-<p>ArrayList和LinkedList的比较</p>
-<p>1、顺序插入速度ArrayList会比较快，因为ArrayList是基于数组实现的，数组是事先new好的，只要往指定位置塞一个数据就好了；LinkedList则不同，每次顺序插入的时候LinkedList将new一个对象出来，如果对象比较大，那么new的时间势必会长一点，再加上一些引用赋值的操作，所以顺序插入LinkedList必然慢于ArrayList</p>
-<p>2、基于上一点，因为LinkedList里面不仅维护了待插入的元素，还维护了Entry的前置Entry和后继Entry，如果一个LinkedList中的Entry非常多，那么LinkedList将比ArrayList更耗费一些内存</p>
-<p>3、数据遍历的速度，看最后一部分，这里就不细讲了，结论是：使用各自遍历效率最高的方式，ArrayList的遍历效率会比LinkedList的遍历效率高一些</p>
-<p>4、有些说法认为LinkedList做插入和删除更快，这种说法其实是不准确的：</p>
-<p>（1）LinkedList做插入、删除的时候，慢在寻址，快在只需要改变前后Entry的引用地址</p>
-<p>（2）ArrayList做插入、删除的时候，慢在数组元素的批量copy，快在寻址</p>
-<p>所以，如果待插入、删除的元素是在数据结构的前半段尤其是非常靠前的位置的时候，LinkedList的效率将大大快过ArrayList，因为ArrayList将批量copy大量的元素；越往后，对于LinkedList来说，因为它是双向链表，所以在第2个元素后面插入一个数据和在倒数第2个元素后面插入一个元素在效率上基本没有差别，但是ArrayList由于要批量copy的元素越来越少，操作速度必然追上乃至超过LinkedList。</p>
-<p>从这个分析看出，如果你十分确定你插入、删除的元素是在前半段，那么就使用LinkedList；如果你十分确定你删除、删除的元素在比较靠后的位置，那么可以考虑使用ArrayList。如果你不能确定你要做的插入、删除是在哪儿呢？那还是建议你使用LinkedList吧，因为一来LinkedList整体插入、删除的执行效率比较稳定，没有ArrayList这种越往后越快的情况；二来插入元素的时候，弄得不好ArrayList就要进行一次扩容，记住，ArrayList底层数组扩容是一个既消耗时间又消耗空间的操作。</p>
+<pre><code>public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;
+        implements List&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable
+public class LinkedList&lt;E&gt;
+    extends AbstractSequentialList&lt;E&gt;
+    implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable
+</code></pre><p>注意到ArrayList是实现了RandomAccess接口而LinkedList则没有实现这个接口。</p>
+<p><strong>做foreach循环的时候，编译器默认会使用这个集合的Iterator</strong>。</p>
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><h2 id="LinkedList知识概括"><a href="#LinkedList知识概括" class="headerlink" title="LinkedList知识概括"></a>LinkedList知识概括</h2><ol>
+<li>LinkedList 实际上是通过双向链表去实现的；它包含一个非常重要的内部类：Entry；Entry是双向链表节点所对应的数据结构，它包括的属性有：当前节点所包含的值，上一个节点，下一个节点。</li>
+<li>从LinkedList的实现方式中可以发现，它不存在LinkedList容量不足的问题。</li>
+<li>LinkedList的克隆函数，即是将全部元素克隆到一个新的LinkedList对象中。</li>
+<li>LinkedList实现java.io.Serializable。当写入到输出流时，先写入“容量”，再依次写入“每一个节点保护的值”；当读出输入流时，先读取“容量”，再依次读取“每一个元素”。</li>
+<li>由于LinkedList实现了Deque，而Deque接口定义了在双端队列两端访问元素的方法。提供插入、移除和检查元素的方法。每种方法都存在两种形式：一种形式在操作失败时抛出异常，另一种形式返回一个特殊值（null 或 false，具体取决于操作）。</li>
+</ol>
+<h2 id="ArrayList和LinkedList的比较"><a href="#ArrayList和LinkedList的比较" class="headerlink" title="ArrayList和LinkedList的比较"></a>ArrayList和LinkedList的比较</h2><ol>
+<li>顺序插入速度ArrayList会比较快，因为ArrayList是基于数组实现的；LinkedList则不同，每次顺序插入的时候LinkedList将new一个对象出来，再加上一些引用赋值的操作，所以顺序插入LinkedList必然慢于ArrayList。</li>
+<li>LinkedList里面不仅维护了待插入的元素，还维护了Entry的前置Entry和后继Entry，如果一个LinkedList中的Entry非常多，那么LinkedList将比ArrayList更耗费一些内存。</li>
+<li>ArrayList使用最普通的for循环遍历比较快，LinkedList使用foreach循环比较快；ArrayList的遍历效率会比LinkedList的遍历效率高一些。</li>
+<li>有些说法认为LinkedList做插入和删除更快，这种说法其实是不准确的：<br>（1）LinkedList做插入、删除的时候，慢在寻址，快在只需要改变前后Entry的引用地址。<br>（2）ArrayList做插入、删除的时候，慢在数组元素的批量copy，快在寻址。  </li>
+</ol>
 
           
         

@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-命令模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-责任链模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-命令模式/" itemprop="url">
-                  Java典型设计模式-命令模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-责任链模式/" itemprop="url">
+                  Java典型设计模式-责任链模式
                 </a>
               
             
@@ -353,73 +353,118 @@
       
         
           
-            <p>　最近在学习Tomcat,Tomcat中的Connector组件是通过命令模式调用Container的，那么今天就来学习一下命令模式。</p>
+            <p>　最近在学习Tomcat,Tomcat中最容易发现的设计模式就是责任链设计模式，这个设计模式也是在Tomcat中Container设计的基础，整个容器就是通过一个链连接在一起的，这个链一直将请求正确地传递给最终处理请求的Servlet，那么就学习一下责任链设计模式。</p>
 <hr>
-<p>　<strong>命令模式：将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以听、提供命令的撤销和恢复功能。</strong><br>　命令模式有以下两个角色：  </p>
+<p>　<strong>责任链模式：使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理为止。</strong><br>　责任链模式有以下两个角色：  </p>
 <ul>
-<li>命令角色：该角色声明一个给所有具体命令类的抽象接口，定义需要执行的命令。</li>
-<li>具体命令角色：该角色定义一个接受者和行为者之间的若耦合，实现命令方法，并调用接受者的相应操作。</li>
-<li>调用者角色：该角色负责调用命令对象执行请求。</li>
-<li>接受者角色：该角色负责具体实施和执行一个请求。</li>
+<li>抽象处理者角色：该角色对请求进行抽象，并定义一个方法以设定和返回对下一个处理者的引用。</li>
+<li>具体处理者角色：该角色接到请求后，可以选择将请求处理掉，或者将请求传给下一个处理者。</li>
 </ul>
-<p>　命令模式类图如下：<br><img src="http://i.imgur.com/OUd8uRD.png" alt=""></p>
-<p>　命令模式的优点：</p>
+<p>　责任链模式类图如下：<br><img src="http://i.imgur.com/4jm2jrS.png" alt=""></p>
+<p>　责任链模式的优点：</p>
 <ol>
-<li>类间解耦：调用者角色与接收者角色之间没有任何依赖关系，调用者实现功能只需要调用Command中的execute()方法，不需要了解是哪个接受者执行。</li>
-<li>可扩展性：Command的子类可以非常容易的扩展，而调用者用Invoker和更高层次的模块Client不产生严重的代码耦合。</li>
-<li>命令模式结合其他模式更优秀。</li>
+<li>责任链模式将请求和处理分开，请求者不知道是谁处理的，处理者可以不用知道请求的全貌。</li>
+<li>提高系统的灵活性。</li>
 </ol>
-<p>　命令模式的缺点：<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</p>
+<p>　责任链模式的缺点：</p>
+<ol>
+<li>降低程序的性能，每个请求都是从链头遍历到链尾，当链比较长的时候，性能会大幅下降。</li>
+<li>不易于调试，由于采用类似递归的方式，调试的时候逻辑比较复杂。<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</li>
+</ol>
+<p>　责任链模式的使用场景：</p>
+<ol>
+<li>一个请求需要一系列的处理工作。</li>
+<li>业务流的处理。</li>
+<li>对系统进行补充扩展。</li>
+</ol>
 <hr>
-<p>　<strong>命令模式模板例子：</strong></p>
-<p>　Command.java：    </p>
-<pre><code>public interface Command {
-    public void execute();
-
-}
-</code></pre><p>　ComcreteCommand.java：</p>
-<pre><code>public class ComcreteCommand implements Command {
-    private Receiver receiver;
-
-    public ComcreteCommand(Receiver receiver) {
-        super();
-        this.receiver = receiver;
+<p>　<strong>击鼓传花演示责任链模式板例子：</strong></p>
+<p>　Player.java：    </p>
+<pre><code>public abstract class Player {
+    private Player successor;
+    public abstract void handle(int i);
+    protected void setSuccessor(Player aSuccessor){
+        this.successor = aSuccessor;
     }
-
+    //传给下一个
+    public void next(int index){
+        if(successor!=null)
+            successor.handle(index);
+        else
+            System.out.println(&quot;游戏结束&quot;);
+    }
+}
+</code></pre><p>　PlayerAjava：</p>
+<pre><code>public class PlayerA extends Player {
+    public PlayerA(Player successor){
+        this.setSuccessor(successor);
+    }
     @Override
-    public void execute() {
-        this.receiver.action();
+    public void handle(int i) {
+        if(i==1)
+            System.out.println(&quot;PlayerA喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerA把花向下传&quot;);
+            next(i);
+        }
     }
 }
-</code></pre><p>　Receiver.java：</p>
-<pre><code>public class Receiver {
-    public void action(){
-        System.out.println(&quot;执行动作&quot;);
+</code></pre><p>　PlayerB.java：</p>
+<pre><code>public class PlayerB extends Player {
+    public PlayerB(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==2)
+            System.out.println(&quot;PlayerB喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerB把花向下传&quot;);
+            next(i);
+        }
     }
 }
-</code></pre><p>　Invoker.java：</p>
-<pre><code>public class Invoker {
-    private Command command;
-
-    public void setCommand(Command command) {
-        this.command = command;
+</code></pre><p>　PlayerC.java：</p>
+<pre><code>public class PlayerC extends Player {
+    public PlayerC(Player successor){
+        this.setSuccessor(successor);
     }
-    public void action(){
-        this.command.execute();
+    @Override
+    public void handle(int i) {
+        if(i==3)
+            System.out.println(&quot;PlayerC喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerC把花向下传&quot;);
+            next(i);
+        }
     }
 }
-</code></pre><p>　Client.java：</p>
-<pre><code>public class Client {
+</code></pre><p>　PlayerD.java：</p>
+<pre><code>public class PlayerD extends Player {
+    public PlayerD(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==4)
+            System.out.println(&quot;PlayerD喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerD把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　DrumBeater.java：</p>
+<pre><code>public class DrumBeater {
     public static void main(String[] args) {
-        Invoker invoker = new Invoker();
-        Receiver receiver = new Receiver();
-        Command command = new ComcreteCommand(receiver);
-        invoker.setCommand(command);
-        invoker.action();
+        Player player = new PlayerA(new PlayerB(new PlayerC(new PlayerD(null))));
+        player.handle(3);
     }
 }
 </code></pre><p>　程序运行结果：</p>
-<pre><code>执行动作
+<pre><code>PlayerA把花向下传
+PlayerB把花向下传
+PlayerC喝酒
 </code></pre>
           
         
@@ -702,7 +747,7 @@ the sourceable interface&apos;s second Sub2!
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -727,8 +772,8 @@ the sourceable interface&apos;s second Sub2!
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
-                  Java典型设计模式-工厂方法模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
+                  Java典型设计模式-单例模式
                 </a>
               
             
@@ -804,92 +849,56 @@ the sourceable interface&apos;s second Sub2!
       
         
           
-            <p>###　工厂方法模式 ###</p>
-<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
-<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<pre><code>public interface MyInterface {
-    public void print();
-}    
-
-public class MyClassOne implements MyInterface {
-
-    @Override
-    public void print() {
-        System.out.println(&quot;MyClassOne&quot;);
+            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
+<pre><code>public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
     }
-
-}
-public class MyClassTwo implements MyInterface {     
-    @Override
-    public void print() {
-        System.out.println(&quot;MyClassTwo&quot;);
+    public static MyObject getInstance() {
+        if (myObject != null) {
+        } else {
+            myObject = new MyObject();
+        }
+        return myObject;
     }
 }
+</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
+<hr>
+<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：<br>　在Java语言中实现单例模式通常有两种表现方式：  </p>
+<ol>
+<li>饿汉式单例类：类加载时，就进行对象实例化。  </li>
+<li><p>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。<br>　<strong>饿汉式单例类代码如下：</strong>  </p>
+<p> package Design.Creational.Singleton;<br> //恶汉式单例<br> public class Singleton1 {</p>
+<pre><code>private static Singleton1 m_instance = new Singleton1();
 
-
-public class MyFactory {
-    public MyInterface produce(String type) {  
-        if (&quot;One&quot;.equals(type)) {  
-            return new MyClassOne();  
-        } else if (&quot;Two&quot;.equals(type)) {  
-            return new MyClassTwo();  
-        } else {  
-            System.out.println(&quot;没有要找的类型&quot;);  
-            return null;  
-        }  
-    }
+private Singleton1(){
 
 }
 
+public static Singleton1 getInstance(){
+    return m_instance;
+}
+</code></pre><p> }</p>
+</li>
+</ol>
+<p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。<br>　<strong>同步懒汉式代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//懒汉式单例
+public class Singleton2 {
+    private static Singleton2 m_instance = null;
 
-public class FactoryTest {
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produce(&quot;One&quot;);  
-        myi.print();
+    private Singleton2(){
+
+    }
+
+    public synchronized static Singleton2 getInstance(){
+        if(m_instance==null)
+            m_instance = new Singleton2();
+        return m_instance;
     }
 
 }
-</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
-<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-     public MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-
-}
-
-public class FactoryTest {
-
-    public static void main(String[] args){
-        MyFactory factory = new MyFactory();  
-        MyInterface myi = factory.produceOne();
-        myi.print();
-    }
-
-}
-</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
-<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
-<pre><code>public class MyFactory {
-    public static MyInterface produceOne() {
-        return new MyClassOne();
-    }
-    public static MyInterface produceTwo() {
-        return new MyClassTwo();
-    }
-}
-
-public class FactoryTest {
-    public static void main(String[] args){ 
-        MyInterface myi = MyFactory.produceOne();
-        myi.print();
-
-}
-</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
-
+</code></pre>
           
         
       
@@ -1096,7 +1105,7 @@ public class MyFactoryTwo implements Provider {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1121,8 +1130,8 @@ public class MyFactoryTwo implements Provider {
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
-                  Java典型设计模式-单例模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
+                  Java典型设计模式-工厂方法模式
                 </a>
               
             
@@ -1198,56 +1207,92 @@ public class MyFactoryTwo implements Provider {
       
         
           
-            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
-<pre><code>public class MyObject {
-    private static MyObject myObject;
-    private MyObject() {
-    }
-    public static MyObject getInstance() {
-        if (myObject != null) {
-        } else {
-            myObject = new MyObject();
-        }
-        return myObject;
-    }
-}
-</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
-<hr>
-<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：<br>　在Java语言中实现单例模式通常有两种表现方式：  </p>
-<ol>
-<li>饿汉式单例类：类加载时，就进行对象实例化。  </li>
-<li><p>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。<br>　<strong>饿汉式单例类代码如下：</strong>  </p>
-<p> package Design.Creational.Singleton;<br> //恶汉式单例<br> public class Singleton1 {</p>
-<pre><code>private static Singleton1 m_instance = new Singleton1();
+            <p>###　工厂方法模式 ###</p>
+<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
+<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+<pre><code>public interface MyInterface {
+    public void print();
+}    
 
-private Singleton1(){
+public class MyClassOne implements MyInterface {
 
-}
-
-public static Singleton1 getInstance(){
-    return m_instance;
-}
-</code></pre><p> }</p>
-</li>
-</ol>
-<p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。<br>　<strong>同步懒汉式代码如下：</strong></p>
-<pre><code>package Design.Creational.Singleton;
-//懒汉式单例
-public class Singleton2 {
-    private static Singleton2 m_instance = null;
-
-    private Singleton2(){
-
-    }
-
-    public synchronized static Singleton2 getInstance(){
-        if(m_instance==null)
-            m_instance = new Singleton2();
-        return m_instance;
+    @Override
+    public void print() {
+        System.out.println(&quot;MyClassOne&quot;);
     }
 
 }
-</code></pre>
+public class MyClassTwo implements MyInterface {     
+    @Override
+    public void print() {
+        System.out.println(&quot;MyClassTwo&quot;);
+    }
+}
+
+
+public class MyFactory {
+    public MyInterface produce(String type) {  
+        if (&quot;One&quot;.equals(type)) {  
+            return new MyClassOne();  
+        } else if (&quot;Two&quot;.equals(type)) {  
+            return new MyClassTwo();  
+        } else {  
+            System.out.println(&quot;没有要找的类型&quot;);  
+            return null;  
+        }  
+    }
+
+}
+
+
+public class FactoryTest {
+    public static void main(String[] args){
+        MyFactory factory = new MyFactory();  
+        MyInterface myi = factory.produce(&quot;One&quot;);  
+        myi.print();
+    }
+
+}
+</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
+<pre><code>public class MyFactory {
+     public MyInterface produceOne() {
+        return new MyClassOne();
+    }
+    public MyInterface produceTwo() {
+        return new MyClassTwo();
+    }
+
+}
+
+public class FactoryTest {
+
+    public static void main(String[] args){
+        MyFactory factory = new MyFactory();  
+        MyInterface myi = factory.produceOne();
+        myi.print();
+    }
+
+}
+</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
+<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
+<pre><code>public class MyFactory {
+    public static MyInterface produceOne() {
+        return new MyClassOne();
+    }
+    public static MyInterface produceTwo() {
+        return new MyClassTwo();
+    }
+}
+
+public class FactoryTest {
+    public static void main(String[] args){ 
+        MyInterface myi = MyFactory.produceOne();
+        myi.print();
+
+}
+</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
+
           
         
       

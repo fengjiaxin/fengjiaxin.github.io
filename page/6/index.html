@@ -934,7 +934,7 @@ hexo d == hexo deploy
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-代理模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -959,8 +959,8 @@ hexo d == hexo deploy
             
               
                 
-                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
-                  Java典型设计模式-观察者模式
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-代理模式/" itemprop="url">
+                  Java典型设计模式-代理模式
                 </a>
               
             
@@ -1036,87 +1036,91 @@ hexo d == hexo deploy
       
         
           
-            <p>　<strong>观察者模式是类和类之间的关系，不涉及到继承。</strong></p>
+            <p>　最近在学习Spring，Spring的两个核心是依赖注入和面向切面编程，其中面向切面编程就是在一个方法的前后位置加入其余的方法以更好地实现，那么在SpringAOP中是采用JDK动态代理实现的，动态代理就是采用代理模式技术实现的，关于JDK动态代理我稍后总结，今天就用静态代理的例子好好学习代理模式。</p>
 <hr>
-<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
-<pre><code>public interface Observer {  
-    public void update();  
-}
-
-public class Observer1 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer1 has received!&quot;);  
-    }  
-}
-
-public class Observer2 implements Observer {  
-    @Override 
-    public void update() {  
-        System.out.println(&quot;observer2 has received!&quot;);  
-    }  
-}
-
-public interface Subject {  
-    /*增加观察者*/  
-    public void add(Observer observer);  
-    /*删除观察者*/  
-    public void del(Observer observer);  
-    /*通知所有的观察者*/  
-    public void notifyObservers();  
-    /*自身的操作*/ 
-    public void operation();  
-}
-
-import java.util.Enumeration;
-import java.util.Vector;
-
-public abstract class AbstractSubject implements Subject {  
-
-    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
-    @Override 
-    public void add(Observer observer) {  
-        vector.add(observer);  
-    }  
-
-    @Override 
-    public void del(Observer observer) {  
-        vector.remove(observer);  
-    }  
-
-    @Override 
-    public void notifyObservers() {  
-        Enumeration&lt;Observer&gt; enumo = vector.elements();  
-        while(enumo.hasMoreElements()){  
-            enumo.nextElement().update();  
-        }  
-    }  
-}
-
-public class MySubject extends AbstractSubject {  
-
-    @Override 
-    public void operation() {  
-        System.out.println(&quot;update self!&quot;);  
-        notifyObservers();  
-    }  
+<p>　<strong>代理模式：为其他对象提供一种代理以控制对这个对象的访问。</strong><br>　代理模式有一下优点：  </p>
+<ol>
+<li>职责清晰：真实的角色实现实际的业务逻辑，不用关心其他非本职的事务，通过后期的代理完成附加的事务，附带的结果就是编程简洁清晰。    </li>
+<li>高扩展性：具体主题角色随需求的不同可能有很多种，但只要实现了接口，代理类就完全可以在不做任何修改的情况下代理各种真实主题角色。  </li>
+<li>智能化：代理类介意在运行时才确定去代理的真实主题（动态代理）。  </li>
+</ol>
+<hr>
+<p>　通过游戏代练的过程演示代理模式的应用，其类图如下所示：<br><img src="http://i.imgur.com/Q6N61ev.png" alt=""><br>　IGamePlayer接口：  </p>
+<pre><code>public interface IGamePlayer {
+    public void killBoss();
+    public void upGrade();
 
 }
+</code></pre><p>　GamePlayer实现IGamePlayer接口中的方法：</p>
+<pre><code>public class GamePlayer implements IGamePlayer {
+    private String name =&quot;&quot;;
 
-public class ObserverTest {  
-    public static void main(String[] args) {  
-        Subject sub = new MySubject();  
-        sub.add(new Observer1());  
-        sub.add(new Observer2());  
-        sub.operation();  
-    }  
+
+    public GamePlayer(String name) {
+        super();
+        this.name = name;
+    }
+
+    @Override
+    public void killBoss() {
+        System.out.println(this.name+&quot;在打怪！！！！&quot;);
+    }
+
+    @Override
+    public void upGrade() {
+        System.out.println(this.name+&quot;成功升1级！！！！&quot;);
+    }
+
 }
-运行结果：
-update self!
-observer1 has received!
-observer2 has received!
-</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
+</code></pre><p>　GamePlayerProxy是代理类：</p>
+<pre><code>public class GamePlayerProxy implements IGamePlayer {
+    private IGamePlayer player = null;
 
+
+    public GamePlayerProxy(IGamePlayer player) {
+        super();
+        this.player = player;
+    }
+
+    @Override
+    public void killBoss() {
+        this.log();
+        player.killBoss();
+    }
+
+    @Override
+    public void upGrade() {
+        player.upGrade();
+        this.count();
+    }
+
+    private void log(){
+        System.out.println(&quot;打怪时间&quot;+new Date().toString());
+    }
+
+    private void count(){
+        System.out.println(&quot;升一级耗费50小时&quot;);
+    }
+
+}
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
+
+    public static void main(String[] args) {
+        IGamePlayer player = new GamePlayer(&quot;冯佳欣&quot;);
+        IGamePlayer proxy = new GamePlayerProxy(player);
+        proxy.killBoss();
+        proxy.upGrade();
+
+    }
+
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>打怪时间Sun Feb 12 17:23:41 CST 2017
+冯佳欣在打怪！！！！
+冯佳欣成功升1级！！！！
+升一级耗费50小时
+</code></pre>
           
         
       
