@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(三)- 功能实现/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/hibernate如何提高性能和二级缓存的含义/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(三)- 功能实现/" itemprop="url">
-                  HashMap源码学习(三)-功能实现
+                <a class="post-title-link" href="/2017/02/02/hibernate如何提高性能和二级缓存的含义/" itemprop="url">
+                  hibernate如何提高性能和二级缓存的含义
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:32:20+08:00">
-                2017-02-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T20:37:04+08:00">
+                2017-02-02
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA源码学习</span>
+                  <a href="/categories/Web总结/" itemprop="url" rel="index">
+                    <span itemprop="name">Web总结</span>
                   </a>
                 </span>
 
@@ -353,94 +353,20 @@
       
         
           
-            <p>HashMap的内部功能实现很多，本文主要从根据<strong>key获取哈希桶数组索引位置、put方法</strong>的详细执行深入学习。</p>
-<h1 id="1、确定哈希桶数组索引位置"><a href="#1、确定哈希桶数组索引位置" class="headerlink" title="1、确定哈希桶数组索引位置"></a>1、确定哈希桶数组索引位置</h1><p>　HashMap定位数组索引位置，直接决定了hash方法的离散性能。先看看源码的实现(方法一+方法二):</p>
-<pre><code>方法一：
-static final int hash(Object key) {   //jdk1.8 &amp; jdk1.7
-     int h;
-     // h = key.hashCode() 为第一步 取hashCode值
-     // h ^ (h &gt;&gt;&gt; 16)  为第二步 高位参与运算
-     return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
-}
-方法二：
-static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个方法，但是实现原理一样的
-     return h &amp; (length-1);  //第三步 取模运算
-}
-</code></pre><p>　这里的Hash算法本质上就是三步：<strong>取key的hashCode值、高位运算、取模运算</strong>。</p>
-<p>　<strong>注意</strong>：Object的hashCode()方法中的hashCode是具体怎么计算的呢？<br>　Object中的hashCode() 返回对象的<strong>32位jvm内存地址</strong>。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</p>
-<p>　对于任意给定的对象，只要它的hashCode()返回值相同，那么程序调用方法一计算得到的Hash码值总是相同的。我们首先想到的就是把hash值对数组长度取模运算，这样元素的分布相对比较均匀。但是，模运算的消耗较大，在HashMap中调用方法二来计算该对象应该保存在table数组的哪个索引处。</p>
-<p>　这个方法非常巧妙，它通过h &amp; (table.length -1)来得到该对象的保存位，而HashMap底层数组的长度总是2的n次方，这是HashMap在速度上的优化。当length总是2的n次方时，h&amp; (length-1)运算等价于对length取模，也就是h%length，但是&amp;比%具有更高的效率。</p>
-<p>　在JDK的实现中，优化了高位运算的算法，通过hashCode()的高16位异或低16位实现的：(h = k.hashCode()) ^ (h &gt;&gt;&gt; 16)，主要是从速度、功效、质量来考虑的，这么做可以在数组table的length比较小的时候，也能保证考虑到高低Bit都参与到Hash的计算中，同时不会有太大的开销。</p>
-<p>　下面举例说明下，n为table的长度16。<br><img src="http://i.imgur.com/etKJGqq.png" alt=""></p>
-<h1 id="2、分析HashMap的put方法"><a href="#2、分析HashMap的put方法" class="headerlink" title="2、分析HashMap的put方法"></a>2、分析HashMap的put方法</h1><ol>
-<li>判断键值对数组table[i]是否为空或为null，否则执行resize()进行扩容；</li>
-<li>根据键值key计算hash值得到插入的数组索引i，如果table[i]==null，直接新建节点添加，转向6，如果table[i]不为空，转向3；</li>
-<li>判断table[i]的首个元素是否和key一样，如果相同直接覆盖value，否则转向4，这里的相同指的是hashCode以及equals；</li>
-<li>判断table[i] 是否为treeNode，即table[i] 是否是红黑树，如果是红黑树，则直接在树中插入键值对，否则转向5；</li>
-<li>遍历table[i]，判断链表长度是否大于8，大于8的话把链表转换为红黑树，在红黑树中执行插入操作，否则进行链表的插入操作；遍历过程中若发现key已经存在直接覆盖value即可；</li>
-<li>插入成功后，判断实际存在的键值对数量size是否超多了最大容量threshold，如果超过，进行扩容。</li>
+            <p>　之前编写了hibernate的一些相关代码，现在总结一些细节。<br><strong>问题： 在使用Hibernate时如何提高性能？</strong>  </p>
+<ol>
+<li>延迟加载，当hibernate从数据库中获取一个对象数据，获取一个对象的集合属性值时或者获取某一个对象所关联的另一个对象时，并不会立即从数据库中加载到对象中，而是通过建立一个代理对象，把这个对象的属性值都设置为默认值，只有这些数据在被使用时才会从数据库中加载对应的数据。  </li>
+<li>缓存技术。hibernate提供了一级缓存与二级缓存，合理的利用缓存有助于提高系统的性能，通过合理配置缓存的参数可以避免不合理的利用缓存导致内存的过度消耗降低系统的性能。  </li>
+<li>优化查询语句。<br>　说了这么多，那么什么是hibernate的二级缓存？<br>　<strong>缓存的目的</strong>是为了通过减少应用程序对物理数据源访问的次数来提高程序运行的效率，<strong>原理</strong>则是把当前或接下来一段时间可能会用到的数据保存在内存中，在使用时直接从内存中读取。</li>
 </ol>
-<p>　HashMap的put方法执行过程可以通过下图来理解</p>
-<p><img src="http://i.imgur.com/WJEDu7Y.png" alt=""></p>
-<p>　JDK1.8HashMap的put方法源码如下:</p>
-<pre><code> 1 public V put(K key, V value) {
- 2     // 对key的hashCode()做hash
- 3     return putVal(hash(key), key, value, false, true);
- 4 }
- 5 
- 6 final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
- 7                boolean evict) {
- 8     Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
- 9     // 步骤1：tab为空则创建
-10     if ((tab = table) == null || (n = tab.length) == 0)
-11         n = (tab = resize()).length;
-12     // 步骤2：计算index，并对null做处理 
-13     if ((p = tab[i = (n - 1) &amp; hash]) == null) 
-14         tab[i] = newNode(hash, key, value, null);
-15     else {
-16         Node&lt;K,V&gt; e; K k;
-17         // 步骤3：节点key存在，直接覆盖value
-18         if (p.hash == hash &amp;&amp;
-19             ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
-20             e = p;
-21         // 步骤4：判断该链为红黑树
-22         else if (p instanceof TreeNode)
-23             e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
-24         // 步骤5：该链为链表
-25         else {
-26             for (int binCount = 0; ; ++binCount) {
-27                 if ((e = p.next) == null) {
-28                     p.next = newNode(hash, key,value,null);
-                        //链表长度大于8转换为红黑树进行处理
-29                     if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st  
-30                         treeifyBin(tab, hash);
-31                     break;
-32                 }
-                    // key已经存在直接覆盖value
-33                 if (e.hash == hash &amp;&amp;
-34                     ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) 
-35                            break;
-36                 p = e;
-37             }
-38         }
-39         
-40         if (e != null) { // existing mapping for key
-41             V oldValue = e.value;
-42             if (!onlyIfAbsent || oldValue == null)
-43                 e.value = value;
-44             afterNodeAccess(e);
-45             return oldValue;
-46         }
-47     }
-
-48     ++modCount;
-49     // 步骤6：超过最大容量 就扩容
-50     if (++size &gt; threshold)
-51         resize();
-52     afterNodeInsertion(evict);
-53     return null;
-54 }
-</code></pre><p>　这样就把哈希桶数组索引位置、put方法讲解了一下，这样我们就在以后Java调用时更好地应用HashMap，那么下一章节就学习一下扩容机制，这个算法我记得在算法导论中曾经有相关的题目，下一章继续学习。</p>
+<hr>
+<p>　<strong>在hibernate中有一级缓存和二级缓存的概念，一级缓存由Session来管理，二级缓存由SessionFactory来管理，在使用时二级缓存可有可无，但是一级缓存必不可少。</strong><br>　一级缓存的使用场合如下：当使用session查询数据时，首先会在Session内部查找该对象是否存在，若存在，直接返回，否则，到数据库中区查询，并将查询结果缓存起来以便后期使用；缺点是当使用Session来表示一次会话中，它的生命周期较短，并且它是线程不安全的，不能够被多个线程共享，因此在实际使用中对效率的提升并不明显。<br>　二级缓存用来为Hibernate配置一种全局的缓存，以便实现多个线程和事物共享。在使用了二级缓存机制后，当查询数据时，会首先在内部缓存中去查找，如果不存在，接着在二级缓存中查找，最后才去数据库中查找，与一级缓存相比，二级缓存是独立于hibernate的软件部件，属于第三方的产品，hibernate3以后默认使用的产品是EhCache.<br>　二级缓存一般适用于以下几种情况：  </p>
+<ol>
+<li>数据量较小，如果数据量较大，缓存太多，大量消耗内存，造成内存资源短缺，从而降低系统的性能。  </li>
+<li>对数据的修改较少，如果进行大量的修改，就需要频繁的同步，也会影响系统的性能。  </li>
+<li>不会被大量的应用共享的数据，如果数据被大量线程或事物共享，多线程访问的同步机制会影响系统的性能。  </li>
+<li>不是很重要的数据，如果数据非常重要，对数据的准确性要求非常高，最好不要使用二级缓存。</li>
+</ol>
 
           
         
@@ -479,7 +405,7 @@ static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(二)- 存储结构/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -504,8 +430,8 @@ static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个
             
               
                 
-                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(二)- 存储结构/" itemprop="url">
-                  HashMap源码学习(二)-存储结构
+                <a class="post-title-link" href="/2017/02/02/静态嵌套类-Static-Nested-Class-和内部类（Inner-Class）的不同/" itemprop="url">
+                  静态嵌套类(Static Nested Class)和内部类（Inner Class）的不同
                 </a>
               
             
@@ -521,334 +447,8 @@ static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:22:20+08:00">
-                2017-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA源码学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="HshMap的内部实现"><a href="#HshMap的内部实现" class="headerlink" title="HshMap的内部实现"></a>HshMap的内部实现</h1><p>　搞清楚HashMap，首先需要知道HashMap是什么，即它的存储结构-字段；其次弄明白它能干什么，即它的功能实现-方法。这篇文章主要学习存储结构。</p>
-<h1 id="存储结构-字段"><a href="#存储结构-字段" class="headerlink" title="存储结构-字段"></a>存储结构-字段</h1><p>　从结构实现来讲，HashMap是数组+链表+红黑树（JDK1.8增加了红黑树部分）实现的，如下所示：<br><img src="http://i.imgur.com/VfAl7ig.png" alt=""></p>
-<h2 id="1-哈希桶数组"><a href="#1-哈希桶数组" class="headerlink" title="1　哈希桶数组"></a>1　哈希桶数组</h2><p>　从源码可知，HashMap类中有一个非常重要的字段，就是 Node[] table，即哈希桶数组。</p>
-<pre><code>static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
-        final int hash;    //用来定位数组索引位置
-        final K key;
-        V value;
-        Node&lt;K,V&gt; next;   //链表的下一个node
-
-        Node(int hash, K key, V value, Node&lt;K,V&gt; next) { ... }
-        public final K getKey(){ ... }
-        public final V getValue() { ... }
-        public final String toString() { ... }
-        public final int hashCode() { ... }
-        public final V setValue(V newValue) { ... }
-        public final boolean equals(Object o) { ... }
-}
-</code></pre><p>　Node是HashMap的一个内部类，实现了Map.Entry接口，本质是就是一个映射(键值对)。上图中的每个黑色圆点就是一个Node对象。</p>
-<h2 id="2-HashMap就是使用哈希表来存储的"><a href="#2-HashMap就是使用哈希表来存储的" class="headerlink" title="2  HashMap就是使用哈希表来存储的"></a>2  HashMap就是使用哈希表来存储的</h2><p>　哈希表为解决冲突，可以采用开放地址法和链地址法等来解决问题，Java中HashMap采用了链地址法。在每个数组元素上都一个链表结构，当数据被Hash后，得到数组下标，把数据放在对应下标元素的链表上。<br>　例如程序执行下面代码：</p>
-<pre><code>map.put(&quot;啦啦&quot;,&quot;嘿嘿&quot;);
-</code></pre><p>　系统将调用”啦啦”这个key的hashCode()方法得到其hashCode值，然后再通过Hash算法的后两步运算（高位运算和取模运算）来定位该键值对的存储位置，有时两个key会定位到相同的位置，表示发生了Hash碰撞。当然Hash算法计算结果越分散均匀，Hash碰撞的概率就越小，map的存取效率就会越高。<br>　那么通过什么方式来控制map使得Hash碰撞的概率又小，哈希桶数组（Node[] table）占用空间又少呢？<br>　答案就是<strong>好的Hash算法和扩容机制</strong>。  </p>
-<h2 id="3-HashMap的扩容字段"><a href="#3-HashMap的扩容字段" class="headerlink" title="3  HashMap的扩容字段"></a>3  HashMap的扩容字段</h2><p>　从HashMap的默认构造函数源码可知，构造函数就是对下面几个字段进行初始化，源码如下：</p>
-<pre><code>int threshold;             // 所能容纳的key-value对极限 
-final float loadFactor;    // 负载因子
-int modCount;  
-int size;
-</code></pre><p>　首先，Node[] table的初始化长度length(默认值是16)，Loadfactor为负载因子(默认值是0.75)，threshold是HashMap所能容纳的最大数据量的Node(键值对)个数。<br>　threshold = length * Load factor。<br>　也就是说，在数组定义好长度之后，负载因子越大，所能容纳的键值对个数越多。</p>
-<hr>
-<p>　结合负载因子的定义公式可知，threshold就是在此Loadfactor和length(数组长度)对应下允许的最大元素数目，超过这个数目就重新resize(扩容)，扩容后的HashMap容量是之前容量的两倍。</p>
-<p>　size字段就是HashMap中实际存在的键值对数量。modCount字段主要用来记录HashMap内部结构发生变化的次数，主要用于迭代的快速失败。<strong>强调一点</strong>，内部结构发生变化指的是结构发生变化，例如put新键值对，但是某个key对应的value值被覆盖不属于结构变化。</p>
-<p>　在HashMap中，哈希桶数组table的长度length大小必须为2的n次方(一定是合数)，这是一种非常规的设计，<strong>常规的设计是把桶的大小设计为素数。相对来说素数导致冲突的概率要小于合数</strong>。<br>　HashMap采用这种非常规设计，主要是为了在取模和扩容时做优化，同时为了减少冲突，HashMap定位哈希桶索引位置时，也加入了高位参与运算的过程。</p>
-<p>　<strong>在JDK1.8版本中，对数据结构做了进一步的优化，引入了红黑树。而当链表长度太长（默认超过8）时，链表就转换为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能。</strong></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(一)-介绍/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(一)-介绍/" itemprop="url">
-                  HashMap源码学习(一)-介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:20+08:00">
-                2017-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA源码学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　最近学习处理大数据，一般方法都是先将数据进行哈希分类，虽然学习数据结构的时候很了解HashMap的原理，但是并不清楚Java中是如何实现的，那么今天就结合原理和源代码好好总结一下HashMap这个类。</p>
-<h1 id="一、HashMap的引入"><a href="#一、HashMap的引入" class="headerlink" title="一、HashMap的引入"></a>一、HashMap的引入</h1><p>　数据结构中有数组和链表来实现对数据的存储，但这两者基本上是两个极端。</p>
-<h2 id="1-数组"><a href="#1-数组" class="headerlink" title="1.数组"></a>1.数组</h2><p>　数组存储区间是连续的，占用内存严重，故空间复杂的很大。但数组的二分查找时间复杂度小，为O(1)；数组的特点是：寻址容易，插入和删除困难；</p>
-<p>##2.链表##<br>　链表存储区间离散，占用内存比较宽松，故空间复杂度很小，但时间复杂度很大，达O（N）。链表的特点是：寻址困难，插入和删除容易。</p>
-<hr>
-<p>　那么我们能不能综合两者的特性，做出一种寻址容易，插入删除也容易的数据结构？<br>　答案是肯定的，这就是我们要提起的哈希表。<strong>哈希表</strong>（(Hash table）既满足了数据的查找方便，同时不占用太多的内容空间，使用也十分方便。</p>
-<h1 id="二、HashMap数据结构简介"><a href="#二、HashMap数据结构简介" class="headerlink" title="二、HashMap数据结构简介"></a>二、HashMap数据结构简介</h1><p>　Java为数据结构中的映射定义了一个接口java.util.Map，此接口主要有四个常用的实现类，分别是HashMap、Hashtable、LinkedHashMap和TreeMap，类继承关系如下图所示：</p>
-<p><img src="http://i.imgur.com/xgHDD1k.png" alt=""></p>
-<p>　下面针对各个实现类的特点做一些说明：</p>
-<p>　<strong>1 HashMap</strong>：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections的synchronizedMap方法使HashMap具有线程安全的能力，或者使用ConcurrentHashMap。</p>
-<p>　<strong>2 LinkedHashMap</strong>：LinkedHashMap是HashMap的一个子类，保存了记录的插入顺序，在用Iterator遍历LinkedHashMap时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</p>
-<p>　<strong>3 TreeMap</strong>：TreeMap实现SortedMap接口，能够把它保存的记录根据键排序，默认是按键值的升序排序，也可以指定排序的比较器，当用Iterator遍历TreeMap时，得到的记录是排过序的。如果使用排序的映射，建议使用TreeMap。在使用TreeMap时，key必须实现Comparable接口或者在构造TreeMap传入自定义的Comparator，否则会在运行时抛出java.lang.ClassCastException类型的异常。</p>
-<hr>
-<p>　对于上述三种Map类型的类，要求映射中的key是不可变对象。不可变对象是该对象在创建后它的哈希值不会被改变。如果对象的哈希值发生变化，Map对象很可能就定位不到映射的位置了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/回调机制/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/23/回调机制/" itemprop="url">
-                  回调机制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T15:19:50+08:00">
-                2017-02-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:55:46+08:00">
+                2017-02-02
               </time>
             
 
@@ -907,137 +507,100 @@ int size;
       
         
           
-            <p>　之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。</p>
-<h1 id="一、-异步和同步"><a href="#一、-异步和同步" class="headerlink" title="一、 异步和同步"></a>一、 异步和同步</h1><p>　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。<br>　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等前面动作执行完成以后方可执行。这就是同步。</p>
-<p>　这里引用一个例子进行说明。</p>
-<blockquote>
-<p>案例：<br>A、张三打电话给李四，让李四帮忙写份材料。<br>B、李四接到电话的时候，手上有自己的工作要处理，但他答应张三，忙完手上的工作后马上帮张三写好材料，并传真给张三。<br>C、通完电话后，张三外出办事。</p>
-<p>说明：<br>张三给李四通完电话后，就出去办事了，他并不需要等李四把材料写好才外出。那么张三让李四写材料的消息就属于异步消息。<br>相反，如果张三必须等李四把材料写好才能外出办事的话，那么这个消息就属于同步消息了。</p>
-</blockquote>
-<h1 id="二、-异步的实现"><a href="#二、-异步的实现" class="headerlink" title="二、 异步的实现"></a>二、 异步的实现</h1><p>　传统的程序执行代码都是从上到下，一条一条执行的。<br>　在以上的案例中，如果李四需要几个小时以后才能帮张三写好材料的话，那张三就必须等几个小时，这样张三这几个小时就无法干其他的事情。</p>
-<hr>
-<p>　可以使用以下办法来处理这种问题：</p>
-<ul>
-<li>张三找王五去给李四打电话，等李四写好材料后，由王五转交给张三。这样张三就可以外出办其他的事情了。</li>
-<li>问题得到了合理的解决，之前张三一条线的工作，由张三和王五两条线来完成了，两边同时进行，彼此不耽误。</li>
-</ul>
-<h1 id="三、-计算机语言的实现"><a href="#三、-计算机语言的实现" class="headerlink" title="三、 计算机语言的实现"></a>三、 计算机语言的实现</h1><ul>
-<li>以前由一个线程来处理的工作，可以通过新增一个线程来达到异步的目的。这也就是JAVA中的多线程技术。</li>
-<li>最后李四写好的材料必须交给张三，以做他用。这就是回调。</li>
-</ul>
-<p>　<strong>回调机制可以这样理解：</strong><br>　A发送消息给B，B处理好A要求的事情后，将结果返回给A，A再对B返回的结果来做进一步的处理。</p>
-<h1 id="四、-Java代码的实现"><a href="#四、-Java代码的实现" class="headerlink" title="四、 Java代码的实现"></a>四、 Java代码的实现</h1><p>回调的实现</p>
+            <p>　Static Nested Class是被声明为静态（static）的内部类，它可以不依赖于外部类实例被实例化。而通常的内部类需要在外部类实例化后才能实例化。</p>
+<p>　<strong>代码示例如下：</strong></p>
 <pre><code>/**
- * 回调接口
- * @author: 冯佳欣  
- * @date: 2017年2月23日 下午3:45:06
+ * 扑克类（一副扑克）
+ *
  */
-public interface CallBack {
+public class Poker {
+    private static String[] suites = {&quot;黑桃&quot;, &quot;红桃&quot;, &quot;草花&quot;, &quot;方块&quot;};
+    private static int[] faces = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    private Card[] cards;
     /**
-     * 执行回调方法
-     * @param objects 将处理后的结果作为参数返回给回调函数
-     * @return: void
+     * 构造器
+     * 
      */
-    public void execute(Object...objects);
-
-}
-</code></pre><p>消息的发送者</p>
-<pre><code>/**
- * 简单本地发送异步消息的类
- * @author: 冯佳欣  
- * @date: 2017年2月23日 下午3:47:07
- */
-public class Local implements CallBack, Runnable {
-    /**
-     * 远程接收消息的类。
-     */
-    private Remote remote;
-    /**
-     * 发送出去的消息
-     */
-    private String message;
-
-    public Local(Remote remote ,String message){
-        super();
-        this.remote = remote;
-        this.message = message;
-    }
-
-    public void sendMessage(){
-        //当前线程的名称
-        System.out.println(Thread.currentThread().getName());
-        //创建一个新的线程发送消息
-        Thread thread = new Thread(this);
-        thread.start();
-        //当前线程继续执行
-        System.out.println(&quot;Message has been sent by Local&quot;);
-    }
-
-
-    @Override
-    public void run() {
-        remote.excuteMessage(message, this);
-    }
-    /**
-     * 发送消息后的回调函数
-     */
-    @Override
-    public void execute(Object... objects) {
-        //打印返回的消息
-        System.out.println(objects[0]);
-        //打印发送消息的线程名称
-        System.out.println(Thread.currentThread().getName());
-        //中断发送消息的线程
-        Thread.interrupted();
-    }
-
-    public static void main(String[] args){
-        Local local = new Local(new Remote(),&quot;hello&quot;);
-        local.sendMessage();
-    }
-
-}
-</code></pre><p>远程消息的接收者</p>
-<pre><code>/**
- * 处理消息的远程类
- * @author: 冯佳欣  
- * @date: 2017年2月23日 下午3:49:43
- */
-public class Remote {
-    /**
-     * 处理消息
-     * @param msg 接收的消息
-     * @param callBack 回调函数处理类
-     * @return: void
-     */
-    public void excuteMessage(String msg,CallBack callBack){
-        /**
-         * 模拟远程类正在处理其他事情
-         */
-        for(int i =0;i&lt;10000;i++)
-        {
-
+    public Poker() {
+        cards = new Card[52];
+        for(int i = 0; i &lt; suites.length; i++) {
+            for(int j = 0; j &lt; faces.length; j++) {
+                cards[i * 13 + j] = new Card(suites[i], faces[j]);
+            }
         }
-        /**
-         * 处理完其他事情，现在来处理消息
-         */
-        System.out.println(msg);
-        System.out.println(&quot;I have executed the message by Local&quot;);
-        /**
-         * 执行回调
-         */
-        callBack.execute(new String[]{&quot;Nice to meet you~!&quot;});
     }
-
+    /**
+     * 洗牌 （随机乱序）
+     * 
+     */
+    public void shuffle() {
+        for(int i = 0, len = cards.length; i &lt; len; i++) {
+            int index = (int) (Math.random() * len);
+            Card temp = cards[index];
+            cards[index] = cards[i];
+            cards[i] = temp;
+        }
+    }
+    /**
+     * 发牌
+     * @param index 发牌的位置
+     * 
+     */
+    public Card deal(int index) {
+        return cards[index];
+    }
+    /**
+     * 卡片类（一张扑克）
+     * [内部类]
+     *
+     */
+    public class Card {
+        private String suite;   // 花色
+        private int face;       // 点数
+        public Card(String suite, int face) {
+            this.suite = suite;
+            this.face = face;
+        }
+        @Override
+        public String toString() {
+            String faceStr = &quot;&quot;;
+            switch(face) {
+            case 1: faceStr = &quot;A&quot;; break;
+            case 11: faceStr = &quot;J&quot;; break;
+            case 12: faceStr = &quot;Q&quot;; break;
+            case 13: faceStr = &quot;K&quot;; break;
+            default: faceStr = String.valueOf(face);
+            }
+            return suite + faceStr;
+        }
+    }
 }
-</code></pre><p>执行结果为</p>
-<pre><code>main
-Message has been sent by Local
-hello
-I have executed the message by Local
-Nice to meet you~!
-</code></pre><p><strong>注意：remote.executeMessage(message, this);</strong><br>　executeMessage方法需要接收一个message参数，表示发送出去的消息，而CallBack参数是他自己，也就是这里的this。表示发送消息后，由Local类自己来处理，调用自身的execute方法来处理消息结果。<br>　如果这里不是用this，而是用其他的CallBack接口的实现类的话，那就不能称之为“回调”了，在OO的世界里，那就属于“委派”。也就是说，“回调”必须是消息的发送者来处理消息结果，否则不能称之为回调。这个概念必须明确。</p>
+</code></pre><p>　测试代码如下：</p>
+<pre><code>class PokerTest {
+    public static void main(String[] args) {
+        Poker poker = new Poker();
+        poker.shuffle();                // 洗牌
+        Poker.Card c1 = poker.deal(0);  // 发第一张牌
+        // 对于非静态内部类Card
+        // 只有通过其外部类Poker对象才能创建Card对象
+        Poker.Card c2 = poker.new Card(&quot;红心&quot;, 1);    // 自己创建一张牌
 
+        System.out.println(c1);     // 洗牌后的第一张
+        System.out.println(c2);     // 打印: 红心A
+    }
+}
+</code></pre><p>　<strong>面试题：下面的代码哪些地方会产生编译错误？</strong></p>
+<pre><code>class Outer {
+    class Inner {}
+    pｕblic static void foo() { new Inner(); }
+    public void bar() { new Inner(); }
+    public static void main(String[] args) {
+        new Inner();
+    }
+}
+</code></pre><p>　解答：Java中非静态内部类对象的创建要依赖其外部类对象，上面的面试题中foo和main方法都是静态方法，静态方法中没有this，也就是说没有所谓的外部类对象，因此无法创建内部类对象，如果要在静态方法中创建内部类对象，可以这样做：</p>
+<pre><code>new Outer().new Inner();
+</code></pre>
           
         
       
@@ -1075,7 +638,7 @@ Nice to meet you~!
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/20/Comparable接口的实现和使用/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1100,8 +663,8 @@ Nice to meet you~!
             
               
                 
-                <a class="post-title-link" href="/2017/02/20/Comparable接口的实现和使用/" itemprop="url">
-                  Comparable接口的实现和使用
+                <a class="post-title-link" href="/2017/02/02/抽象类（abstract-class）和接口（interface）有什么异同/" itemprop="url">
+                  抽象类（abstract class）和接口（interface）有什么异同
                 </a>
               
             
@@ -1117,8 +680,8 @@ Nice to meet you~!
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-20T22:07:31+08:00">
-                2017-02-20
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T19:21:13+08:00">
+                2017-02-02
               </time>
             
 
@@ -1177,63 +740,1457 @@ Nice to meet you~!
       
         
           
-            <p>　在c语言中，有一个非常重要的概念就是<strong>回调函数</strong>，<strong>所谓回调函数，就是指函数先在某处注册，而他将在某个需要的时刻被调用</strong>。<br>　关于回调函数的概念，我将另起一篇文章进行学习。<br>　在Java中没有指针的概念，那么如何在Java语言中实现类似于函数指针的功能？可以利用接口与类来实现同样的效果，具体而言，就是先定义一个接口，然后在接口中声明要被调用的方法，接着实现这个接口，最后把这个实现类的一个对象作为参数传递给调用程序，调用程序通过这个参数来调用指定的函数，从而实现回调函数的功能。  </p>
+            <p>　如果一个类中包含抽象方法，那么这个类就是抽象类，在Java中可以通过abstract关键字声明该类或该方法时抽象的；接口就是指一些方法的集合，接口中的所有方法都没有方法体。<br>　只要包含一个抽象方法的类就必须别声明为抽象类，抽象类可以声明方法的存在而不去实现它，被声明的抽象方法不能包含方法体，在实现时，必须包含相同的或者更低的访问级别；接口中的所有方法都是抽象的，接口中的成员变量都是static final类型。</p>
+<p>　<strong>接口与抽象类的相同点如下：</strong></p>
+<ol>
+<li>都不能被实例化。</li>
+<li>接口类的实现类或抽象类的子类都只有实现了接口或抽象类的方法后才能被实例化。</li>
+</ol>
+<p>　<strong>接口是抽象类的不同点如下：</strong></p>
+<ol>
+<li>接口只有定义，其方法不能在接口中实现，只有实现接口的类才能实现接口中定义的方法，而抽象类可以有定义与实现，即其方法可以在抽象类中被实现。</li>
+<li>接口需要实现，但是抽象类只能被继承。</li>
+<li>接口强调特定功能的实现，其设计理念是“has- a”关系，而抽象类强调所属关系，其设计理念为“is- a”关系。</li>
+<li>接口中定义的成员变量默认为public static final,并且必须赋给其初值，其所有成员方法都是public、abstract的；而抽象类可以有自己的数据成员变量，也可以有非抽象的成员方法。</li>
+<li>接口被用于实现比较常用的功能，便于日后的维护或添加删除方法；而抽象类更倾向于充当公共类的角色，不适用于日后重新对里面的代码进行修改。<br>　<strong>一般而言，抽象类多用于在同类事物中有无法具体描述的方法的场景，所以当子类和父类之间存在有逻辑上的层次结构时，推荐使用抽象类；而接口多用于不同类之间，定义不同类之间的通信规则。</strong></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中字符串与存储的机制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/Java中字符串与存储的机制/" itemprop="url">
+                  Java中字符串与存储的机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T18:29:28+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>今天准备总结一下String对象的存储机制</strong></p>
+<p>　字符串的声明与初始化有如下两种情况：</p>
+<ol>
+<li>String s1 = new String(“abc”)//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后用new关键字在堆中创建新的对象</li>
+<li>String s2 = “abc”//s1是引用对象，首先在常量池寻找是否有”abc”字符串对象，如果没有则在字符串常量池中创建一个对象，然后s2指向字符串常量池中”abc”对象的首地址。</li>
+</ol>
+<p>　具体来说：</p>
+<pre><code>String s1 = &quot;abc&quot;//把&quot;abc&quot;放到常量池中，在编译时产生
+String s2 = &quot;ab&quot;+&quot;c&quot;//把&quot;ab&quot;+&quot;c&quot;转换成字符串常量&quot;abc&quot;放到常量区中
+String s3 = new String(&quot;abc&quot;)//在运行时把&quot;abc&quot;放到堆里面
+</code></pre><ul>
+<li>String对象的intern()方法会得到字符串对象在常量池中对应的版本的引用（如果常量池中有一个字符串与String对象的equals结果是true），如果常量池中没有对应的字符串，则该字符串将被添加到常量池中，然后返回常量池中字符串的引用</li>
+<li>字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象</li>
+</ul>
 <hr>
-<p>　那么接下来学习Compareble接口的实现和使用。</p>
-<h1 id="1-什么是Comparable接口"><a href="#1-什么是Comparable接口" class="headerlink" title="1.什么是Comparable接口"></a>1.什么是Comparable接口</h1><p>　此接口强行对实现它的每个类的对象进行整体排序。此排序被称为该类的自然排序 ，类的 compareTo 方法被称为它的自然比较方法 。实现此接口的对象列表（和数组）可以通过 Collections.sort （和 Arrays.sort ）进行自动排序。实现此接口的对象可以用作有序映射表中的键或有序集合中的元素，无需指定比较器。</p>
-<h1 id="2-实现什么方法"><a href="#2-实现什么方法" class="headerlink" title="2.实现什么方法"></a>2.实现什么方法</h1><pre><code>int compareTo(T o)
-</code></pre><p>　比较此对象与指定对象的顺序。如果该对象小于、等于或大于指定对象，则分别返回负整数、零或正整数。<br>　强烈推荐 (x.compareTo(y)==0) == (x.equals(y)) 这种做法，但不是 严格要求这样做。一般来说，任何实现 Comparable 接口和违背此条件的类都应该清楚地指出这一事实。推荐如此阐述：“注意：此类具有与 equals 不一致的自然排序。”</p>
-<pre><code>参数：
-       o - 要比较的对象。 
-返回：
-        负整数、零或正整数，根据此对象是小于、等于还是大于指定对象。 
-抛出：
-        ClassCastException - 如果指定对象的类型不允许它与此对象进行比较。
-</code></pre><h1 id="3-代码实例"><a href="#3-代码实例" class="headerlink" title="3.代码实例"></a>3.代码实例</h1><pre><code>import java.util.Arrays;
-import java.util.Random;
-class Employee implements Comparable&lt;Employee&gt;{
-    private int id;
-    private String name;
-    private double salary;
-    public Employee(String n,double s){
-        this.name = n;
-        this.salary =s;
-        Random ID = new Random();
-        id = ID.nextInt(10000000);
+<p>　在明白了以上两点，那么我们来做两道笔试题：</p>
+<ol>
+<li>什么情况下用+运算符进行字符串连接比调用StringBuffer/StringBuilder对象的append方法连接字符串性能更好？<br>StringBuffer对象适用于字符串经常操作，不产生而额外内存，而String对象不可变，一旦创建不能修改，但是操作简单，效率高，所以适用于字符串较少时，操作次数少的情况下。  </li>
+<li><p>请说出下面程序的输出。</p>
+<pre><code>class StringEqualTest {
+    public static void main(String[] args) {
+        String s1 = &quot;Programming&quot;;
+        String s2 = new String(&quot;Programming&quot;);
+        String s3 = &quot;Program&quot;;
+        String s4 = &quot;ming&quot;;
+        String s5 = &quot;Program&quot; + &quot;ming&quot;;
+        String s6 = s3 + s4;
+        System.out.println(s1 == s2);
+        System.out.println(s1 == s5);
+        System.out.println(s1 == s6);
+        System.out.println(s1 == s6.intern());
+        System.out.println(s2 == s2.intern());
     }
-    public int getId() {
-        return id;
+}
+</code></pre></li>
+</ol>
+<pre><code>**结果为**
+
+    System.out.println(s1==s2);//false
+    System.out.println(s1==s5);//true
+    System.out.println(s1==s6);//false
+    System.out.println(s1==s6.intern());//true
+    System.out.println(s2==s2.intern());//false
+</code></pre><p>　　<strong>解释</strong>：字符串的+操作其本质是创建了StringBuilder对象进行append操作，然后将拼接后的StringBuilder对象用toString方法处理成String对象；</p>
+<pre><code>String s6 = s3+s4//等价于
+StringBuilder temp = s3;
+temp.append(s4);
+String s6 = temp.toString();
+</code></pre><p>　所以S6是创建一个新的StringBuilder对象的toString()方法处理成String对象，因此s1==s6为false。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/02/Java中i++和++i的区别和理解/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/02/Java中i++和++i的区别和理解/" itemprop="url">
+                  Java中i++和++i的区别和理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T17:31:43+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　今天在做Java题时碰到了关于i++的问题，题目是这样的：</p>
+<pre><code>public class Inc { 
+    public static void main(String[] args) { 
+       Inc inc = new Inc(); 
+       int i = 0; 
+       inc.fermin(i); 
+       i= i ++; 
+       System.out.println(i);
+
+    } 
+    void fermin(int i){ 
+       i++; 
+    } 
+}
+最终答案是0。
+</code></pre><p>　关于值传递我还是理解的，但是i=i++这个语句我又有点懵了，于是找了相关资料，总结就是JVM的机制所引起的，接下来我要详细介绍一下这方面知识，也算给自己一个交代。</p>
+<hr>
+<p>　<strong>jvm里面有两个存储区，一个是暂存区（是一个堆栈，以下称为堆栈），另一个是变量区。jvm会这样运行这条语句：</strong></p>
+<ol>
+<li>JVM把count值（其值是0）拷贝到临时变量区。 </li>
+<li>count值加1，这时候count的值是1。 </li>
+<li>返回临时变量区的值。</li>
+<li>返回值赋值给count，此时count值被重置成0。  </li>
+</ol>
+<p>　所以上题的i= i++应该是下面的过程</p>
+<pre><code>int i =0;
+temp = i;//temp 为临时变量
+i =i+1;//i =1
+i = temp //i =0
+</code></pre><p>　对于自增运算++j与j++，由于加一的执行顺序不同，所以Java中有中间缓存变量来储存其单个表达式的值，而j的自增自减的结果依然保留在原来的变量储存区。因为本体是j的值，而单个表达式的值是中间产生的一个临时变量值，是在整条计算表达式结束后就可以抛弃的值，所以用个临时中间缓存变量在放就可以了。</p>
+<p>　<strong>按字面理解就是i++ 等价于</strong></p>
+<pre><code>temp =i;//jvm把i的值拷贝到临时变量temp
+i =i+1;//i自加1
+返回临时变量temp的值0作为表达式i++/++i的值
+</code></pre><p>　感觉了解了Java的自增原理，那么我们在练习一道题：</p>
+<pre><code>int j = 0;
+j =++j + j++ +j++ + j++;
+
+最终结果为7，详细解答如下
+
+j =j+1 =1;
+temp1 = j =1;
+temp2 = j =1;
+j = j+1 =2;
+temp3 = j = 2；
+j =j+1 =3;
+temp4 = j = 3;
+j = j+1 =4;
+j = temp1 +temp2 +temp3 +temp4 = 1+1+2+3 =7;
+</code></pre><p> <strong>总结</strong>：今天算是终于弄明白i++的原理了，有些问题一定要弄清楚，不能糊弄过去，加油！！！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/01/基本操作/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/01/基本操作/" itemprop="url">
+                  基本操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T19:51:36+08:00">
+                2017-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/备忘录/" itemprop="url" rel="index">
+                    <span itemprop="name">备忘录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>hexo new &quot;postName&quot; #新建文章
+hexo generate #生成静态页面至public目录
+hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）
+hexo deploy #将.deploy目录部署到GitHub
+hexo help  # 查看帮助
+hexo version  #查看Hexo的版本
+</code></pre><h3 id="命令简写"><a href="#命令简写" class="headerlink" title="命令简写"></a>命令简写</h3><pre><code>hexo n == hexo new
+hexo g == hexo generate
+hexo s == hexo server
+hexo d == hexo deploy
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-外观模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-外观模式/" itemprop="url">
+                  Java典型设计模式-外观模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在学习Tomcat,Tomcat中多处使用外观（门面）模式，那么今天系统学习一下外观模式，以便更好地学习Tomcat。</p>
+<hr>
+<p>　<strong>外观模式：要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行，外观模式提供一个更高层次的接口，使得子系统轻易使用。</strong><br>外观模式有以下两个角色：  </p>
+<ul>
+<li>外观角色：客户端可以调用该角色的方法，该角色知晓相关子系统的功能和责任；正常情况下，本角色会将所有从客户端发来的请求委派到相应的子系统，该角色没有实际的业务逻辑，只是一个委托类。</li>
+<li>子系统角色：可以同时有一个或多个子系统，每一个子系统都不是一个单独的类，而是一个类的集合。子系统不知道外观角色的存在，对于子系统而言，外观角色仅是另一个客户端。</li>
+</ul>
+<p>外观模式类图如下：<br><img src="http://i.imgur.com/bnRLavr.png" alt=""> </p>
+<p>外观模式的优点：</p>
+<ol>
+<li>减少系统的相互依赖，所有的依赖都是对Facade对象的依赖，与子系统无关。</li>
+<li>提高灵活性，不管子系统如何变化，只要不影响Facade对象，任何活动都是自由的。</li>
+<li>提高安全性，Facade为提供的方法，外界就无法访问，提高系统的安全性。</li>
+<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
+</ol>
+<p>外观模式的使用场景：</p>
+<ol>
+<li>为一个浮渣的模块或子系统提供一个供外界访问的接口。</li>
+<li>子系统相对独立，外界对子系统的访问只要黑箱操作即可。</li>
+<li>预防风险扩散，使用Facade进行访问操作控制。</li>
+</ol>
+<hr>
+<p>　<strong>使用外观模式模拟秘书为老板准备工作的过程：</strong></p>
+<p>　Airport.java：    </p>
+<pre><code>public class Airport {
+    public void bookTicket(String from,String to){
+        System.out.println(&quot;订购了从&quot;+from+&quot;到&quot;+to+&quot;的机票&quot;);
     }
-    public String getName() {
-        return name;
+}
+</code></pre><p>　Hotel.java：</p>
+<pre><code>public class Hotel {
+    public void reserve(int days){
+        System.out.println(&quot;订了&quot;+days+&quot;天的房间&quot;);
     }
-    public double getSalary() {
-        return salary;
+}
+</code></pre><p>　Restaurant.java：</p>
+<pre><code>public class Restaurant {
+    public void reserve(int num){
+        System.out.println(&quot;定了一座&quot;+num+&quot;个人的酒席&quot;);
+    }
+}
+</code></pre><p>　Driver.java：</p>
+<pre><code>public class Driver {
+    public void drive(String to){
+        System.out.println(&quot;司机开车到&quot;+to);
+    }
+}
+</code></pre><p>　Secretary.java：</p>
+<pre><code>public class Secretary {
+    private Driver driver = new Driver();
+    private Hotel hotel = new Hotel();
+    private Restaurant res = new Restaurant();
+    private Airport air = new Airport();
+
+    //安排出差
+    public void trip(String to,int days){
+        air.bookTicket(&quot;青岛&quot;, to);
+        driver.drive(&quot;机场&quot;);
+        hotel.reserve(days);
+    }
+
+    //安排饭局
+    public void repast(int num){
+        res.reserve(num);
+        driver.drive(&quot;酒店&quot;);
+    }
+}
+</code></pre><p>　Boss.java</p>
+<pre><code>public class Boss {
+    public static void main(String[] args){
+        Secretary se = new Secretary();
+        System.out.println(&quot;老板告诉秘书要去上海出差10天&quot;);
+        se.trip(&quot;上海&quot;, 10);
+        System.out.println(&quot;................&quot;);
+        System.out.println(&quot;老板告诉秘书邀请8个人吃饭&quot;);
+        se.repast(8);
+    }
+
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>老板告诉秘书要去上海出差10天
+订购了从青岛到上海的机票
+司机开车到机场
+订了10天的房间
+................
+老板告诉秘书邀请8个人吃饭
+定了一座8个人的酒席
+司机开车到酒店
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-命令模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-命令模式/" itemprop="url">
+                  Java典型设计模式-命令模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在学习Tomcat,Tomcat中的Connector组件是通过命令模式调用Container的，那么今天就来学习一下命令模式。</p>
+<hr>
+<p>　<strong>命令模式：将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以听、提供命令的撤销和恢复功能。</strong><br>　命令模式有以下两个角色：  </p>
+<ul>
+<li>命令角色：该角色声明一个给所有具体命令类的抽象接口，定义需要执行的命令。</li>
+<li>具体命令角色：该角色定义一个接受者和行为者之间的若耦合，实现命令方法，并调用接受者的相应操作。</li>
+<li>调用者角色：该角色负责调用命令对象执行请求。</li>
+<li>接受者角色：该角色负责具体实施和执行一个请求。</li>
+</ul>
+<p>　命令模式类图如下：<br><img src="http://i.imgur.com/OUd8uRD.png" alt=""></p>
+<p>　命令模式的优点：</p>
+<ol>
+<li>类间解耦：调用者角色与接收者角色之间没有任何依赖关系，调用者实现功能只需要调用Command中的execute()方法，不需要了解是哪个接受者执行。</li>
+<li>可扩展性：Command的子类可以非常容易的扩展，而调用者用Invoker和更高层次的模块Client不产生严重的代码耦合。</li>
+<li>命令模式结合其他模式更优秀。</li>
+</ol>
+<p>　命令模式的缺点：<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</p>
+<hr>
+<p>　<strong>命令模式模板例子：</strong></p>
+<p>　Command.java：    </p>
+<pre><code>public interface Command {
+    public void execute();
+
+}
+</code></pre><p>　ComcreteCommand.java：</p>
+<pre><code>public class ComcreteCommand implements Command {
+    private Receiver receiver;
+
+    public ComcreteCommand(Receiver receiver) {
+        super();
+        this.receiver = receiver;
+    }
+
+    @Override
+    public void execute() {
+        this.receiver.action();
+    }
+}
+</code></pre><p>　Receiver.java：</p>
+<pre><code>public class Receiver {
+    public void action(){
+        System.out.println(&quot;执行动作&quot;);
+    }
+}
+</code></pre><p>　Invoker.java：</p>
+<pre><code>public class Invoker {
+    private Command command;
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+    public void action(){
+        this.command.execute();
+    }
+}
+</code></pre><p>　Client.java：</p>
+<pre><code>public class Client {
+    public static void main(String[] args) {
+        Invoker invoker = new Invoker();
+        Receiver receiver = new Receiver();
+        Command command = new ComcreteCommand(receiver);
+        invoker.setCommand(command);
+        invoker.action();
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>执行动作
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-观察者模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-观察者模式/" itemprop="url">
+                  Java典型设计模式-观察者模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　<strong>观察者模式是类和类之间的关系，不涉及到继承。</strong></p>
+<hr>
+<p>　观察者模式很好理解，类似于邮件订阅和RSS订阅，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。</p>
+<pre><code>public interface Observer {  
+    public void update();  
+}
+
+public class Observer1 implements Observer {  
+    @Override 
+    public void update() {  
+        System.out.println(&quot;observer1 has received!&quot;);  
+    }  
+}
+
+public class Observer2 implements Observer {  
+    @Override 
+    public void update() {  
+        System.out.println(&quot;observer2 has received!&quot;);  
+    }  
+}
+
+public interface Subject {  
+    /*增加观察者*/  
+    public void add(Observer observer);  
+    /*删除观察者*/  
+    public void del(Observer observer);  
+    /*通知所有的观察者*/  
+    public void notifyObservers();  
+    /*自身的操作*/ 
+    public void operation();  
+}
+
+import java.util.Enumeration;
+import java.util.Vector;
+
+public abstract class AbstractSubject implements Subject {  
+
+    private Vector&lt;Observer&gt; vector = new Vector&lt;Observer&gt;();  
+    @Override 
+    public void add(Observer observer) {  
+        vector.add(observer);  
+    }  
+
+    @Override 
+    public void del(Observer observer) {  
+        vector.remove(observer);  
+    }  
+
+    @Override 
+    public void notifyObservers() {  
+        Enumeration&lt;Observer&gt; enumo = vector.elements();  
+        while(enumo.hasMoreElements()){  
+            enumo.nextElement().update();  
+        }  
+    }  
+}
+
+public class MySubject extends AbstractSubject {  
+
+    @Override 
+    public void operation() {  
+        System.out.println(&quot;update self!&quot;);  
+        notifyObservers();  
+    }  
+
+}
+
+public class ObserverTest {  
+    public static void main(String[] args) {  
+        Subject sub = new MySubject();  
+        sub.add(new Observer1());  
+        sub.add(new Observer2());  
+        sub.operation();  
+    }  
+}
+运行结果：
+update self!
+observer1 has received!
+observer2 has received!
+</code></pre><p>　也许看完实例之后还是比较抽象，再将文字描述和代码实例看一两遍吧，然后结合工作中看哪些场景可以使用这种模式以加深理解。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-责任链模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-责任链模式/" itemprop="url">
+                  Java典型设计模式-责任链模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在学习Tomcat,Tomcat中最容易发现的设计模式就是责任链设计模式，这个设计模式也是在Tomcat中Container设计的基础，整个容器就是通过一个链连接在一起的，这个链一直将请求正确地传递给最终处理请求的Servlet，那么就学习一下责任链设计模式。</p>
+<hr>
+<p>　<strong>责任链模式：使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理为止。</strong><br>　责任链模式有以下两个角色：  </p>
+<ul>
+<li>抽象处理者角色：该角色对请求进行抽象，并定义一个方法以设定和返回对下一个处理者的引用。</li>
+<li>具体处理者角色：该角色接到请求后，可以选择将请求处理掉，或者将请求传给下一个处理者。</li>
+</ul>
+<p>　责任链模式类图如下：<br><img src="http://i.imgur.com/4jm2jrS.png" alt=""></p>
+<p>　责任链模式的优点：</p>
+<ol>
+<li>责任链模式将请求和处理分开，请求者不知道是谁处理的，处理者可以不用知道请求的全貌。</li>
+<li>提高系统的灵活性。</li>
+</ol>
+<p>　责任链模式的缺点：</p>
+<ol>
+<li>降低程序的性能，每个请求都是从链头遍历到链尾，当链比较长的时候，性能会大幅下降。</li>
+<li>不易于调试，由于采用类似递归的方式，调试的时候逻辑比较复杂。<br>　可能会导致系统中出现过多的具体命令类，在项目使用中慎重考虑使用。</li>
+</ol>
+<p>　责任链模式的使用场景：</p>
+<ol>
+<li>一个请求需要一系列的处理工作。</li>
+<li>业务流的处理。</li>
+<li>对系统进行补充扩展。</li>
+</ol>
+<hr>
+<p>　<strong>击鼓传花演示责任链模式板例子：</strong></p>
+<p>　Player.java：    </p>
+<pre><code>public abstract class Player {
+    private Player successor;
+    public abstract void handle(int i);
+    protected void setSuccessor(Player aSuccessor){
+        this.successor = aSuccessor;
+    }
+    //传给下一个
+    public void next(int index){
+        if(successor!=null)
+            successor.handle(index);
+        else
+            System.out.println(&quot;游戏结束&quot;);
+    }
+}
+</code></pre><p>　PlayerAjava：</p>
+<pre><code>public class PlayerA extends Player {
+    public PlayerA(Player successor){
+        this.setSuccessor(successor);
     }
     @Override
-    //这里比较的是什么 sort方法实现的就是按照此比较的东西从小到大排列
-    public int compareTo(Employee o) {
-        if(id&lt;o.id)
-            return -1;
-        if(id&gt;o.id)
-            return 1;
-        return 0;
+    public void handle(int i) {
+        if(i==1)
+            System.out.println(&quot;PlayerA喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerA把花向下传&quot;);
+            next(i);
+        }
     }
 }
-public class EmployeeSortTest {
+</code></pre><p>　PlayerB.java：</p>
+<pre><code>public class PlayerB extends Player {
+    public PlayerB(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==2)
+            System.out.println(&quot;PlayerB喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerB把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　PlayerC.java：</p>
+<pre><code>public class PlayerC extends Player {
+    public PlayerC(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==3)
+            System.out.println(&quot;PlayerC喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerC把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　PlayerD.java：</p>
+<pre><code>public class PlayerD extends Player {
+    public PlayerD(Player successor){
+        this.setSuccessor(successor);
+    }
+    @Override
+    public void handle(int i) {
+        if(i==4)
+            System.out.println(&quot;PlayerD喝酒&quot;);
+        else{
+            System.out.println(&quot;PlayerD把花向下传&quot;);
+            next(i);
+        }
+    }
+}
+</code></pre><p>　DrumBeater.java：</p>
+<pre><code>public class DrumBeater {
     public static void main(String[] args) {
-        Employee[] staff = new Employee[3];
-        staff[0] = new Employee(&quot;fengjiaxin&quot;,35000);
-        staff[1] = new Employee(&quot;yangqi&quot;,40000);
-        staff[2] = new Employee(&quot;james&quot;,50000);
-        //sort方法可以实现对对象数组排序，但是必须实现 Comparable接口
-        Arrays.sort(staff);
-        for(Employee e:staff)
-            System.out.println(&quot;id:&quot;+e.getId()+&quot; name:&quot;+e.getName()+&quot; salary:&quot;+e.getSalary());
+        Player player = new PlayerA(new PlayerB(new PlayerC(new PlayerD(null))));
+        player.handle(3);
     }
 }
-</code></pre><h1 id="4-与Comparator的区别"><a href="#4-与Comparator的区别" class="headerlink" title="4.与Comparator的区别"></a>4.与Comparator的区别</h1><p>　Comparator位于包java.util下，而Comparable位于包java.lang下，Comparable接口将比较代码嵌入自身类中，而后者在一个独立的类中实现比较。<br>　如果类的设计师没有考虑到Compare的问题而没有实现Comparable接口，可以通过  Comparator来实现比较算法进行排序，并且为了使用不同的排序标准做准备，比如：升序、降序。</p>
-
+</code></pre><p>　程序运行结果：</p>
+<pre><code>PlayerA把花向下传
+PlayerB把花向下传
+PlayerC喝酒
+</code></pre>
           
         
       
@@ -1266,7 +2223,7 @@ public class EmployeeSortTest {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1309,7 +2266,7 @@ public class EmployeeSortTest {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">59</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

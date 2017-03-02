@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/19/null关键字理解/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-策略模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/19/null关键字理解/" itemprop="url">
-                  null关键字理解
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-策略模式/" itemprop="url">
+                  Java典型设计模式-策略模式
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-19T21:35:07+08:00">
-                2017-02-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
                   </a>
                 </span>
 
@@ -353,68 +353,108 @@
       
         
           
-            <p>　<strong>关键字</strong>是电脑语言里事先定义的，有特别意义的标识符，有时又叫保留字，还有特别意义的变量。Java的关键字对Java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等，关键字不能用作变量名、方法名、类名、包名和参数。Java语言规定了Java中的关键字不能作为标识符。那么，今天，我们来探讨一下Java中的关键字null。</p>
-<h1 id="一、null是代表不确定的对象"><a href="#一、null是代表不确定的对象" class="headerlink" title="一、null是代表不确定的对象"></a>一、null是代表不确定的对象</h1><p>　　Java中，null是一个关键字，用来标识一个不确定的对象。因此可以将null赋给引用类型变量，但不可以将null赋给基本类型变量。<br>　　比如：int a = null;是错误的。Ojbect o = null是正确的。<br>　　Java中，变量的适用都遵循一个原则，先定义，并且初始化后，才可以使用。我们不能int a后，不给a指定值，就去打印a的值。这条对对于引用类型变量也是适用的。<br>　　我们在定义一个引用类型变量时，无法给出一个确定的值，但是不指定值，程序可能会在try语句块中初始化值。但我们下面使用变量的时候就会报错。但只要先给变量指定一个null值，问题就解决了。例：</p>
-<pre><code>Connection conn = null;
-　　try {
-　　conn = DriverManager.getConnection(&quot;url&quot;, &quot;user&quot;, &quot;password&quot;);
-　　} catch (SQLException e) {
-　　e.printStackTrace();
-　　}
-    String catalog = conn.getCatalog();
-</code></pre><p>　如果刚开始的时候不指定conn = null，则最后一句就会报错。</p>
-<h1 id="二、null本身不是对象，也不是Objcet的实例"><a href="#二、null本身不是对象，也不是Objcet的实例" class="headerlink" title="二、null本身不是对象，也不是Objcet的实例"></a>二、null本身不是对象，也不是Objcet的实例</h1><p>　null本身虽然能代表一个不确定的对象，但就null本身来说，它不是对象，也不知道什么类型，也不是java.lang.Object的实例。</p>
-<h1 id="三、Java默认给变量赋值"><a href="#三、Java默认给变量赋值" class="headerlink" title="三、Java默认给变量赋值"></a>三、Java默认给变量赋值</h1><p>　在定义变量的时候，如果定义后没有给变量赋值，则Java在运行时会自动给变量赋值。赋值原则是整数类型int、byte、short、long的自动赋值为0，带小数点的float、double自动赋值为0.0，boolean的自动赋值为false，其他各供引用类型变量自动赋值为null。</p>
-<h1 id="四、null的其他作用"><a href="#四、null的其他作用" class="headerlink" title="四、null的其他作用"></a>四、null的其他作用</h1><p>1、判断一个引用类型数据是否null。 用==来判断。<br>2、释放内存，让一个非null的引用类型变量指向null。这样这个对象就不再被任何对象应用了。等待JVM垃圾回收机制去回收。</p>
-<h1 id="五、null与””的相关问题"><a href="#五、null与””的相关问题" class="headerlink" title="五、null与””的相关问题"></a>五、null与””的相关问题</h1><h2 id="问题一：null和””的区别"><a href="#问题一：null和””的区别" class="headerlink" title="问题一：null和””的区别"></a>问题一：null和””的区别</h2><pre><code>String s=null; 
-string.trim()就会抛出为空的exception 
-String s=&quot;&quot;; 
-string.trim()就不会抛,为什么? 
-</code></pre><p>　NULL代表声明了一个空对象，根本就不是一个字符串；””代表声明了一个对象实例，这个对象实例的值是一个长度为0的空字符串。<br>　NULL代表声明了一个空对象,对空对象做任何操作都不行的,除了=和==；””是一个字符串了,只是这个字符串里面没有内容了</p>
-<pre><code>String s=null;只是定义了一个句柄，也就是说你有了个引用，但是这个引用未指乡任何内存空间 
-String s=&quot;&quot;;这个引用已经指向了一块是空字符串的内存空间，是一个实际的东西。
-String s=null;//null是未分配堆内存空间 
-String a;//分配了一个内存空间,没存入任何对象 
-String a=&quot;&quot;;//分配了一个内存空间,存了一个字符串对象 
-</code></pre><h2 id="问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？"><a href="#问题二：-String-s-和String-s-null-和String-s-”a”-有什么区别？" class="headerlink" title="问题二： String s;和String s=null;和String s=”a”;有什么区别？"></a>问题二： String s;和String s=null;和String s=”a”;有什么区别？</h2><p>　针对这三种情况，使用out.println(s);的时候，第一个会出现异常，第二个会输出null.第三个则会输出a，这是为什么呢？这三句声明语句，各自作了什么呢？<br>　第一个只是定义了一个String类型变量s，并没有给它赋初值，在Java中，默认在使用一<br>个变量的时候必须赋予它初值（降低风险）。<br>　第二个和第三个都定义了String类型变量s，并赋予它初值，只不过第二个赋予的值为null（空）罢了<br>　主要要理解的是String s; <strong>s为一个引用，它不是对象</strong><br>　第一个是没有初始化的引用；<br>　第二个为空引用；<br>　第三个是在字符串池里写入一个字符’a’,然后用s指向它。<br>　另外， String s=”a”和String s=new String(“a”);是有本质上的区别的；前者是在字符串池里写入一个字符’a’,然后用s指向它；后者是在堆上创建一个内容为”a”的字符串对象。 </p>
-<pre><code>String str=&quot;aaa&quot;; //于栈上分配内存 
-String str=new String(&quot;aaa&quot;); //于堆上分配内存 
-String s; 系统会自动赋值null 
-String s;只是给s分配一个内存空间 
-String s=null;是分配的空间中存储的值为空值 
-String s=&quot;a&quot;;这句就不用我多说了分配的空间的值为字符a 
-</code></pre><h2 id="问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同"><a href="#问题三：-声明了一个string-a-变量-在以后的判断中，a-””和a-null有何不同" class="headerlink" title="问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?"></a>问题三： 声明了一个string a;变量 在以后的判断中，a==””和a==null有何不同?</h2><p>　如果没有给a赋过值，a==””会导致异常。<br>　在实际处理时，往往认为””和null代表相同的含义，即都代表无值。<br>　此时建议用如下语法： </p>
-<pre><code>if(a==null || a==&quot;&quot;) 
-{ 
-} 
-</code></pre><p>　如果a为null，就不会执行后面的判断，直接返回true；null是用来判断引用类型是否分配了存储空间 ，””是针对字符串的。string类型实际上是字符串指针，也即是一个引用类型 所以如果没有给a赋过值，a==””会导致异常 </p>
-<h2 id="问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？"><a href="#问题四：-String-abc-null-String-abc-””-String-abc-三种写法有什么区别？" class="headerlink" title="问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？"></a>问题四： String abc=null;String abc=””;String abc;三种写法有什么区别？</h2><p>1：创建一个空字符串对象。<br>2：创建一个字符串为空的字符串对象。<br>3：声明一个字符串对象，但并没有分配内存，而1，2已经分配了内存<br>　对于最后一种表示,你不能if(abc==null),或者int length = abc.length();编译的时候会提示可能没有初始化。</p>
-<pre><code>String abc=null; 
-String abc=&quot;&quot;; 
-</code></pre><p>　一般推荐使用第二种。<br>　第一种abc指向null，很多时候要判断字符串是否为空时，容易漏掉这种情况，在调用String的相关方法的时候就会出错<br>　第二种则相对简单，String的方法都可以用，判断的时候也不会出错。</p>
-<pre><code>1) String abc=null; 
-2) String abc; 
-3）String a=&quot;&quot;; 
-4) String b=&quot;&quot;; 
-5) String c=new String(&quot;&quot;); 
-6) String d=new String(&quot;&quot;); 
+            <p>　最近在学习Spring，在Spring中有多个地方使用策略模式，如Bean定义对象的创建和代理对象的创建等，那今天学习一下策略模式。</p>
+<hr>
+<p>　<strong>策略模式：针对一组算法，将每一个算法封装到具有共同接口的的独立类中，从而使得他们可以相互替换，使得算法可以在不影响客户端的情况下发生变化。</strong>  </p>
+<p>　策略模式有以下三个角色：  </p>
+<ul>
+<li>环境角色：该角色也叫上下文角色，起到承上启下的作用，屏蔽高层模块对策略、算法的直接访问，它持有一个Strategy的引用。</li>
+<li>抽象策略角色：该角色对策略、算法进行抽象，通常定义每个策略或算法必须具有的方法和属性。</li>
+<li>具体策略角色：该角色实现抽象策略中的具体操作，含有具体的算法。</li>
+</ul>
+<p>　策略模式类图如下：<br><img src="http://i.imgur.com/lLTa3AF.png" alt=""></p>
+<p>　策略式有以下优点：  </p>
+<ol>
+<li>策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族，恰当的使用继承可以把公共的代码移到父类中，从而避免代码重复。</li>
+<li>策略模式提供了可以替换继承关系的办法，继承可以处理多种算法或行为，如果不适用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为，但是这样算法或行为的使用者和算法本身混在一起，从而不可能在独立演化。</li>
+<li>使用策略模式可以避免使用多重条件转移语句。</li>
+</ol>
+<p>　策略模式的缺点：</p>
+<ol>
+<li>客户端必须知道所有的策略类，并自行决定使用哪一个策略类。</li>
+<li>策略模式造成很多的策略类。</li>
+</ol>
+<p>　策略模式的使用场景：</p>
+<ol>
+<li>多个类只是在算法或行为上稍有不同的场景。</li>
+<li>算法需要自由切换的场景。</li>
+<li>需要屏蔽算法规则的场景。</li>
+</ol>
+<hr>
+<p>　通过图书销售中不同折扣算法演示策略模式。<br>　DiscountStrategy.java</p>
+<pre><code>public abstract class DiscountStrategy {
+    private double price = 0;
+    private int number =0;
+    public DiscountStrategy(double price, int number) {
+        super();
+        this.price = price;
+        this.number = number;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public int getNumber() {
+        return number;
+    }
+    public abstract double calculateDiscount();
+}
+</code></pre><p>　NoDiscountStrategy.java</p>
+<pre><code>public class NoDiscountStrategy extends DiscountStrategy {
+    public NoDiscountStrategy(double price, int number) {
+        super(price, number);
 
-//1)等于2），和C语言不同，**JAVA为安全原因不允许一个悬挂引用，没有赋值的引用地址一律自动赋值为NULL，以防止访问到任意内存 **  
-//3)和4)中,变量a和b将会指向同一内存地址(&quot;&quot;的地址)   
-//5)和6)中，变量c和d不会指向同一地址,而是两个&quot;&quot;内容的地址,并且和a,b不同,实际上,3)和4)相当于new String(&quot;&quot;).intern().   
-//String类维护着一个字符串池,对于像3)和4)这样的赋值方法,String会在这个池中查找字符串是否已经在池中,如果在,就直接指向该地址,   
-//如果不在,生成一个实例放入池中再指向那个地址,可见对于同样内容的字符串多次引用时3)4)的方法要比5)6)的方法剩内存,之所以这样做,是因为String是一个内容不可变的量,运用的是设计模式GOF.FlyWeight 
-</code></pre><p>　但有个关键的一点,这就是: <strong>String s;在什么情况下可以等同于String s=null;而在什么情况下又不等同？</strong><br>　考虑下面的代码: </p>
-<pre><code>//StringTest.java 
-public class StringTest { 
-    static String s; //１
-    public static void main(String[] args) { 
-    //String s; //２
-    System.out.println(s); 
-    } 
-} 
-</code></pre><p>　编译并运行上面的代码,将打印null。<br>　可见标有１号的行是自动初始化了的(s被自动初始化为null)。<br>　而如果把标有２号的行取消注释,代码将不能通过编译,这是因为这行定义的是本地变量,而本地变量是不会自动初始化的。<br><strong>由此得出结论：</strong><br>　在成员变量的定义中,String s;等同于String s=null;<br>　而在本地变量(方法变量)的定义中,String s;不等同于String s=null;,这时要使用s必须显式地赋值。     </p>
+    }
+    @Override
+    public double calculateDiscount() {
+        return 0;
+    }
+}
+</code></pre><p>　FixDiscountStrategy.java</p>
+<pre><code>public class FixDiscountStrategy extends DiscountStrategy {
+    public FixDiscountStrategy(double price, int number) {
+        super(price, number);
+    }
+    @Override
+    public double calculateDiscount() {
+        return getNumber()+1;
+    }
+}
+</code></pre><p>　PercentageDiscountStrategy.java</p>
+<pre><code>public class PercentageDiscountStrategy extends DiscountStrategy {
+    public PercentageDiscountStrategy(double price, int number) {
+        super(price, number);
+    }
+    @Override
+    public double calculateDiscount() {
+        return getPrice()*getNumber()*0.15;
+    }
+}
+</code></pre><p>　ContextClient.java</p>
+<pre><code>public class ContextClient {
+    private DiscountStrategy ds = null;
+    public ContextClient(DiscountStrategy ds) {
+        super();
+        this.ds = ds;
+    }
+    public double contextCalDisc(){
+        return this.ds.calculateDiscount();
+    }
+    public static void main(String[] args) {
+        ContextClient context0 = new ContextClient(new NoDiscountStrategy(48.5, 20));
+        System.out.println(&quot;0折扣&quot;+context0.contextCalDisc());
 
+        ContextClient context1 = new ContextClient(new FixDiscountStrategy(48.5, 20));
+        System.out.println(&quot;固定折扣&quot;+context1.contextCalDisc());
+
+        ContextClient context2 = new ContextClient(new PercentageDiscountStrategy(48.5, 20));
+        System.out.println(&quot;15%折扣&quot;+context2.contextCalDisc());
+    }
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>0折扣0.0
+固定折扣21.0
+15%折扣145.5
+</code></pre>
           
         
       
@@ -452,7 +492,7 @@ public class StringTest {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/16/Java反射机制/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-代理模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -477,8 +517,8 @@ public class StringTest {
             
               
                 
-                <a class="post-title-link" href="/2017/02/16/Java反射机制/" itemprop="url">
-                  Java反射机制
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-代理模式/" itemprop="url">
+                  Java典型设计模式-代理模式
                 </a>
               
             
@@ -494,8 +534,8 @@ public class StringTest {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-16T21:27:01+08:00">
-                2017-02-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
               </time>
             
 
@@ -517,8 +557,8 @@ public class StringTest {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
                   </a>
                 </span>
 
@@ -554,230 +594,305 @@ public class StringTest {
       
         
           
-            <p>　最近在学习Spring的AOP，即面向切面编程，在前些时间我用静态代理的模式演绎了代理设计模式，Java本身有一个反射机制，就是在运行期间确定类，Spring关于AOP的底层实现其中有一个模块就是JDK的动态代理，那么今天就来系统整理一下关于Java的反射机制。  </p>
-<h1 id="一、什么是反射？"><a href="#一、什么是反射？" class="headerlink" title="一、什么是反射？"></a>一、什么是反射？</h1><p>　反射(Reflection)是Java 程序开发语言的特征之一，它允许运行中的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。简而言之，通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。<br>　程序中一般的对象的类型都是在编译期就确定下来的，而Java反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以我们可以通过反射机制直接创建对象，即使这个对象的类型在编译期是未知的。<br>　<strong>反射的核心是JVM在运行时才动态加载类或调用方法/访问属性，它不需要事先（写代码的时候或编译期）知道运行对象是谁。</strong>  </p>
+            <p>　最近在学习Spring，Spring的两个核心是依赖注入和面向切面编程，其中面向切面编程就是在一个方法的前后位置加入其余的方法以更好地实现，那么在SpringAOP中是采用JDK动态代理实现的，动态代理就是采用代理模式技术实现的，关于JDK动态代理我稍后总结，今天就用静态代理的例子好好学习代理模式。</p>
 <hr>
-<p>　Java反射框架主要提供以下功能：<br>1.在运行时判断任意一个对象所属的类；<br>2.在运行时构造任意一个类的对象；<br>3.在运行时判断任意一个类所具有的成员变量和方法（通过反射甚至可以调用private方法）；<br>4.在运行时调用任意一个对象的方法</p>
-<h1 id="二、反射的基本运用"><a href="#二、反射的基本运用" class="headerlink" title="二、反射的基本运用"></a>二、反射的基本运用</h1><h2 id="1、获得Class对象"><a href="#1、获得Class对象" class="headerlink" title="1、获得Class对象"></a>1、获得Class对象</h2><p>　有三种方法：<br>　(1)使用Class类的forName静态方法:  </p>
-<pre><code>/*
- * 获取字节码对象的方式：
- * 1，Object类中的getClass()方法的。
- * 想要用这种方式，必须要明确具体的类，并创建对象。
- * 麻烦 .
- * 
- */
-public static void getClassObject_1(){
-    Person p = new Person();
-    Class clazz = p.getClass();
-    Person p1 = new Person();
-    Class clazz1 = p1.getClass();
-    System.out.println(clazz==clazz1);
+<p>　<strong>代理模式：为其他对象提供一种代理以控制对这个对象的访问。</strong><br>　代理模式有一下优点：  </p>
+<ol>
+<li>职责清晰：真实的角色实现实际的业务逻辑，不用关心其他非本职的事务，通过后期的代理完成附加的事务，附带的结果就是编程简洁清晰。    </li>
+<li>高扩展性：具体主题角色随需求的不同可能有很多种，但只要实现了接口，代理类就完全可以在不做任何修改的情况下代理各种真实主题角色。  </li>
+<li>智能化：代理类介意在运行时才确定去代理的真实主题（动态代理）。  </li>
+</ol>
+<hr>
+<p>　通过游戏代练的过程演示代理模式的应用，其类图如下所示：<br><img src="http://i.imgur.com/Q6N61ev.png" alt=""><br>　IGamePlayer接口：  </p>
+<pre><code>public interface IGamePlayer {
+    public void killBoss();
+    public void upGrade();
+
 }
-</code></pre><p>　(2)直接获取某一个对象的class</p>
-<pre><code>/*
- * 方式二：
- * 2，任何数据类型都具备一个静态的属性.class来获取其对应的Class对象。
- * 相对简单，但是还是要明确用到类中的静态成员。
- * 还是不够扩展。 
- * 
- */
-public static void getClassObject_2(){
-    Class class1 = Person.class;
-    Class class2 = Person.class;
-    System.out.println(class1==class2);
-}
-</code></pre><p>　(3)调用某个对象的getClass()方法</p>
-<pre><code>/*
- * 方式三：
- * 只要通过给定的类的 字符串名称就可以获取该类，更为扩展。
- * 可是用Class类中的方法完成。
- * 该方法就是forName.
- * 这种方式只要有名称即可，更为方便，扩展性更强。 
- */
-public static void getClassObject_3() throws ClassNotFoundException{
-    String className = &quot;Reflect.Person&quot;;
-    Class clazz = Class.forName(className);
-    System.out.println(clazz);
-}
-</code></pre><p>　附上Person.java</p>
-<pre><code>public class Person {
-    private int age;
-    private String name;
-    public Person(int age, String name) {
+</code></pre><p>　GamePlayer实现IGamePlayer接口中的方法：</p>
+<pre><code>public class GamePlayer implements IGamePlayer {
+    private String name =&quot;&quot;;
+
+
+    public GamePlayer(String name) {
         super();
-        this.age = age;
         this.name = name;
-        System.out.println(&quot;Person param run...&quot;+this.name+&quot;:&quot;+this.age);
     }
-    public Person() {
+
+    @Override
+    public void killBoss() {
+        System.out.println(this.name+&quot;在打怪！！！！&quot;);
+    }
+
+    @Override
+    public void upGrade() {
+        System.out.println(this.name+&quot;成功升1级！！！！&quot;);
+    }
+
+}
+</code></pre><p>　GamePlayerProxy是代理类：</p>
+<pre><code>public class GamePlayerProxy implements IGamePlayer {
+    private IGamePlayer player = null;
+
+
+    public GamePlayerProxy(IGamePlayer player) {
         super();
-        System.out.println(&quot;Person run...&quot;);
+        this.player = player;
+    }
+
+    @Override
+    public void killBoss() {
+        this.log();
+        player.killBoss();
+    }
+
+    @Override
+    public void upGrade() {
+        player.upGrade();
+        this.count();
+    }
+
+    private void log(){
+        System.out.println(&quot;打怪时间&quot;+new Date().toString());
+    }
+
+    private void count(){
+        System.out.println(&quot;升一级耗费50小时&quot;);
+    }
+
+}
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
+
+    public static void main(String[] args) {
+        IGamePlayer player = new GamePlayer(&quot;冯佳欣&quot;);
+        IGamePlayer proxy = new GamePlayerProxy(player);
+        proxy.killBoss();
+        proxy.upGrade();
+
+    }
+
+}
+</code></pre><p>　程序运行结果：</p>
+<pre><code>打怪时间Sun Feb 12 17:23:41 CST 2017
+冯佳欣在打怪！！！！
+冯佳欣成功升1级！！！！
+升一级耗费50小时
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-装饰模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-装饰模式/" itemprop="url">
+                  Java典型设计模式-装饰模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:04:09+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近在复习I/O,发现很多类都是通过装饰模式进行修饰，将原来的类修饰的更强大，那么今天就来总结一下装饰模式。</p>
+<hr>
+<p>　<strong>装饰模式：动态地给一个对象添加一些额外的职责，就增加功能来说，装饰模式比生成子类更为灵活。</strong><br>装饰模式有以下四个角色：</p>
+<ul>
+<li>抽象构件角色：用于规范需要装饰的对象。</li>
+<li>具体构件角色：用于实现抽象构件接口，定义一个需要装饰的原始类。</li>
+<li>装饰角色：该角色持有一个构件对象的实例，并定义一个与抽象构件接口一致的接口。</li>
+<li>具体装饰角色：该角色负责对构件对象进行装饰</li>
+</ul>
+<p>装饰模式类图如下：<br><img src="http://i.imgur.com/aIQFA1A.png" alt=""> </p>
+<p>装饰模式的优点：</p>
+<ol>
+<li>装饰类和被装饰类可以独立发展，而不会相互耦合。</li>
+<li>装饰模式是继承关系的一个替代方式，装饰类Decorator，不管装饰多少层，返回的对象还是Component。</li>
+<li>装饰模式可以动态地扩展一个实现类的功能。 </li>
+</ol>
+<p>装饰模式的使用场景：</p>
+<ol>
+<li>需要扩展一个类的功能，或给一个类增加附加功能。</li>
+<li>需要动态地给一个对象增加功能，这些功能可以在动态地撤销。</li>
+<li>需要为一批类进行改装或加装功能。</li>
+</ol>
+<hr>
+<p>　通过对裸车进行装饰的过程演示装饰模式的应用：<br>　Car接口：  </p>
+<pre><code>public interface Car {
+    public void show();
+}
+</code></pre><p>　Benz实现IGamePlayer接口中的方法：</p>
+<pre><code>public class Benz implements Car {
+    @Override
+    public void show() {
+        System.out.println(&quot;奔驰车默认是黑色&quot;);
+    }
+}
+</code></pre><p>　汽车修饰类CarDecorator：</p>
+<pre><code>public abstract class CarDecorator {
+    private Car car = null;
+    public CarDecorator(Car car){
+    this.car = car;
     }
     public void show(){
-        System.out.println(name+&quot;....show run...&quot;+age);
-    }
-    public void paramMethod(String str,int num){
-        System.out.println(&quot;paramMethod run.....&quot;+str+&quot;:&quot;+num);
+        this.car.show();
     }
 }
-</code></pre><h2 id="2、判断是否为某个类的实例"><a href="#2、判断是否为某个类的实例" class="headerlink" title="2、判断是否为某个类的实例"></a>2、判断是否为某个类的实例</h2><p>　用instanceof关键字来判断是否为某个类的实例。同时我们也可以借助反射中Class对象的isInstance()方法来判断是否为某个类的实例，它是一个Native方法：</p>
-<pre><code>public native boolean isInstance(Object obj);
-</code></pre><h2 id="3、创建实例"><a href="#3、创建实例" class="headerlink" title="3、创建实例"></a>3、创建实例</h2><p>　通过反射来生成对象主要有两种方式。<br>（1）使用Class对象的newInstance()方法来创建Class对象对应类的实例。</p>
-<pre><code>public static void createNewObject() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
-        //早期：new时候，先根据被new的类的名称找寻该类的字节码文件，并加载进内存，
-//        并创建该字节码文件对象，并接着创建该字节文件的对应的Person对象.
-//        cn.itcast.bean.Person p = new cn.itcast.bean.Person();
-        //现在：
-        String name = &quot;Reflect.Person&quot;;
-        //找寻该名称类文件，并加载进内存，并产生Class对象。
-        Class clazz = Class.forName(name);
-        //如何产生该类的对象呢？
-        Object obj  = clazz.newInstance();
-        System.out.println(obj);
+</code></pre><p>　汽车修饰实现类ConcreteCarDecorator：</p>
+<pre><code>public class ConcreteCarDecorator extends CarDecorator {
+    public ConcreteCarDecorator(Car car) {
+        super(car);
     }
-</code></pre><p>（2）先通过Class对象获取指定的Constructor对象，再调用Constructor对象的newInstance()方法来创建实例。这种方法可以用指定的构造器构造类的实例。</p>
-<pre><code>public static void createNewObject2() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        /*
-         * 当获取指定名称对应类中的所体现的对象时，
-         * 而该对象初始化不使用空参数构造该怎么办呢？
-         * 既然是通过指定的构造 函数进行对象的初始化，
-         * 所以应该先获取到该构造函数。 通过字节码文件对象即可完成。
-         * 该方法是：getConstructor(paramterTypes);
-         * 
-         */
-        String name = &quot;Reflect.Person&quot;;
-        //找寻该名称类文件，并加载进内存，并产生Class对象。
-        Class clazz = Class.forName(name);
-        //获取到了指定的构造函数对  象。
-        Constructor constructor = clazz.getConstructor(int.class,String.class);
-        //通过该构造器对象的newInstance方法进行对象的初始化。
-        Object obj = constructor.newInstance(38,&quot;小明&quot;);
-        System.out.println(obj);
-    }
-</code></pre><h2 id="4、获取方法"><a href="#4、获取方法" class="headerlink" title="4、获取方法"></a>4、获取方法</h2><p>　获取某个Class对象的方法集合，主要有以下几个方法：<br>　getDeclaredMethods()方法返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法。<br>　getMethods()方法返回某个类的所有公用（public）方法，包括其继承类的公用方法。<br>　<strong>getMethod方法返回一个特定的方法，其中第一个参数为方法名称，后面的参数为方法的参数对应Class的对象</strong></p>
-<pre><code>public Method getMethod(String name, Class&lt;?&gt;... parameterTypes)
-</code></pre><h2 id="5、获取构造器信息"><a href="#5、获取构造器信息" class="headerlink" title="5、获取构造器信息"></a>5、获取构造器信息</h2><p>　获取类构造器的用法与上述获取方法的用法类似。主要是通过Class类的getConstructor方法得到Constructor类的一个实例，而Constructor类有一个newInstance方法可以创建一个对象实例:</p>
-<pre><code>public T newInstance(Object ... initargs)
-</code></pre><p>　此方法可以根据传入的参数来调用对应的Constructor创建对象实例</p>
-<h2 id="6、获取类的成员变量（字段）信息"><a href="#6、获取类的成员变量（字段）信息" class="headerlink" title="6、获取类的成员变量（字段）信息"></a>6、获取类的成员变量（字段）信息</h2><p>　getFiled: 访问公有的成员变量<br>　getDeclaredField：所有已声明的成员变量。但不能得到其父类的成员变量。</p>
-<h2 id="7、调用方法"><a href="#7、调用方法" class="headerlink" title="7、调用方法"></a>7、调用方法</h2><p>　当我们从类中获取了一个方法后，我们就可以用invoke()方法来调用这个方法。invoke方法的原型为:</p>
-<pre><code>public Object invoke(Object obj, Object... args)
-        throws IllegalAccessException, IllegalArgumentException,
-           InvocationTargetException
-</code></pre><p>　代码示例如下：</p>
-<pre><code>public class ReflectDemo4 {
-    public static void main(String[] args) throws Exception {
-        getMethodDemo_2();
-    }
-    public static void getMethodDemo_2() throws Exception {
-        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
-        Method method = clazz.getMethod(&quot;paramMethod&quot;, String.class,int.class);
-        Object obj = clazz.newInstance();
-        method.invoke(obj, &quot;小强&quot;,89);
-    }
-    public static void getMethodDemo_1() throws Exception{
-        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
-        Method method = clazz.getMethod(&quot;show&quot;, null);//获取空参数一般方法。
-        Constructor constructor = clazz.getConstructor(int.class,String.class);
-        Object o = constructor.newInstance(89,&quot;小明&quot;);
-        method.invoke(o, null);
-    }
-    /*
-     * 获取指定Class中的所有公共函数。
-     */
-    public static void getMethodDemo() throws Exception {
-        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
-        Method[] methods  = clazz.getMethods();//获取的都是公有的方法。 
-        methods = clazz.getDeclaredMethods();//只获取本类中所有方法，包含私有。 
-        for(Method method : methods){
-            System.out.println(method);
-        }
-    }
-}
-</code></pre><h2 id="8、取消权限，将细节全暴露"><a href="#8、取消权限，将细节全暴露" class="headerlink" title="8、取消权限，将细节全暴露"></a>8、取消权限，将细节全暴露</h2><p>　调用Field.setAccessible(true)：暴力访问，可访问全部私有变量。</p>
-<pre><code>public class ReflectDemo3 {
-    public static void main(String[] args) throws Exception {
-        getFieldDemo();
-    }
-    /*
-     * 获取字节码文件中的字段。
-     */
-    public static void getFieldDemo() throws Exception {
-        Class clazz = Class.forName(&quot;Reflect.Person&quot;);
-        Field field = null;//clazz.getField(&quot;age&quot;);//只能获取公有的，
-        field = clazz.getDeclaredField(&quot;age&quot;);//只获取本类，但包含私有。 
-        //对私有字段的访问取消权限检查。暴力访问。
-        field.setAccessible(true);
-        Object obj = clazz.newInstance();
-        field.set(obj, 89);
-        Object o = field.get(obj);
-        System.out.println(o);
-//        cn.itcast.bean.Person p = new cn.itcast.bean.Person();
-//        p.age = 30;
-    }
-}
-</code></pre><p>三、反射的基本例子</p>
-<p>　学习了反射，为了了解优越性，我们假定一台电脑，每当添加一个设备时，我们将这些设备抽象为一个接口，当添加一个设备时，只需让该设备实现接口，并将该接口信息写入properties文件中读取即可，这个过程并不需要修改代码，只许修改配置文件即可，那么下面介绍代码：<br>　PCI接口：</p>
-<pre><code>public interface PCI {
-    public void open();
-    public void close();
 
-}
-</code></pre><p>　电脑主机:</p>
-<pre><code>public class MainBoard {
-    public void run(){
-        System.out.println(&quot;MainBoard run.......&quot;);
+    public void print(){
+        System.out.println(&quot;彩绘喷漆&quot;);
     }
-    public void usePCI(PCI p){
-        p.open();
-        p.close();
+    public void setGps(){
+        System.out.println(&quot;安装GPS&quot;);
     }
-}
-</code></pre><p>　网卡：</p>
-<pre><code>public class NetCard implements PCI {
-    @Override
-    public void open() {
-        System.out.println(&quot;NetCard run......&quot;);
-    }
-    @Override
-    public void close() {
-        System.out.println(&quot;NetCard close...&quot;);
+    public void show(){
+        super.show();
+        this.print();
+        this.setGps();
     }
 }
-</code></pre><p>　声卡：</p>
-<pre><code>public class SoundCard implements PCI {
-    @Override
-    public void open() {
-        System.out.println(&quot;SoundCard run......&quot;);
-    }
-    @Override
-    public void close() {
-        System.out.println(&quot;SoundCard close......&quot;);
+</code></pre><p>　应用程序代码：</p>
+<pre><code>public class ClientDemo {
+    public static void main(String[] args) {
+        Car car = new Benz();
+        CarDecorator cd = new ConcreteCarDecorator(car);
+        cd.show();
     }
 }
-</code></pre><p>　测试文件：</p>
-<pre><code>public class ReflectTest {
-    public static void main(String[] args) throws Exception {
-        MainBoard mb = new MainBoard();
-        mb.run();
-        File configFile = new File(&quot;pci.properties&quot;);
-        Properties prop = new Properties();
-        FileInputStream fis = new FileInputStream(configFile);
-        prop.load(fis);
-        for(int i=0;i&lt;prop.size();i++){
-            String pciName = prop.getProperty(&quot;pci&quot;+(i+1));
-            Class clazz = Class.forName(pciName);
-            PCI p = (PCI) clazz.newInstance();
-            mb.usePCI(p);
-        }
-        fis.close();
-    }
-}
-</code></pre><p>　配置文件pci.prtperties：</p>
-<pre><code>pci1 = Reflect.test.NetCard
-pci2 = Reflect.test.SoundCard
-</code></pre><p>　这样我们添加设备，不需要修改代码，只需在配置文件中修改代码即可。<br>　<strong>是不是很熟悉，Spring框架为我们提供配置文件，我们只需在配置文件中写类的名称，然后Spring利用反射机制为我们建立实体类及依赖关系，这种动态机制为我们开发者开发提供了方便。</strong></p>
-
+</code></pre><p>　程序运行结果：</p>
+<pre><code>奔驰车默认是黑色
+彩绘喷漆
+安装GPS
+</code></pre>
           
         
       
@@ -815,7 +930,7 @@ pci2 = Reflect.test.SoundCard
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/10/Set中hashCode()学习/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-适配器模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -840,8 +955,8 @@ pci2 = Reflect.test.SoundCard
             
               
                 
-                <a class="post-title-link" href="/2017/02/10/Set中hashCode()学习/" itemprop="url">
-                  Set中hashCode学习
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-适配器模式/" itemprop="url">
+                  Java典型设计模式-适配器模式
                 </a>
               
             
@@ -857,8 +972,8 @@ pci2 = Reflect.test.SoundCard
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-10T08:48:25+08:00">
-                2017-02-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T13:03:57+08:00">
+                2017-01-09
               </time>
             
 
@@ -880,8 +995,8 @@ pci2 = Reflect.test.SoundCard
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
                   </a>
                 </span>
 
@@ -917,51 +1032,110 @@ pci2 = Reflect.test.SoundCard
       
         
           
-            <p>　我在复习Set的时候，知道Set集合中的元素不重复，是利用对象的<strong>hashCode()</strong>方法保证的，我本身也学过数据结构的hash表，但是本着不撞南墙不死心的态度，我决定总结一下hash算法并分析Java中的hashCode()究竟是怎么一回事。</p>
-<h1 id="Hash表："><a href="#Hash表：" class="headerlink" title="Hash表："></a>Hash表：</h1><p>　Hash表也称散列表，它同数组、链表以及二叉排序树等相比较有很明显的区别，它能够快速定位到想要查找的记录，而不是与表中存在的记录的关键字进行比较来进行查找。这个源于Hash表设计的特殊性，它采用了函数映射的思想将记录的存储位置与记录的关键字关联起来，从而能够很快速地进行查找。</p>
-<h2 id="1-设计思想："><a href="#1-设计思想：" class="headerlink" title="1.设计思想："></a>1.设计思想：</h2><p>　Hash表采用一个映射函数 f : key —&gt; address 将关键字映射到该记录在表中的存储位置，从而在想要查找该记录时，可以直接根据关键字和映射关系计算出该记录在表中的存储位置，通常情况下，这种映射关系称作为Hash函数，而通过Hash函数和关键字计算出来的存储位置(注意这里的存储位置只是表中的存储位置，并不是实际的物理地址)称作为Hash地址。</p>
-<h2 id="2-构造方法："><a href="#2-构造方法：" class="headerlink" title="2.构造方法："></a>2.构造方法：</h2><h3 id="1-直接定址法"><a href="#1-直接定址法" class="headerlink" title="1)直接定址法"></a>1)直接定址法</h3><p>　取关键字或者关键字的某个线性函数为Hash地址，即address(key)=a*key+b;如知道学生的学号从2000开始，最大为4000，则可以将address(key)=key-2000作为Hash地址。</p>
-<h3 id="2-平方取中法"><a href="#2-平方取中法" class="headerlink" title="2)平方取中法"></a>2)平方取中法</h3><p>　对关键字进行平方运算，然后取结果的中间几位作为Hash地址。假如有以下关键字序列{421，423，436}，平方之后的结果为{177241，178929，190096}，那么可以取{72，89，00}作为Hash地址。</p>
-<h3 id="3-折叠法"><a href="#3-折叠法" class="headerlink" title="3)折叠法"></a>3)折叠法</h3><p>　将关键字拆分成几部分，然后将这几部分组合在一起，以特定的方式进行转化形成Hash地址。假如知道图书的ISBN号为8903-241-23，可以将address(key)=89+03+24+12+3作为Hash地址。</p>
-<h3 id="4-除留取余法"><a href="#4-除留取余法" class="headerlink" title="4)除留取余法"></a>4)除留取余法</h3><p>　如果知道Hash表的最大长度为m，可以取不大于m的最大质数p，然后对关键字进行取余运算，address(key)=key%p。在这里p的选取非常关键，p选择的好的话，能够最大程度地减少冲突，p一般取不大于m的最大质数。</p>
-<h2 id="3-Hash表大小的确定"><a href="#3-Hash表大小的确定" class="headerlink" title="3.Hash表大小的确定"></a>3.Hash表大小的确定</h2><p>　Hash表大小的确定也非常关键，如果Hash表的空间远远大于最后实际存储的记录个数，则造成了很大的空间浪费，如果选取小了的话，则容易造成冲突。在实际情况中，一般需要根据最终记录存储个数和关键字的分布特点来确定Hash表的大小。还有一种情况时可能事先不知道最终需要存储的记录个数，则需要动态维护Hash表的容量，此时可能需要重新计算Hash地址。</p>
-<h2 id="4-冲突的解决"><a href="#4-冲突的解决" class="headerlink" title="4.冲突的解决"></a>4.冲突的解决</h2><p>　在上述例子中，发生了冲突现象，因此需要办法来解决，否则记录无法进行正确的存储。通常情况下有2种解决办法：</p>
-<h3 id="1-开放定址法"><a href="#1-开放定址法" class="headerlink" title="1)开放定址法"></a>1)开放定址法</h3><p>　即当一个关键字和另一个关键字发生冲突时，使用某种探测技术在Hash表中形成一个探测序列，然后沿着这个探测序列依次查找下去，当碰到一个空的单元时，则插入其中。比较常用的探测方法有线性探测法；<br>　比如有一组关键字{12，13，25，23，38，34，6，84，91}，Hash表长为14，Hash函数为address(key)=key%11，当插入12，13，25时可以直接插入，而当插入23时，地址1被占用了，因此沿着地址1依次往下探测(探测步长可以根据情况而定)，直到探测到地址4，发现为空，则将23插入其中。</p>
-<h3 id="2-链地址法"><a href="#2-链地址法" class="headerlink" title="2)链地址法"></a>2)链地址法</h3><p>　采用数组和链表相结合的办法，将Hash地址相同的记录存储在一张线性表中，而每张表的表头的序号即为计算得到的Hash地址。如上述例子中，采用链地址法形成的Hash表存储表示为：<br><img src="http://i.imgur.com/NSBvkHx.jpg" alt=""></p>
-<p>　虽然能够采用一些办法去减少冲突，但是冲突是无法完全避免的。因此需要根据实际情况选取解决冲突的办法。</p>
-<h2 id="5-Hash表的平均查找长度"><a href="#5-Hash表的平均查找长度" class="headerlink" title="5.Hash表的平均查找长度"></a>5.Hash表的平均查找长度</h2><p>　　Hash表的平均查找长度包括查找成功时的平均查找长度和查找失败时的平均查找长度。<br>　　查找成功时的平均查找长度=表中每个元素查找成功时的比较次数之和/表中元素个数；<br>　　查找不成功时的平均查找长度相当于在表中查找元素不成功时的平均比较次数，可以理解为向表中插入某个元素，该元素在每个位置都有可能，然后计算出在每个位置能够插入时需要比较的次数，再除以表长即为查找不成功时的平均查找长度。<br>　　下面举个例子：<br>　　有一组关键字{23，12，14，2，3，5}，表长为14，Hash函数为key%11，则关键字在表中的存储如下：<br>　　地址     0     1     2     3      4     5    6   7   8    9  10   11   12    13<br>　　关键字        23    12   14     2     3    5<br>　　比较次数         1      2    1     3     3     2<br>　　因此查找成功时的平均查找长度为(1+2+1+3+3+2)/6=11/6；<br>　　查找失败时的平均查找长度为(1+7+6+5+4+3+2+1+1+1+1+1+1+1)/14=38/14；<br>　　这里有一个概念装填因子=表中的记录数/哈希表的长度，如果装填因子越小，表明表中还有很多的空单元，则发生冲突的可能性越小；而装填因子越大，则发生冲突的可能性就越大，在查找时所耗费的时间就越多。因此，Hash表的平均查找长度和装填因子有关。</p>
-<h2 id="6-Hash表的优缺点"><a href="#6-Hash表的优缺点" class="headerlink" title="6.Hash表的优缺点"></a>6.Hash表的优缺点</h2><p>　Hash表存在的优点显而易见，能够在常数级的时间复杂度上进行查找，并且插入数据和删除数据比较容易。但是它也有某些缺点，比如不支持排序，一般比用线性表存储需要更多的空间，并且记录的关键字不能重复。</p>
+            <h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>　适配器模式主要分为三类：类的适配器模式、对象的适配器模式、接口的适配器模式。</p>
 <hr>
-<p>　<strong>到这里Hash表我也复习的差不多，那我开始分析Object对象的hashCode()方法和set中的HashCode()方法：</strong></p>
-<h1 id="一、java对象的比较"><a href="#一、java对象的比较" class="headerlink" title="一、java对象的比较"></a>一、java对象的比较</h1><p>　<strong>等号(==)：</strong><br>对比对象实例的内存地址（也即对象实例的ID），来判断是否是同一对象实例；又可以说是判断对象实例是否物理相等；<br>　<strong>equals()：</strong><br>对比两个对象实例是否相等；当对象所属的类没有重写根类Object的equals()方法时，equals()判断的是对象实例的ID（内存地址），是否是同一对象实例；该方法就是使用的等号(==)的判断结果。<br>　当对象所属的类重写equals()方法（可能因为需要自己特有的“逻辑相等”概念)时，equals()判断的根据就因具体实现而异，有些类是需要比较对象的某些指或内容，如String类重写equals()来判断字符串的值是否相等。判断逻辑相等。<br>　<strong>hashCode():</strong><br>　计算出对象实例的哈希码，并返回哈希码，又称为散列函数。根类Object的hashCode()方法的计算依赖于对象实例的D（内存地址），故每个Object对象的hashCode都是唯一的；当然，当对象所对应的类重写了hashCode()方法时，结果就截然不同了。<br>　<strong>查看Object类中的hashCode()方法源代码：</strong></p>
-<pre><code>public native int hashCode();
-</code></pre><p>　使用<strong>native</strong>关键字说明这个方法是原生函数，也就是这个方法是用C/C++语言实现的，并且被编译成了DLL，由java去调用。<br>　这些函数的实现体在DLL中，JDK的源代码中并不包含的。对于不同的平台它们也是不同的。这也是java的底层机制，实际上java就是在不同的平台上调用不同的native方法实现对操作系统的访问的；所以native关键字的函数都是操作系统实现的，java只能调用。<br>　<strong>默认情况下，Object中的hashCode() 返回对象的32位jvm内存地址。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</strong></p>
-<h1 id="二、hashCode的作用"><a href="#二、hashCode的作用" class="headerlink" title="二、hashCode的作用"></a>二、hashCode的作用</h1><ul>
-<li>Java中的集合（Collection）有两类，一类是List，再有一类是Set。后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复，可两个元素是否重复应该依据什么来判断呢？</li>
-<li>这就是 Object.equals方法了。但是，如果每增加一个元素就检查一次，那么当元素很多时，后添加到集合中的元素比较的次数就非常多了。也就是说，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，它就要调用1000次equals方法。这显然会大大降低效率。</li>
-<li>Java采用了哈希表的原理，当集合要添加新的元素时，将对象通过哈希算法计算得到哈希值，然后将哈希值和集合长度进行&amp;运算，得到该对象在该数组存放的位置索引。如果这个位置上没有元素，它就可以直接存储在这个位置；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存，不相同就表示发生冲突，散列表对于冲突有具体的解决办法，但最终还会将新元素保存在适当的位置。<br>　这样一来，实际调用equals方法比较的次数就大大降低了，几乎只需要一两次。简而言之，在集合查找时，hashcode能大大降低对象比较次数，提高查找效率！</li>
+<p>　适配器模式将某个类的接口转换成客户端期望的另一个接口表示，目的是消除由于接口不匹配所造成的类的兼容性问题。有点抽象，我们来看看详细的内容。  </p>
+<h4 id="类的适配器模式"><a href="#类的适配器模式" class="headerlink" title="类的适配器模式"></a>类的适配器模式</h4><p>　类的适配器模式核心思想就是：有一个Source类，拥有一个方法，待适配，目标接口是Targetable，通过Adapter类，将Source的功能扩展到Targetable里。</p>
+<pre><code>public class Source {
+    public void method1() {  
+        System.out.println(&quot;this is original method!&quot;);  
+    }  
+}
+
+public interface Targetable {
+    /* 与原类中的方法相同 */
+    public void method1();
+    /* 新类的方法 */
+    public void method2();
+}
+
+public class Adapter extends Source implements Targetable {
+    public void method2() {
+        System.out.println(&quot;this is the targetable method!&quot;);
+    }
+}
+
+public class AdapterTest {
+    public static void main(String[] args) {
+        Targetable target = new Adapter();
+        target.method1();
+        target.method2();
+    }
+}
+AdapterTest的运行结果：
+this is original method!
+this is the targetable method!
+</code></pre><h4 id="对象的适配器模式"><a href="#对象的适配器模式" class="headerlink" title="对象的适配器模式"></a>对象的适配器模式</h4><p>　对象的适配器模式的基本思路和类的适配器模式相同，只是将Adapter类作修改成Wrapper，这次不继承Source类，而是持有Source类的实例，以达到解决兼容性的问题。</p>
+<pre><code>public class Wrapper implements Targetable {
+    private Source source;
+    public Wrapper(Source source) {
+        super();
+        this.source = source;
+    }
+    @Override
+    public void method2() {
+        System.out.println(&quot;this is the targetable method!&quot;);
+    }
+    @Override
+    public void method1() {
+        source.method1();
+    }
+}
+
+public class AdapterTest {
+    public static void main(String[] args) {
+        Source source = new Source();
+        Targetable target = new Wrapper(source);
+        target.method1();
+        target.method2();
+    }
+}
+AdapterTest的运行结果：
+this is original method!
+this is the targetable method!
+</code></pre><h4 id="接口的适配器模式"><a href="#接口的适配器模式" class="headerlink" title="接口的适配器模式"></a>接口的适配器模式</h4><p>　接口的适配器是这样的：有时我们写的一个接口中有多个抽象方法，当我们写该接口的实现类时，必须实现该接口的所有方法，这明显有时比较浪费，因为并不是所有的方法都是我们需要的，有时只需要某一些，此处为了解决这个问题，我们引入了接口的适配器模式，借助于一个抽象类，该抽象类实现了该接口，实现了所有的方法，而我们不和原始的接口打交道，只和该抽象类取得联系，所以我们写一个类，继承该抽象类，重写我们需要的方法就行了。</p>
+<hr>
+<p>　在实际开发中，我们也常会遇到这种接口中定义了太多的方法，以致于有时我们在一些实现类中并不是都需要。看代码：</p>
+<pre><code>public interface Sourceable {    
+    public void method1();  
+    public void method2();  
+}  
+//抽象类Wrapper2：
+public abstract class Wrapper2 implements Sourceable{  
+
+    public void method1(){}  
+    public void method2(){}  
+}  
+
+public class SourceSub1 extends Wrapper2 {  
+    public void method1(){  
+        System.out.println(&quot;the sourceable interface&apos;s first Sub1!&quot;);  
+    }  
+}  
+public class SourceSub2 extends Wrapper2 {  
+    public void method2(){  
+        System.out.println(&quot;the sourceable interface&apos;s second Sub2!&quot;);  
+    }  
+}  
+public class WrapperTest {  
+    public static void main(String[] args) {  
+        Sourceable source1 = new SourceSub1();  
+        Sourceable source2 = new SourceSub2();  
+
+        source1.method1();  
+        source1.method2();  
+        source2.method1();  
+        source2.method2();  
+    }  
+}  
+测试输出：
+the sourceable interface&apos;s first Sub1!
+the sourceable interface&apos;s second Sub2!
+</code></pre><h3 id="总结一下三种适配器模式的应用场景"><a href="#总结一下三种适配器模式的应用场景" class="headerlink" title="总结一下三种适配器模式的应用场景"></a>总结一下三种适配器模式的应用场景</h3><ul>
+<li>类的适配器模式：当希望将一个类转换成满足另一个新接口的类时，可以使用类的适配器模式，创建一个新类，继承原有的类，实现新的接口即可。</li>
+<li>对象的适配器模式：当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Wrapper类，持有原类的一个实例，在Wrapper类的方法中，调用实例的方法就行。</li>
+<li>接口的适配器模式：当不希望实现一个接口中所有的方法时，可以创建一个抽象类Wrapper，实现所有方法，我们写别的类的时候，继承抽象类即可。</li>
 </ul>
-<h1 id="三、Java-对象的equal方法和hashCode方法的关系"><a href="#三、Java-对象的equal方法和hashCode方法的关系" class="headerlink" title="三、Java  对象的equal方法和hashCode方法的关系"></a>三、Java  对象的equal方法和hashCode方法的关系</h1><p>　Java对象相同指的是两个对象通过eqauls方法判断的结果为true<br>　<strong>Java对象的eqauls方法和hashCode方法是这样规定的：</strong></p>
-<ol>
-<li>相等的对象必须具有相等的哈希码（或者散列码）。</li>
-<li>如果两个对象的hashCode相同，它们并不一定相同。  </li>
-</ol>
-<ul>
-<li><p><strong>关于第一点，相等（相同）的对象必须具有相等的哈希码（或者散列码），为什么？</strong><br>　想象一下，假如两个Java对象A和B，A和B相等（eqauls结果为true），但A和B的哈希码不同，则A和B存入HashMap时的哈希码计算得到的HashMap内部数组位置索引可能不同，那么A和B很有可能允许同时存入HashMap，显然相等/相同的元素是不允许同时存入HashMap，HashMap不允许存放重复元素。</p>
-</li>
-<li><p><strong>关于第二点，两个对象的hashCode相同，它们并不一定相同</strong><br>　也就是说，不同对象的hashCode可能相同；假如两个Java对象A和B，A和B不相等（eqauls结果为false），但A和B的哈希码相等，将A和B都存入HashMap时会发生哈希冲突，也就是A和B存放在HashMap内部数组的位置索引相同这时HashMap会在该位置建立一个链接表，将A和B串起来放在该位置，显然，该情况不违反HashMap的使用原则，是允许的。当然，哈希冲突越少越好，尽量采用好的哈希算法以避免哈希冲突。</p>
-</li>
-</ul>
-<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><ol>
-<li><strong>绑定：</strong>当equals方法被重写时，通常有必要重写 hashCode 方法，以维护 hashCode 方法的常规协定，该协定声明相等对象必须具有相等的哈希码。</li>
-<li><strong>绑定原因：</strong>Hashtable实现一个哈希表，为了成功地在哈希表中存储和检索对象，用作键的对象必须实现 hashCode 方法和 equals 方法。同(1)，必须保证equals相等的对象，hashCode 也相等。因为哈希表通过hashCode检索对象。</li>
-<li><strong>默认：</strong><ul>
-<li>==默认比较对象在JVM中的地址。</li>
-<li>hashCode 默认返回对象在JVM中的存储地址。</li>
-<li>equal比较对象，默认也是比较对象在JVM中的地址，同==</li>
-</ul>
-</li>
-</ol>
 
           
         
@@ -1000,7 +1174,7 @@ pci2 = Reflect.test.SoundCard
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（二）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-工厂方法模式/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1025,8 +1199,8 @@ pci2 = Reflect.test.SoundCard
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（二）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-工厂方法模式/" itemprop="url">
+                  Java典型设计模式-工厂方法模式
                 </a>
               
             
@@ -1042,8 +1216,8 @@ pci2 = Reflect.test.SoundCard
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:56:53+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+                2017-01-09
               </time>
             
 
@@ -1065,8 +1239,8 @@ pci2 = Reflect.test.SoundCard
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
                   </a>
                 </span>
 
@@ -1102,114 +1276,448 @@ pci2 = Reflect.test.SoundCard
       
         
           
-            <p>　<strong>在总结之前，我先复习一下有关String对象的知识。</strong></p>
-<p>#　String类 #</p>
-<p>　String类是<strong>final</strong>类型的，所以<strong>不能被被继承，方法不能被覆盖</strong>。它是一个引用数据类型，它的对象是一个字符串，程序中用” “标示的都是字符串。字符串是一个特殊的对象，字符串对象最大的特点是<strong>它为一个常量，一经初始化，永远不会改变</strong>，这是它跟其它引用数据类型最大的不同之处。<br>　常见的操作方法：  </p>
-<h2 id="1、获取"><a href="#1、获取" class="headerlink" title="1、获取"></a>1、获取</h2><p>1.1 字符串中的包含的字符数，也就是字符串的长度；</p>
-<pre><code>int length（）:获取长度。  （跟数组length的区别）
-</code></pre><p>1.2 根据位置获取位置上某个字符。</p>
-<pre><code>char charAt（int index）：
-</code></pre><p>1.3 根据字符获取该字符在字符串中的位置。</p>
-<pre><code>int indexOf（int ch）：返回的是ch在字符串中第一次出现的位置。
-int indexOf（int ch,int fromIndex）:从fromIndex指定位置开始，获取ch在字符串中的位置。
-int indexOf（String str）：返回的是str在字符串中第一次出现的位置。
-int indexOf（String str,int fromIndex）:从fromIndex指定位置开始，获取str在字符串中的位置。（str字符串）
-int lastIndexOf（int ch）：返回指定字符在此字符串中最后一次出现的索引。
-</code></pre><h2 id="2、判断"><a href="#2、判断" class="headerlink" title="2、判断"></a>2、判断</h2><p>2.1 字符串中是否包含某一个字串。</p>
-<pre><code>boolean contains(str);①
-</code></pre><p>2.2 字符串中是否有内容</p>
-<pre><code>boolean isEmpty（）;原理就是判断长度是否为0；
-</code></pre><p>2.3 字符串中是否是以指定内容开头。</p>
-<pre><code>boolean startsWith（str）;
-</code></pre><p>2.4 字符串中是否是以指定内容结尾。</p>
-<pre><code>boolean endsWith（str）;
-</code></pre><p>2.5 判读字符串的内容是否相同，复写了Object类中的equals方法。</p>
-<pre><code>boolean equals（str）；
-</code></pre><p>2.6 判断内容是否相同，并忽略大小写。</p>
-<pre><code>boolean equalsIgnoreCase（str）；
-</code></pre><h2 id="3-转换"><a href="#3-转换" class="headerlink" title="3. 转换"></a>3. 转换</h2><p>3.1 将字符数组转成字符串；</p>
-<pre><code>构造函数：String（char[]）
-String（char[]，offset，count）：将字符数组中的一部分转成字符串。
-offset起始位置，count取字符的个数。
-静态方法：
-   static String copyValueOf(char[]);
-   static String copyValueOf(char[] data,int offset ,int count)
-   static String valueOf(char[]):
-</code></pre><p>3.2 将字符串转成字符数组；</p>
-<pre><code>char[]  toCharArray();
-</code></pre><p>3.3 将字节数组转成字符串；</p>
-<pre><code>String（byte[]）
-String（byte[]，offset，count）
-</code></pre><p>3.4 将字符串转成字节数组;</p>
-<pre><code>Byte[] getBytes();
-</code></pre><p>3.5 将基本数据类型转成字符串。<br>    static String valueOf（int）<br>    static String valueOf（double）<br>    (3+””和String valueOf（3）)<br>    特殊：字符串和字节数组在转换过程中，是可以指定编码表的。</p>
-<h2 id="4-替换"><a href="#4-替换" class="headerlink" title="4. 替换"></a>4. 替换</h2><pre><code>String replace（oldchar，newchar）；
-</code></pre><h2 id="5-切割"><a href="#5-切割" class="headerlink" title="5. 切割"></a>5. 切割</h2><pre><code>String[] split（regex）；
-</code></pre><h2 id="6-字串，获取字符串中的一部分。"><a href="#6-字串，获取字符串中的一部分。" class="headerlink" title="6. 字串，获取字符串中的一部分。"></a>6. 字串，获取字符串中的一部分。</h2><pre><code>String substring(begin);
-String substring(begin,end);
-</code></pre><h2 id="7-转换，去除空格，比较。"><a href="#7-转换，去除空格，比较。" class="headerlink" title="7. 转换，去除空格，比较。"></a>7. 转换，去除空格，比较。</h2><p>7.1 将字符串转成大写或者小写。</p>
-<pre><code>String toUpperCase();
-String toLowerCase();
-</code></pre><p>7.2 将字符串两端的多个空格去除。</p>
-<pre><code>String trim();
-</code></pre><p>7.3 对两个字符串进行自然顺序的比较。</p>
-<pre><code>Int compareTo(string );
-</code></pre><p>#　接下来就是笔试题： #</p>
-<p>　扑克牌游戏大家应该都比较熟悉了，一副牌由54张组成，含3~A，2各4张，小王1张，大王1张。牌面从小到大用如下字符和字符串表示（其中，小写joker表示小王，大写JOKER表示大王）:)<br>3 4 5 6 7 8 9 10 J Q K A 2 joker JOKER<br>输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如：4 4 4 4-joker JOKER<br>请比较两手牌大小，输出较大的牌，如果不存在比较关系则输出ERROR<br>　基本规则：<br>（1）输入每手牌可能是个子，对子，顺子（连续5张），三个，炸弹（四个）和对王中的一种，不存在其他情况，由输入保证两手牌都是合法的，顺子已经从小到大排列；<br>（2）除了炸弹和对王可以和所有牌比较之外，其他类型的牌只能跟相同类型的存在比较关系（如，对子跟对子比较，三个跟三个比较），不考虑拆牌情况（如：将对子拆分成个子）<br>（3）大小规则跟大家平时了解的常见规则相同，个子，对子，三个比较牌面大小；顺子比较最小牌大小；炸弹大于前面所有的牌，炸弹之间比较牌面大小；对王是最大的牌；<br>（4）输入的两手牌不会出现相等的情况。<br>　答案提示：<br>（1）除了炸弹和对王之外，其他必须同类型比较。<br>（2）输入已经保证合法性，不用检查输入是否是合法的牌。<br>（3）输入的顺子已经经过从小到大排序，因此不用再排序了.<br>　输入描述:<br>　输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如4 4 4 4-joker JOKER。<br>　输出描述:<br>　输出两手牌中较大的那手，不含连接符，扑克牌顺序不变，仍以空格隔开；如果不存在比较关系则输出ERROR。<br>　输入例子:<br>　4 4 4 4-joker JOKER<br>　输出例子:<br>　joker JOKER<br>　<strong>注意：本道题目的输入规定是4 4 4 4-joker JOKER<br>要想获取两组字符串</strong><br><strong>正确做法是：</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-String[] left,right;
-String[] line;
-String nextLine,outString;
-while(sc.hasNext())
-{
-    nextLine = sc.nextLine();
-    line = nextLine.split(&quot;-&quot;);
-    left = line[0].split(&quot; &quot;);
-    right = line[1].split(&quot; &quot;);
-    //处理业务逻辑
+            <p>###　工厂方法模式 ###</p>
+<p>　工厂方法模式分为三种：普通工厂模式、多个工厂方法模式和静态工厂方法模式。</p>
+<p>####　1 普通工厂模式 ####<br>　普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+<pre><code>public interface MyInterface {
+    public void print();
+}    
+
+public class MyClassOne implements MyInterface {
+
+    @Override
+    public void print() {
+        System.out.println(&quot;MyClassOne&quot;);
+    }
 
 }
-</code></pre><p>　那么当牌个数相等时如何比较牌面大小呢？<br>　一种简单的方法就是获取字符串所在基础字符串的位置<br>　即</p>
-<pre><code>private static int count(String str){
-    return &quot;345678910JOKA2jokerJOKER&quot;.indexOf(str);
+public class MyClassTwo implements MyInterface {     
+    @Override
+    public void print() {
+        System.out.println(&quot;MyClassTwo&quot;);
+    }
 }
-</code></pre><p>　写到这里，基本答案就出来了。</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String[] left,right;
-        String[] line;
-        String nextLine,outString;
-        while(sc.hasNext()){
-            nextLine = sc.nextLine();
-            if(nextLine.contains(&quot;joker JOKER&quot;))
-                outString = &quot;joker JOKER&quot;;
-            else{
-                line = nextLine.split(&quot;-&quot;);
-                left = line[0].split(&quot; &quot;);
-                right = line[1].split(&quot; &quot;);
 
-                if(left.length ==4 &amp;&amp; right.length!=4)
-                    outString = line[0];
-                else if(left.length!=4 &amp;&amp; right.length==4)
-                    outString = line[1];
 
-                else if(left.length==right.length){
-                    if(count(left[0])&gt;count(right[0]))
-                        outString = line[0];
-                    else
-                        outString = line[1];
-                }else{
-                    outString = &quot;ERROR&quot;;
-                }
-            }
-            System.out.println(outString);
+public class MyFactory {
+    public MyInterface produce(String type) {  
+        if (&quot;One&quot;.equals(type)) {  
+            return new MyClassOne();  
+        } else if (&quot;Two&quot;.equals(type)) {  
+            return new MyClassTwo();  
+        } else {  
+            System.out.println(&quot;没有要找的类型&quot;);  
+            return null;  
         }  
     }
-    private static int count(String str){
-        return &quot;345678910JQKA2jokerJOKER&quot;.indexOf(str);
+
+}
+
+
+public class FactoryTest {
+    public static void main(String[] args){
+        MyFactory factory = new MyFactory();  
+        MyInterface myi = factory.produce(&quot;One&quot;);  
+        myi.print();
     }
+
+}
+</code></pre><p>　再回头来理解这句话：普通工厂模式就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。</p>
+<p>###　2 多个工厂方法模式 ###<br>　多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。<br>我们修改MyFactory和FactoryTest如下：</p>
+<pre><code>public class MyFactory {
+     public MyInterface produceOne() {
+        return new MyClassOne();
+    }
+    public MyInterface produceTwo() {
+        return new MyClassTwo();
+    }
+
+}
+
+public class FactoryTest {
+
+    public static void main(String[] args){
+        MyFactory factory = new MyFactory();  
+        MyInterface myi = factory.produceOne();
+        myi.print();
+    }
+
+}
+</code></pre><p>　再回头来理解这句话：多个工厂方法模式，是对普通工厂方法模式的改进，多个工厂方法模式就是提供多个工厂方法，分别创建对象。</p>
+<p>###　3 静态工厂方法模式 ###<br>　静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。<br>我们修改MyFactory和FactoryTest如下：</p>
+<pre><code>public class MyFactory {
+    public static MyInterface produceOne() {
+        return new MyClassOne();
+    }
+    public static MyInterface produceTwo() {
+        return new MyClassTwo();
+    }
+}
+
+public class FactoryTest {
+    public static void main(String[] args){ 
+        MyInterface myi = MyFactory.produceOne();
+        myi.print();
+
+}
+</code></pre><p>　再回顾：静态工厂方法模式，将上面的多个工厂方法模式里的方法置为静态的，不需要创建实例，直接调用即可。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-抽象工厂方法模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-抽象工厂方法模式/" itemprop="url">
+                  Java典型设计模式-抽象工厂方法模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###　抽象工厂模式 ###<br>　工厂方法模式有一个问题就是，类的创建依赖工厂类，也就是说，如果想要拓展程序，必须对工厂类进行修改，这违背了闭包原则。</p>
+<hr>
+<p>　为解决这个问题，我们来看看抽象工厂模式：创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码，这样就符合闭包原则了。<br>　下面来看看代码：<br>　MyInterface、MyClassOne、MyClassTwo不变。<br>　新增如下接口和类：</p>
+<pre><code>public interface Provider {
+    public MyInterface produce(); 
+}
+
+public class MyFactoryOne implements Provider {
+    @Override
+    public MyInterface produce() {
+        return new MyClassOne();
+    }
+}
+
+public class MyFactoryTwo implements Provider {
+    @Override
+    public MyInterface produce() {
+        return new MyClassTwo();
+    }
+}
+</code></pre><p>　修改测试类FactoryTest如下：</p>
+<pre><code>public class FactoryTest {
+    public static void main(String[] args){ 
+        Provider provider = new MyFactoryOne();
+        MyInterface myi = provider.produce();
+        myi.print();
+    }
+}
+</code></pre><p>　再回顾：抽象工厂模式就是创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了，不需要修改之前的代码。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/09/Java典型设计模式-单例模式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/09/Java典型设计模式-单例模式/" itemprop="url">
+                  Java典型设计模式-单例模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-09T12:01:47+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###　单例模式 ###<br>　单例模式就是一个类只有一个实例，不允许外界创建新的对象，但是可以调用类的实例，代码如下：</p>
+<pre><code>public class MyObject {
+    private static MyObject myObject;
+    private MyObject() {
+    }
+    public static MyObject getInstance() {
+        if (myObject != null) {
+        } else {
+            myObject = new MyObject();
+        }
+        return myObject;
+    }
+}
+</code></pre><p>　但是这样会引发多线程问题，这个问题就先放下，对线程有了更深入的了解后在回看。</p>
+<hr>
+<p>　在学习了线程的知识后，从新看单例模式，发现果然不是只有上面一种单例模式，那么根据我学习的知识进行一下补充：<br>　在Java语言中实现单例模式通常有两种表现方式：  </p>
+<ol>
+<li>饿汉式单例类：类加载时，就进行对象实例化。  </li>
+<li><p>懒汉式单例类：第一次引用类时，才进行对象实例化。上面的例子是非同步懒汉式单例类。<br>　<strong>饿汉式单例类代码如下：</strong>  </p>
+<p> package Design.Creational.Singleton;<br> //恶汉式单例<br> public class Singleton1 {</p>
+<pre><code>private static Singleton1 m_instance = new Singleton1();
+
+private Singleton1(){
+
+}
+
+public static Singleton1 getInstance(){
+    return m_instance;
+}
+</code></pre><p> }</p>
+</li>
+</ol>
+<p>　第一个例子是线程不安全的，如果有连个线程同时调用实例方法，那么有可能会生成两个实例，违反了单例模式。<br>　<strong>同步懒汉式代码如下：</strong></p>
+<pre><code>package Design.Creational.Singleton;
+//懒汉式单例
+public class Singleton2 {
+    private static Singleton2 m_instance = null;
+
+    private Singleton2(){
+
+    }
+
+    public synchronized static Singleton2 getInstance(){
+        if(m_instance==null)
+            m_instance = new Singleton2();
+        return m_instance;
+    }
+
 }
 </code></pre>
           
@@ -1249,7 +1757,7 @@ public class Main{
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（一）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-5-聚合-复用原则/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1274,8 +1782,8 @@ public class Main{
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（一）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-5-聚合-复用原则/" itemprop="url">
+                  设计模式六大原则(5): 聚合/复用原则
                 </a>
               
             
@@ -1291,8 +1799,8 @@ public class Main{
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:04:25+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:58:37+08:00">
+                2017-01-06
               </time>
             
 
@@ -1314,8 +1822,8 @@ public class Main{
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
                   </a>
                 </span>
 
@@ -1351,73 +1859,526 @@ public class Main{
       
         
           
-            <p>　<strong>在总结之前，我得自身反省一下，明明想法其实已经想的差不多了，但是总差一些细节，尤其关于Scanner类，这个类非常重要，方法一定要记住。</strong></p>
-<p>##　Scanner类##<br>　在源码中应该包括下句：</p>
-<pre><code>import java.util.Scanner;  
-</code></pre><p>　Scanner是新增的一个简易文本扫描器，在 JDK 5.0之前，是没有的。</p>
-<p>　<strong>构造方法：</strong><br>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
-<p>　<strong>方法：</strong><br>　public void close()    //关闭<br>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代<br>　public boolean hasNext() //检测输入中，是否，还有单词<br>　public boolean hasNextInt() //检测输入中，是否，还有单词<br>　public String next()   //读取下一个单词，默认把空格作为分隔符<br>　public int hasNextInt();查看是否有int类型的token的分割段<br>　public String nextLine()  //读行   </p>
-<p>　<strong>读取键盘输入</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-while(sc.hasNext())
-{
-    //处理业务
-}
-</code></pre><p>　好了，在了解了一些基本信息后，我们开始看题：</p>
+            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　在实际开发中，新建一个类可能会用到多个以前的类的方法，但是在设计时是不能轻易采用继承机制的；因为在使用继承时，需要严格遵循里氏代换原则，有效使用继承会有助于对问题的理解，降低复杂度，而滥用继承反而会增加系统构建和维护的难度以及系统的复杂度，因此需要慎重使用继承复用。</p>
+<h3 id="2-聚合-复用原则"><a href="#2-聚合-复用原则" class="headerlink" title="2 聚合/复用原则"></a>2 聚合/复用原则</h3><p>　合成复用原则(Composite Reuse Principle, CRP)：尽量使用对象组合，而不是继承来达到复用的目的。<br>　合成复用原则就是在一个新的对象里通过关联关系（包括组合关系和聚合关系）来使用一些已有的对象，使之成为新对象的一部分；新对象通过委派调用已有对象的方法达到复用功能的目的。</p>
 <hr>
-<p>　输入包括多组测试数据。每组输入第一行是两个正整数N和M（0 &lt; N &lt;= 30000,0 &lt; M &lt; 5000）,分别代表学生的数目和操作的数目。<br>学生ID编号从1编到N。第二行包含N个整数，代表这N个学生的初始成绩，其中第i个数代表ID为i的学生的成绩<br>接下来又M行，每一行有一个字符C（只取‘Q’或‘U’），和两个正整数A,B,当C为’Q’的时候, 表示这是一条询问操作，他询问ID从A到B（包括A,B）的学生当中，成绩最高的是多少；当C为‘U’的时候，表示这是一条更新操作，要求把ID为A的学生的成绩更改为B。</p>
-<p>　我第一次做题的时候忽略了两点：</p>
+<p>　组合或聚合关系可以将成员对象纳入到新对象中，使之成为新对象的一部分，因此新对象可以调用已有对象的功能，这样做可以使得成员对象的内部实现细节对于新对象不可见。<br>　相对继承关系而言，其耦合度相对较低，成员对象的变化对新对象的影响不大，可以在新对象中根据实际需要有选择性地调用成员对象的操作。</p>
+<hr>
+<p>　一般而言，如果两个类之间是“Has-A”的关系应使用组合或聚合，如果是“Is-A”关系可使用继承。”Is-A”是严格的分类学意义上的定义，意思是一个类是另一个类的”一种”；而”Has-A”则不同，它表示某一个角色具有某一项责任。</p>
+<h3 id="3-举例说明"><a href="#3-举例说明" class="headerlink" title="3 举例说明"></a>3 举例说明</h3><p>　在初期的CRM系统设计中，考虑到客户数量不多，系统采用MySQL作为数据库，与数据库操作有关的类如CustomerDAO类等都需要连接数据库，连接数据库的方法getConnection()封装在DBUtil类中，由于需要重用DBUtil类的getConnection()方法，设计人员将CustomerDAO作为DBUtil类的子类，初始设计方案结构如下所示：</p>
+<p><img src="http://i.imgur.com/VvKP8g8.png" alt=""></p>
+<p> 　随着客户数量的增加，系统决定升级为Oracle数据库，因此需要增加一个新的OracleDBUtil类来连接Oracle数据库，由于在初始设计方案中CustomerDAO和DBUtil之间是继承关系，因此在更换数据库连接方式时需要修改CustomerDAO类的源代码，将CustomerDAO作为OracleDBUtil的子类，这将违反开闭原则。</p>
+<hr>
+<p>　现使用合成复用原则对其进行重构。在实现复用时应该多用关联，少用继承。因此在本实例中我们可以使用关联复用来取代继承复用，重构后的结构如下所示：</p>
+<p><img src="http://i.imgur.com/wpV8wbt.png" alt=""></p>
 <ul>
-<li>M限制了查询次数</li>
-<li>A、B的大小关系不确定</li>
+<li>CustomerDAO和DBUtil之间的关系由继承关系变为关联关系，采用依赖注入的方式将DBUtil对象注入到CustomerDAO中。</li>
+<li><p>如果需要对DBUtil的功能进行扩展，可以通过其子类来实现，如通过子类OracleDBUtil来连接Oracle数据库。由于CustomerDAO针对DBUtil编程，根据里氏代换原则，DBUtil子类的对象可以覆盖DBUtil对象，只需在CustomerDAO中注入子类对象即可使用子类所扩展的方法。。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3></li>
+<li><p>在面向对象设计中，可以通过两种方法在不同的环境中复用已有的设计和实现，即通过组合/聚合关系或通过继承，但首先应该考虑使用组合/聚合，组合/聚合可以使系统更加灵活，降低类与类之间的耦合度，一个类的变化对其他类造成的影响相对较少；其次才考虑继承，在使用继承时，需要严格遵循里氏代换原则，有效使用继承会有助于对问题的理解，降低复杂度，而滥用继承反而会增加系统构建和维护的难度以及系统的复杂度。</p>
+</li>
+<li>通过继承来进行复用的主要问题在于继承复用会破坏系统的封装性，因为继承会将基类的实现细节暴露给子类，由于基类的内部细节通常对子类来说是可见的，所以这种复用又称“白箱”复用，如果基类发生改变，那么子类的实现也不得不发生改变；从基类继承而来的实现是静态的，不可能在运行时发生改变，没有足够的灵活性；而且继承只能在有限的环境中使用（如类没有声明为不能被继承）。</li>
 </ul>
-<p>　在了解了这两个陷阱后，代码如下：</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int num = 0;
-        int count = 0;
-         int A=0,B =0;
-        while(sc.hasNext()){
-            num = sc.nextInt();
-            count = sc.nextInt();
 
-            int[] grade = new int[num];
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;num ;i++)
-                grade[i] = sc.nextInt();
-            String ch = null;
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;count;i++){
-                ch = sc.next();
-                A = sc.nextInt();
-                B = sc.nextInt();
-                if(ch.equals(&quot;U&quot;))
-                    grade[A-1] = B;
-                if(ch.equals(&quot;Q&quot;)){
-                    int result = max(grade,A,B);
-                    System.out.println(result);
-                }
+          
+        
+      
+    </div>
 
-            }
-        }
+    <div>
+      
+    </div>
 
-    }
-
-    public static int max(int[] array,int begin,int end){
-        int min = Math.min(begin,end)-1;
-        int max = Math.max(begin,end);
-
-        int result = array[min];
-        for(int i =min+1;i&lt;max;i++){
-            if(array[i]&gt;result)
-                result = array[i];
-        }
-        return result;
-    }
+    <div>
+      
+    </div>
 
 
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-4-迪米特原则/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-4-迪米特原则/" itemprop="url">
+                  设计模式六大原则(4): 迪米特原则
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:58:12+08:00">
+                2017-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　类与类之间的关系越密切，耦合度越大，当一个类发生改变时，对另一个类的影响也越大。</p>
+<h3 id="2-迪米特原则"><a href="#2-迪米特原则" class="headerlink" title="2 迪米特原则"></a>2 迪米特原则</h3><p>　通俗的来讲：就是一个类对自己依赖的类知道的越少越好。<br>　对于被依赖的类来说，无论逻辑多么复杂，都尽量地的将逻辑封装在类的内部，对外除了提供的public方法，不对外泄漏任何信息。<br>　更简单的定义：只与直接的朋友通信。</p>
+<hr>
+<p>　<strong>那么什么是直接的朋友？？？</strong></p>
+<p>　直接的朋友：每个对象都会与其他对象有耦合关系，只要两个对象之间有耦合关系，我们就说这两个对象之间是朋友关系。耦合的方式很多，依赖、关联、组合、聚合等。<br>　出现成员变量、方法参数、方法返回值中的类为直接的朋友；<br>　出现在局部变量中的类则不是直接的朋友。</p>
+<hr>
+<p>　也就是说，陌生的类最好不要作为局部变量的形式出现在类的内部。</p>
+<h3 id="3-举例"><a href="#3-举例" class="headerlink" title="3 举例"></a>3 举例</h3><p>　举一个代码例子：有一个集团公司，下属单位有分公司和直属部门，现在要求打印出所有下属单位的员工ID。</p>
+<p>　<strong>先看一个错误的例子</strong></p>
+<pre><code>//总公司员工  
+class Employee{  
+    private String id;  
+    public void setId(String id){  
+        this.id = id;  
+    }  
+    public String getId(){  
+        return id;  
+    }  
+}  
+
+//分公司员工  
+class SubEmployee{  
+    private String id;  
+    public void setId(String id){  
+        this.id = id;  
+    }  
+    public String getId(){  
+        return id;  
+    }  
+}  
+//分公司管理
+class SubCompanyManager{  
+    public List&lt;SubEmployee&gt; getAllEmployee(){  
+        List&lt;SubEmployee&gt; list = new ArrayList&lt;SubEmployee&gt;();  
+        for(int i=0; i&lt;100; i++){  
+            SubEmployee emp = new SubEmployee();  
+            //为分公司人员按顺序分配一个ID  
+            emp.setId(&quot;分公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+}  
+//总公司管理
+class CompanyManager{  
+    public List&lt;Employee&gt; getAllEmployee(){  
+        List&lt;Employee&gt; list = new ArrayList&lt;Employee&gt;();  
+        for(int i=0; i&lt;30; i++){  
+            Employee emp = new Employee();  
+            //为总公司人员按顺序分配一个ID  
+            emp.setId(&quot;总公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+
+    public void printAllEmployee(SubCompanyManager sub){  
+        List&lt;SubEmployee&gt; list1 = sub.getAllEmployee();  
+        for(SubEmployee e:list1){  
+            System.out.println(e.getId());  
+        }  
+
+        List&lt;Employee&gt; list2 = this.getAllEmployee();  
+        for(Employee e:list2){  
+            System.out.println(e.getId());  
+        }  
+    }  
+}  
+
+public class Client{  
+    public static void main(String[] args){  
+        CompanyManager e = new CompanyManager();  
+        e.printAllEmployee(new SubCompanyManager());  
+    }  
+}  
+</code></pre><p>　主要问题出在CompanyManager中，根据迪米特法则，只与直接的朋友发生通信，而SubEmployee类并不是CompanyManager类的直接朋友（以局部变量出现的耦合不属于直接朋友），从逻辑上讲总公司只与他的分公司耦合就行了，与分公司的员工并没有任何联系，这样设计显然是增加了不必要的耦合。按照迪米特法则，应该避免类中出现这样非直接朋友关系的耦合。</p>
+<hr>
+<p>　<strong>修改后的代码</strong></p>
+<pre><code>class SubCompanyManager{  
+    public List&lt;SubEmployee&gt; getAllEmployee(){  
+        List&lt;SubEmployee&gt; list = new ArrayList&lt;SubEmployee&gt;();  
+        for(int i=0; i&lt;100; i++){  
+            SubEmployee emp = new SubEmployee();  
+            //为分公司人员按顺序分配一个ID  
+            emp.setId(&quot;分公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+    public void printEmployee(){  
+        List&lt;SubEmployee&gt; list = this.getAllEmployee();  
+        for(SubEmployee e:list){  
+            System.out.println(e.getId());  
+        }  
+    }  
+}  
+
+class CompanyManager{  
+    public List&lt;Employee&gt; getAllEmployee(){  
+        List&lt;Employee&gt; list = new ArrayList&lt;Employee&gt;();  
+        for(int i=0; i&lt;30; i++){  
+            Employee emp = new Employee();  
+            //为总公司人员按顺序分配一个ID  
+            emp.setId(&quot;总公司&quot;+i);  
+            list.add(emp);  
+        }  
+        return list;  
+    }  
+
+    public void printAllEmployee(SubCompanyManager sub){  
+        sub.printEmployee();  
+        List&lt;Employee&gt; list2 = this.getAllEmployee();  
+        for(Employee e:list2){  
+            System.out.println(e.getId());  
+        }  
+    }  
+}  
+</code></pre><p>　修改后，为分公司增加了打印人员ID的方法，总公司直接调用来打印，从而避免了与分公司的员工发生耦合。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><p>　迪米特法则的初衷是降低类之间的耦合，由于每个类都减少了不必要的依赖，因此的确可以降低耦合关系。但是凡事都有度，虽然可以避免与非直接的类通信，但是要通信，必然会通过一个“中介”来发生联系，例如本例中，总公司就是通过分公司这个“中介”来与分公司的员工发生联系的。过分的使用迪米特原则，会产生大量这样的中介和传递类，导致系统复杂度变大。所以在采用迪米特法则时要反复权衡，既做到结构清晰，又要高内聚低耦合。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/01/06/设计模式六大原则-3-接口隔离原则/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/06/设计模式六大原则-3-接口隔离原则/" itemprop="url">
+                  设计模式六大原则(3): 接口隔离原则
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-06T11:57:45+08:00">
+                2017-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1-问题的由来"><a href="#1-问题的由来" class="headerlink" title="1 问题的由来"></a>1 问题的由来</h3><p>　类A通过接口I依赖类B，类C通过接口I依赖类D，如果接口I对于类B和类D来说不是最小接口，则类B和类D必须去实现他们不需要的方法。</p>
+<h3 id="2-接口隔离原则"><a href="#2-接口隔离原则" class="headerlink" title="2 接口隔离原则"></a>2 接口隔离原则</h3><ul>
+<li><strong>客户端不应该依赖它不需要的接口</strong><br>  意思就是说客户端只要依赖它需要的接口，它需要什么接口，就提供什么接口，不提供多余的接口。</li>
+<li><strong>类间的依赖关系应该建立在最小的接口上</strong><br>  接口中的方法应该尽量少，不要使接口过于臃肿，不要有很多不相关的逻辑方法。</li>
+</ul>
+<p>　接下来是代码示例：</p>
+<pre><code> public interface I {
+    public void method1();
+    public void method2();
+    public void method3();
 }
-</code></pre><p>　<strong>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</strong></p>
+public class B implements I{
+    @Override
+    public void method1() {
+        System.out.println(&quot;类B实现了接口I的方法1&quot;);
+    }
+    @Override
+    public void method2() {
+        System.out.println(&quot;类B实现了接口I的方法2&quot;);
+    }
+    @Override
+    public void method3() {//类B并不需要接口I的方法3功能，但是由于实现接口I，所以不得不实现方法3
+        //在这里写一个空方法
+    }
+}
+public class D implements I{
+    @Override
+    public void method2() {
+        System.out.println(&quot;类D实现了接口I的方法2&quot;);
+    }
+    @Override
+    public void method3() {
+        System.out.println(&quot;类D实现了接口I的方法3&quot;);
+    }
+    @Override
+    public void method1() {//类D并不需要接口I的方法1功能，但是由于实现接口I，所以不得不实现方法1
+        //在这里写一个空方法
+    }
+}
+//类A通过接口I依赖类B
+public class A {
+    public void depend1(I i){
+        i.method1();
+    }
+}
+//类C通过接口I依赖类D
+public class C {
+    public void depend1(I i){
+        i.method3();
+    }
+}
+public class Client {
+    public static void main(String[] args) {
+        A a = new A();
+        I i1 = new B();
+        a.depend1(i1);         
+        C c = new C();
+        I i2 = new D();
+        c.depend1(i2);
+    }
+}
+运行结果：
+类B实现了接口I的方法1
+类D实现了接口I的方法3
+</code></pre><hr>
+<p>　可以看出，如果接口过于臃肿，不同业务逻辑的抽象方法都放在一个接口内，会造成它的实现类必须实现自己并不需要的方法</p>
+<hr>
+<p>　这种设计方式显然是不妥当的。所以应该把接口I拆分成3个接口，使得实现类只需要实现自己需要的接口即可，修改代码如下：</p>
+<pre><code>public interface I1 {
+    public void method1();
+}
+public interface I2 {
+    public void method2();
+}
+public interface I3 {
+    public void method3();
+}
+public class B implements I1,I2{
+    @Override
+    public void method1() {
+        System.out.println(&quot;类B实现了接口I的方法1&quot;);
+    }
+    @Override
+    public void method2() {
+        System.out.println(&quot;类B实现了接口I的方法2&quot;);
+    }
+} 
+public class D implements I2,I3{
+    @Override
+    public void method2() {
+        System.out.println(&quot;类D实现了接口I的方法2&quot;);
+    }
+    @Override
+    public void method3() {
+        System.out.println(&quot;类D实现了接口I的方法3&quot;);
+    }
+}
+</code></pre><h3 id="3-与单一职责区别"><a href="#3-与单一职责区别" class="headerlink" title="3 与单一职责区别"></a>3 与单一职责区别</h3><ul>
+<li>单一职责原则注重的是职责；而接口隔离原则注重对接口依赖的隔离。</li>
+<li>单一职责原则主要是约束类，其次才是接口和方法，它针对的是程序中的实现和细节；而接口隔离原则主要约束接口，主要针对抽象，针对程序整体框架的构建。<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3>　对于接口隔离原则来说，接口尽量小，但是也要有限度。<br>　对接口进行细化可以提高程序设计灵活性是不争的事实，但是如果过小，则会造成接口数量过多，使设计复杂化，所以一定要适度。</li>
+</ul>
 
           
         
@@ -1451,7 +2412,7 @@ public class Main{
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1494,7 +2455,7 @@ public class Main{
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">59</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
