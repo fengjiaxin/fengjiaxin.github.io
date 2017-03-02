@@ -251,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（二）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(三)- 功能实现/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -276,8 +276,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（二）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(三)- 功能实现/" itemprop="url">
+                  HashMap源码学习(三)-功能实现
                 </a>
               
             
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:56:53+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:32:20+08:00">
+                2017-02-23
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
                   </a>
                 </span>
 
@@ -353,116 +353,95 @@
       
         
           
-            <p>　<strong>在总结之前，我先复习一下有关String对象的知识。</strong></p>
-<p>#　String类 #</p>
-<p>　String类是<strong>final</strong>类型的，所以<strong>不能被被继承，方法不能被覆盖</strong>。它是一个引用数据类型，它的对象是一个字符串，程序中用” “标示的都是字符串。字符串是一个特殊的对象，字符串对象最大的特点是<strong>它为一个常量，一经初始化，永远不会改变</strong>，这是它跟其它引用数据类型最大的不同之处。<br>　常见的操作方法：  </p>
-<h2 id="1、获取"><a href="#1、获取" class="headerlink" title="1、获取"></a>1、获取</h2><p>1.1 字符串中的包含的字符数，也就是字符串的长度；</p>
-<pre><code>int length（）:获取长度。  （跟数组length的区别）
-</code></pre><p>1.2 根据位置获取位置上某个字符。</p>
-<pre><code>char charAt（int index）：
-</code></pre><p>1.3 根据字符获取该字符在字符串中的位置。</p>
-<pre><code>int indexOf（int ch）：返回的是ch在字符串中第一次出现的位置。
-int indexOf（int ch,int fromIndex）:从fromIndex指定位置开始，获取ch在字符串中的位置。
-int indexOf（String str）：返回的是str在字符串中第一次出现的位置。
-int indexOf（String str,int fromIndex）:从fromIndex指定位置开始，获取str在字符串中的位置。（str字符串）
-int lastIndexOf（int ch）：返回指定字符在此字符串中最后一次出现的索引。
-</code></pre><h2 id="2、判断"><a href="#2、判断" class="headerlink" title="2、判断"></a>2、判断</h2><p>2.1 字符串中是否包含某一个字串。</p>
-<pre><code>boolean contains(str);①
-</code></pre><p>2.2 字符串中是否有内容</p>
-<pre><code>boolean isEmpty（）;原理就是判断长度是否为0；
-</code></pre><p>2.3 字符串中是否是以指定内容开头。</p>
-<pre><code>boolean startsWith（str）;
-</code></pre><p>2.4 字符串中是否是以指定内容结尾。</p>
-<pre><code>boolean endsWith（str）;
-</code></pre><p>2.5 判读字符串的内容是否相同，复写了Object类中的equals方法。</p>
-<pre><code>boolean equals（str）；
-</code></pre><p>2.6 判断内容是否相同，并忽略大小写。</p>
-<pre><code>boolean equalsIgnoreCase（str）；
-</code></pre><h2 id="3-转换"><a href="#3-转换" class="headerlink" title="3. 转换"></a>3. 转换</h2><p>3.1 将字符数组转成字符串；</p>
-<pre><code>构造函数：String（char[]）
-String（char[]，offset，count）：将字符数组中的一部分转成字符串。
-offset起始位置，count取字符的个数。
-静态方法：
-   static String copyValueOf(char[]);
-   static String copyValueOf(char[] data,int offset ,int count)
-   static String valueOf(char[]):
-</code></pre><p>3.2 将字符串转成字符数组；</p>
-<pre><code>char[]  toCharArray();
-</code></pre><p>3.3 将字节数组转成字符串；</p>
-<pre><code>String（byte[]）
-String（byte[]，offset，count）
-</code></pre><p>3.4 将字符串转成字节数组;</p>
-<pre><code>Byte[] getBytes();
-</code></pre><p>3.5 将基本数据类型转成字符串。<br>    static String valueOf（int）<br>    static String valueOf（double）<br>    (3+””和String valueOf（3）)<br>    特殊：字符串和字节数组在转换过程中，是可以指定编码表的。</p>
-<h2 id="4-替换"><a href="#4-替换" class="headerlink" title="4. 替换"></a>4. 替换</h2><pre><code>String replace（oldchar，newchar）；
-</code></pre><h2 id="5-切割"><a href="#5-切割" class="headerlink" title="5. 切割"></a>5. 切割</h2><pre><code>String[] split（regex）；
-</code></pre><h2 id="6-字串，获取字符串中的一部分。"><a href="#6-字串，获取字符串中的一部分。" class="headerlink" title="6. 字串，获取字符串中的一部分。"></a>6. 字串，获取字符串中的一部分。</h2><pre><code>String substring(begin);
-String substring(begin,end);
-</code></pre><h2 id="7-转换，去除空格，比较。"><a href="#7-转换，去除空格，比较。" class="headerlink" title="7. 转换，去除空格，比较。"></a>7. 转换，去除空格，比较。</h2><p>7.1 将字符串转成大写或者小写。</p>
-<pre><code>String toUpperCase();
-String toLowerCase();
-</code></pre><p>7.2 将字符串两端的多个空格去除。</p>
-<pre><code>String trim();
-</code></pre><p>7.3 对两个字符串进行自然顺序的比较。</p>
-<pre><code>Int compareTo(string );
-</code></pre><p>#　接下来就是笔试题： #</p>
-<p>　扑克牌游戏大家应该都比较熟悉了，一副牌由54张组成，含3~A，2各4张，小王1张，大王1张。牌面从小到大用如下字符和字符串表示（其中，小写joker表示小王，大写JOKER表示大王）:)<br>3 4 5 6 7 8 9 10 J Q K A 2 joker JOKER<br>输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如：4 4 4 4-joker JOKER<br>请比较两手牌大小，输出较大的牌，如果不存在比较关系则输出ERROR<br>　基本规则：<br>（1）输入每手牌可能是个子，对子，顺子（连续5张），三个，炸弹（四个）和对王中的一种，不存在其他情况，由输入保证两手牌都是合法的，顺子已经从小到大排列；<br>（2）除了炸弹和对王可以和所有牌比较之外，其他类型的牌只能跟相同类型的存在比较关系（如，对子跟对子比较，三个跟三个比较），不考虑拆牌情况（如：将对子拆分成个子）<br>（3）大小规则跟大家平时了解的常见规则相同，个子，对子，三个比较牌面大小；顺子比较最小牌大小；炸弹大于前面所有的牌，炸弹之间比较牌面大小；对王是最大的牌；<br>（4）输入的两手牌不会出现相等的情况。<br>　答案提示：<br>（1）除了炸弹和对王之外，其他必须同类型比较。<br>（2）输入已经保证合法性，不用检查输入是否是合法的牌。<br>（3）输入的顺子已经经过从小到大排序，因此不用再排序了.<br>　输入描述:<br>　输入两手牌，两手牌之间用“-”连接，每手牌的每张牌以空格分隔，“-”两边没有空格，如4 4 4 4-joker JOKER。<br>　输出描述:<br>　输出两手牌中较大的那手，不含连接符，扑克牌顺序不变，仍以空格隔开；如果不存在比较关系则输出ERROR。<br>　输入例子:<br>　4 4 4 4-joker JOKER<br>　输出例子:<br>　joker JOKER<br>　<strong>注意：本道题目的输入规定是4 4 4 4-joker JOKER<br>要想获取两组字符串</strong><br><strong>正确做法是：</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-String[] left,right;
-String[] line;
-String nextLine,outString;
-while(sc.hasNext())
-{
-    nextLine = sc.nextLine();
-    line = nextLine.split(&quot;-&quot;);
-    left = line[0].split(&quot; &quot;);
-    right = line[1].split(&quot; &quot;);
-    //处理业务逻辑
-
+            <p>HashMap的内部功能实现很多，本文主要从根据<strong>key获取哈希桶数组索引位置、put方法</strong>的详细执行深入学习。</p>
+<h1 id="1、确定哈希桶数组索引位置"><a href="#1、确定哈希桶数组索引位置" class="headerlink" title="1、确定哈希桶数组索引位置"></a>1、确定哈希桶数组索引位置</h1><p>　HashMap定位数组索引位置，直接决定了hash方法的离散性能。先看看源码的实现(方法一+方法二):</p>
+<pre><code>方法一：
+static final int hash(Object key) {   //jdk1.8 &amp; jdk1.7
+     int h;
+     // h = key.hashCode() 为第一步 取hashCode值
+     // h ^ (h &gt;&gt;&gt; 16)  为第二步 高位参与运算
+     return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
 }
-</code></pre><p>　那么当牌个数相等时如何比较牌面大小呢？<br>　一种简单的方法就是获取字符串所在基础字符串的位置<br>　即</p>
-<pre><code>private static int count(String str){
-    return &quot;345678910JOKA2jokerJOKER&quot;.indexOf(str);
+方法二：
+static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个方法，但是实现原理一样的
+     return h &amp; (length-1);  //第三步 取模运算
 }
-</code></pre><p>　写到这里，基本答案就出来了。</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String[] left,right;
-        String[] line;
-        String nextLine,outString;
-        while(sc.hasNext()){
-            nextLine = sc.nextLine();
-            if(nextLine.contains(&quot;joker JOKER&quot;))
-                outString = &quot;joker JOKER&quot;;
-            else{
-                line = nextLine.split(&quot;-&quot;);
-                left = line[0].split(&quot; &quot;);
-                right = line[1].split(&quot; &quot;);
+</code></pre><p>　这里的Hash算法本质上就是三步：<strong>取key的hashCode值、高位运算、取模运算</strong>。</p>
+<p>　<strong>注意</strong>：Object的hashCode()方法中的hashCode是具体怎么计算的呢？<br>　Object中的hashCode() 返回对象的<strong>32位jvm内存地址</strong>。也就是说如果对象不重写该方法，则返回相应对象的32为JVM内存地址。</p>
+<p>　对于任意给定的对象，只要它的hashCode()返回值相同，那么程序调用方法一计算得到的Hash码值总是相同的。我们首先想到的就是把hash值对数组长度取模运算，这样元素的分布相对比较均匀。但是，模运算的消耗较大，在HashMap中调用方法二来计算该对象应该保存在table数组的哪个索引处。</p>
+<p>　这个方法非常巧妙，它通过h &amp; (table.length -1)来得到该对象的保存位，而HashMap底层数组的长度总是2的n次方，这是HashMap在速度上的优化。当length总是2的n次方时，h&amp; (length-1)运算等价于对length取模，也就是h%length，但是&amp;比%具有更高的效率。</p>
+<p>　在JDK的实现中，优化了高位运算的算法，通过hashCode()的高16位异或低16位实现的：(h = k.hashCode()) ^ (h &gt;&gt;&gt; 16)，主要是从速度、功效、质量来考虑的，这么做可以在数组table的length比较小的时候，也能保证考虑到高低Bit都参与到Hash的计算中，同时不会有太大的开销。</p>
+<p>　下面举例说明下，n为table的长度16。<br><img src="http://i.imgur.com/etKJGqq.png" alt=""></p>
+<h1 id="2、分析HashMap的put方法"><a href="#2、分析HashMap的put方法" class="headerlink" title="2、分析HashMap的put方法"></a>2、分析HashMap的put方法</h1><ol>
+<li>判断键值对数组table[i]是否为空或为null，否则执行resize()进行扩容；</li>
+<li>根据键值key计算hash值得到插入的数组索引i，如果table[i]==null，直接新建节点添加，转向6，如果table[i]不为空，转向3；</li>
+<li>判断table[i]的首个元素是否和key一样，如果相同直接覆盖value，否则转向4，这里的相同指的是hashCode以及equals；</li>
+<li>判断table[i] 是否为treeNode，即table[i] 是否是红黑树，如果是红黑树，则直接在树中插入键值对，否则转向5；</li>
+<li>遍历table[i]，判断链表长度是否大于8，大于8的话把链表转换为红黑树，在红黑树中执行插入操作，否则进行链表的插入操作；遍历过程中若发现key已经存在直接覆盖value即可；</li>
+<li>插入成功后，判断实际存在的键值对数量size是否超多了最大容量threshold，如果超过，进行扩容。</li>
+</ol>
+<p>　HashMap的put方法执行过程可以通过下图来理解</p>
+<p><img src="http://i.imgur.com/WJEDu7Y.png" alt=""></p>
+<p>　JDK1.8HashMap的put方法源码如下:</p>
+<pre><code> 1 public V put(K key, V value) {
+ 2     // 对key的hashCode()做hash
+ 3     return putVal(hash(key), key, value, false, true);
+ 4 }
+ 5 
+ 6 final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+ 7                boolean evict) {
+ 8     Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+ 9     // 步骤1：tab为空则创建
+10     if ((tab = table) == null || (n = tab.length) == 0)
+11         n = (tab = resize()).length;
+12     // 步骤2：计算index，并对null做处理 
+13     if ((p = tab[i = (n - 1) &amp; hash]) == null) 
+14         tab[i] = newNode(hash, key, value, null);
+15     else {
+16         Node&lt;K,V&gt; e; K k;
+17         // 步骤3：节点key存在，直接覆盖value
+18         if (p.hash == hash &amp;&amp;
+19             ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+20             e = p;
+21         // 步骤4：判断该链为红黑树
+22         else if (p instanceof TreeNode)
+23             e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+24         // 步骤5：该链为链表
+25         else {
+26             for (int binCount = 0; ; ++binCount) {
+27                 if ((e = p.next) == null) {
+28                     p.next = newNode(hash, key,value,null);
+                        //链表长度大于8转换为红黑树进行处理
+29                     if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st  
+30                         treeifyBin(tab, hash);
+31                     break;
+32                 }
+                    // key已经存在直接覆盖value
+33                 if (e.hash == hash &amp;&amp;
+34                     ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) 
+35                            break;
+36                 p = e;
+37             }
+38         }
+39         
+40         if (e != null) { // existing mapping for key
+41             V oldValue = e.value;
+42             if (!onlyIfAbsent || oldValue == null)
+43                 e.value = value;
+44             afterNodeAccess(e);
+45             return oldValue;
+46         }
+47     }
 
-                if(left.length ==4 &amp;&amp; right.length!=4)
-                    outString = line[0];
-                else if(left.length!=4 &amp;&amp; right.length==4)
-                    outString = line[1];
+48     ++modCount;
+49     // 步骤6：超过最大容量 就扩容
+50     if (++size &gt; threshold)
+51         resize();
+52     afterNodeInsertion(evict);
+53     return null;
+54 }
+</code></pre><p>　这样就把哈希桶数组索引位置、put方法讲解了一下，这样我们就在以后Java调用时更好地应用HashMap，那么下一章节就学习一下扩容机制，这个算法我记得在算法导论中曾经有相关的题目，下一章继续学习。</p>
 
-                else if(left.length==right.length){
-                    if(count(left[0])&gt;count(right[0]))
-                        outString = line[0];
-                    else
-                        outString = line[1];
-                }else{
-                    outString = &quot;ERROR&quot;;
-                }
-            }
-            System.out.println(outString);
-        }  
-    }
-    private static int count(String str){
-        return &quot;345678910JQKA2jokerJOKER&quot;.indexOf(str);
-    }
-}
-</code></pre>
           
         
       
@@ -500,7 +479,7 @@ public class Main{
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/09/华为在线笔试总结（一）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(二)- 存储结构/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -525,8 +504,8 @@ public class Main{
             
               
                 
-                <a class="post-title-link" href="/2017/02/09/华为在线笔试总结（一）/" itemprop="url">
-                  华为在线笔试总结（一）
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(二)- 存储结构/" itemprop="url">
+                  HashMap源码学习(二)-存储结构
                 </a>
               
             
@@ -542,8 +521,8 @@ public class Main{
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-09T18:04:25+08:00">
-                2017-02-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:22:20+08:00">
+                2017-02-23
               </time>
             
 
@@ -565,8 +544,8 @@ public class Main{
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/笔试总结/" itemprop="url" rel="index">
-                    <span itemprop="name">笔试总结</span>
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
                   </a>
                 </span>
 
@@ -602,719 +581,462 @@ public class Main{
       
         
           
-            <p>　<strong>在总结之前，我得自身反省一下，明明想法其实已经想的差不多了，但是总差一些细节，尤其关于Scanner类，这个类非常重要，方法一定要记住。</strong></p>
-<p>##　Scanner类##<br>　在源码中应该包括下句：</p>
-<pre><code>import java.util.Scanner;  
-</code></pre><p>　Scanner是新增的一个简易文本扫描器，在 JDK 5.0之前，是没有的。</p>
-<p>　<strong>构造方法：</strong><br>　public Scanner(InputStream source) //用指定的输入流来创建一个Scanner对象</p>
-<p>　<strong>方法：</strong><br>　public void close()    //关闭<br>　public Scanner useDelimiter(String pattern) //设置分隔模式 ,String可以用Pattern取代<br>　public boolean hasNext() //检测输入中，是否，还有单词<br>　public boolean hasNextInt() //检测输入中，是否，还有单词<br>　public String next()   //读取下一个单词，默认把空格作为分隔符<br>　public int hasNextInt();查看是否有int类型的token的分割段<br>　public String nextLine()  //读行   </p>
-<p>　<strong>读取键盘输入</strong></p>
-<pre><code>Scanner sc = new Scanner(System.in);
-while(sc.hasNext())
-{
-    //处理业务
+            <h1 id="HshMap的内部实现"><a href="#HshMap的内部实现" class="headerlink" title="HshMap的内部实现"></a>HshMap的内部实现</h1><p>　搞清楚HashMap，首先需要知道HashMap是什么，即它的存储结构-字段；其次弄明白它能干什么，即它的功能实现-方法。这篇文章主要学习存储结构。</p>
+<h1 id="存储结构-字段"><a href="#存储结构-字段" class="headerlink" title="存储结构-字段"></a>存储结构-字段</h1><p>　从结构实现来讲，HashMap是数组+链表+红黑树（JDK1.8增加了红黑树部分）实现的，如下所示：<br><img src="http://i.imgur.com/VfAl7ig.png" alt=""></p>
+<h2 id="1-哈希桶数组"><a href="#1-哈希桶数组" class="headerlink" title="1　哈希桶数组"></a>1　哈希桶数组</h2><p>　从源码可知，HashMap类中有一个非常重要的字段，就是 Node[] table，即哈希桶数组。</p>
+<pre><code>static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
+        final int hash;    //用来定位数组索引位置
+        final K key;
+        V value;
+        Node&lt;K,V&gt; next;   //链表的下一个node
+
+        Node(int hash, K key, V value, Node&lt;K,V&gt; next) { ... }
+        public final K getKey(){ ... }
+        public final V getValue() { ... }
+        public final String toString() { ... }
+        public final int hashCode() { ... }
+        public final V setValue(V newValue) { ... }
+        public final boolean equals(Object o) { ... }
 }
-</code></pre><p>　好了，在了解了一些基本信息后，我们开始看题：</p>
+</code></pre><p>　Node是HashMap的一个内部类，实现了Map.Entry接口，本质是就是一个映射(键值对)。上图中的每个黑色圆点就是一个Node对象。</p>
+<h2 id="2-HashMap就是使用哈希表来存储的"><a href="#2-HashMap就是使用哈希表来存储的" class="headerlink" title="2  HashMap就是使用哈希表来存储的"></a>2  HashMap就是使用哈希表来存储的</h2><p>　哈希表为解决冲突，可以采用开放地址法和链地址法等来解决问题，Java中HashMap采用了链地址法。在每个数组元素上都一个链表结构，当数据被Hash后，得到数组下标，把数据放在对应下标元素的链表上。<br>　例如程序执行下面代码：</p>
+<pre><code>map.put(&quot;啦啦&quot;,&quot;嘿嘿&quot;);
+</code></pre><p>　系统将调用”啦啦”这个key的hashCode()方法得到其hashCode值，然后再通过Hash算法的后两步运算（高位运算和取模运算）来定位该键值对的存储位置，有时两个key会定位到相同的位置，表示发生了Hash碰撞。当然Hash算法计算结果越分散均匀，Hash碰撞的概率就越小，map的存取效率就会越高。<br>　那么通过什么方式来控制map使得Hash碰撞的概率又小，哈希桶数组（Node[] table）占用空间又少呢？<br>　答案就是<strong>好的Hash算法和扩容机制</strong>。  </p>
+<h2 id="3-HashMap的扩容字段"><a href="#3-HashMap的扩容字段" class="headerlink" title="3  HashMap的扩容字段"></a>3  HashMap的扩容字段</h2><p>　从HashMap的默认构造函数源码可知，构造函数就是对下面几个字段进行初始化，源码如下：</p>
+<pre><code>int threshold;             // 所能容纳的key-value对极限 
+final float loadFactor;    // 负载因子
+int modCount;  
+int size;
+</code></pre><p>　首先，Node[] table的初始化长度length(默认值是16)，Loadfactor为负载因子(默认值是0.75)，threshold是HashMap所能容纳的最大数据量的Node(键值对)个数。<br>　threshold = length * Load factor。<br>　也就是说，在数组定义好长度之后，负载因子越大，所能容纳的键值对个数越多。</p>
 <hr>
-<p>　输入包括多组测试数据。每组输入第一行是两个正整数N和M（0 &lt; N &lt;= 30000,0 &lt; M &lt; 5000）,分别代表学生的数目和操作的数目。<br>学生ID编号从1编到N。第二行包含N个整数，代表这N个学生的初始成绩，其中第i个数代表ID为i的学生的成绩<br>接下来又M行，每一行有一个字符C（只取‘Q’或‘U’），和两个正整数A,B,当C为’Q’的时候, 表示这是一条询问操作，他询问ID从A到B（包括A,B）的学生当中，成绩最高的是多少；当C为‘U’的时候，表示这是一条更新操作，要求把ID为A的学生的成绩更改为B。</p>
-<p>　我第一次做题的时候忽略了两点：</p>
+<p>　结合负载因子的定义公式可知，threshold就是在此Loadfactor和length(数组长度)对应下允许的最大元素数目，超过这个数目就重新resize(扩容)，扩容后的HashMap容量是之前容量的两倍。</p>
+<p>　size字段就是HashMap中实际存在的键值对数量。modCount字段主要用来记录HashMap内部结构发生变化的次数，主要用于迭代的快速失败。<strong>强调一点</strong>，内部结构发生变化指的是结构发生变化，例如put新键值对，但是某个key对应的value值被覆盖不属于结构变化。</p>
+<p>　在HashMap中，哈希桶数组table的长度length大小必须为2的n次方(一定是合数)，这是一种非常规的设计，<strong>常规的设计是把桶的大小设计为素数。相对来说素数导致冲突的概率要小于合数</strong>。<br>　HashMap采用这种非常规设计，主要是为了在取模和扩容时做优化，同时为了减少冲突，HashMap定位哈希桶索引位置时，也加入了高位参与运算的过程。</p>
+<p>　<strong>在JDK1.8版本中，对数据结构做了进一步的优化，引入了红黑树。而当链表长度太长（默认超过8）时，链表就转换为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/HashMap源码学习(一)-介绍/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/23/HashMap源码学习(一)-介绍/" itemprop="url">
+                  HashMap源码学习(一)-介绍
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:20+08:00">
+                2017-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA源码学习/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA源码学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　最近学习处理大数据，一般方法都是先将数据进行哈希分类，虽然学习数据结构的时候很了解HashMap的原理，但是并不清楚Java中是如何实现的，那么今天就结合原理和源代码好好总结一下HashMap这个类。</p>
+<h1 id="一、HashMap的引入"><a href="#一、HashMap的引入" class="headerlink" title="一、HashMap的引入"></a>一、HashMap的引入</h1><p>　数据结构中有数组和链表来实现对数据的存储，但这两者基本上是两个极端。</p>
+<h2 id="1-数组"><a href="#1-数组" class="headerlink" title="1.数组"></a>1.数组</h2><p>　数组存储区间是连续的，占用内存严重，故空间复杂的很大。但数组的二分查找时间复杂度小，为O(1)；数组的特点是：寻址容易，插入和删除困难；</p>
+<p>##2.链表##<br>　链表存储区间离散，占用内存比较宽松，故空间复杂度很小，但时间复杂度很大，达O（N）。链表的特点是：寻址困难，插入和删除容易。</p>
+<hr>
+<p>　那么我们能不能综合两者的特性，做出一种寻址容易，插入删除也容易的数据结构？<br>　答案是肯定的，这就是我们要提起的哈希表。<strong>哈希表</strong>（(Hash table）既满足了数据的查找方便，同时不占用太多的内容空间，使用也十分方便。</p>
+<h1 id="二、HashMap数据结构简介"><a href="#二、HashMap数据结构简介" class="headerlink" title="二、HashMap数据结构简介"></a>二、HashMap数据结构简介</h1><p>　Java为数据结构中的映射定义了一个接口java.util.Map，此接口主要有四个常用的实现类，分别是HashMap、Hashtable、LinkedHashMap和TreeMap，类继承关系如下图所示：</p>
+<p><img src="http://i.imgur.com/xgHDD1k.png" alt=""></p>
+<p>　下面针对各个实现类的特点做一些说明：</p>
+<p>　<strong>1 HashMap</strong>：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections的synchronizedMap方法使HashMap具有线程安全的能力，或者使用ConcurrentHashMap。</p>
+<p>　<strong>2 LinkedHashMap</strong>：LinkedHashMap是HashMap的一个子类，保存了记录的插入顺序，在用Iterator遍历LinkedHashMap时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</p>
+<p>　<strong>3 TreeMap</strong>：TreeMap实现SortedMap接口，能够把它保存的记录根据键排序，默认是按键值的升序排序，也可以指定排序的比较器，当用Iterator遍历TreeMap时，得到的记录是排过序的。如果使用排序的映射，建议使用TreeMap。在使用TreeMap时，key必须实现Comparable接口或者在构造TreeMap传入自定义的Comparator，否则会在运行时抛出java.lang.ClassCastException类型的异常。</p>
+<hr>
+<p>　对于上述三种Map类型的类，要求映射中的key是不可变对象。不可变对象是该对象在创建后它的哈希值不会被改变。如果对象的哈希值发生变化，Map对象很可能就定位不到映射的位置了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/23/回调机制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="冯佳欣">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="冯佳欣的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/23/回调机制/" itemprop="url">
+                  回调机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T15:19:50+08:00">
+                2017-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　之前在学习操作系统的时候，Linux系统是用c语言编写，当时就涉及到了回调机制，回调函数就是指函数先在某处注册，而他将在某个需要的时刻被调用。虽然字面很简单，但是今天有必要将其和同步异步的概念结合起来，然后利用Java语言更好地理解回调机制。</p>
+<h1 id="一、-异步和同步"><a href="#一、-异步和同步" class="headerlink" title="一、 异步和同步"></a>一、 异步和同步</h1><p>　讲通俗点，异步就是不需要等当前执行的动作完成，就可以继续执行后面的动作。<br>　通常一个程序执行的顺序是：从上到下，依次执行。后面的动作必须等前面动作执行完成以后方可执行。这就是同步。</p>
+<p>　这里引用一个例子进行说明。</p>
+<blockquote>
+<p>案例：<br>A、张三打电话给李四，让李四帮忙写份材料。<br>B、李四接到电话的时候，手上有自己的工作要处理，但他答应张三，忙完手上的工作后马上帮张三写好材料，并传真给张三。<br>C、通完电话后，张三外出办事。</p>
+<p>说明：<br>张三给李四通完电话后，就出去办事了，他并不需要等李四把材料写好才外出。那么张三让李四写材料的消息就属于异步消息。<br>相反，如果张三必须等李四把材料写好才能外出办事的话，那么这个消息就属于同步消息了。</p>
+</blockquote>
+<h1 id="二、-异步的实现"><a href="#二、-异步的实现" class="headerlink" title="二、 异步的实现"></a>二、 异步的实现</h1><p>　传统的程序执行代码都是从上到下，一条一条执行的。<br>　在以上的案例中，如果李四需要几个小时以后才能帮张三写好材料的话，那张三就必须等几个小时，这样张三这几个小时就无法干其他的事情。</p>
+<hr>
+<p>　可以使用以下办法来处理这种问题：</p>
 <ul>
-<li>M限制了查询次数</li>
-<li>A、B的大小关系不确定</li>
+<li>张三找王五去给李四打电话，等李四写好材料后，由王五转交给张三。这样张三就可以外出办其他的事情了。</li>
+<li>问题得到了合理的解决，之前张三一条线的工作，由张三和王五两条线来完成了，两边同时进行，彼此不耽误。</li>
 </ul>
-<p>　在了解了这两个陷阱后，代码如下：</p>
-<pre><code>import java.util.Scanner;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int num = 0;
-        int count = 0;
-         int A=0,B =0;
-        while(sc.hasNext()){
-            num = sc.nextInt();
-            count = sc.nextInt();
-
-            int[] grade = new int[num];
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;num ;i++)
-                grade[i] = sc.nextInt();
-            String ch = null;
-            for(int i=0;sc.hasNext() &amp;&amp; i&lt;count;i++){
-                ch = sc.next();
-                A = sc.nextInt();
-                B = sc.nextInt();
-                if(ch.equals(&quot;U&quot;))
-                    grade[A-1] = B;
-                if(ch.equals(&quot;Q&quot;)){
-                    int result = max(grade,A,B);
-                    System.out.println(result);
-                }
-
-            }
-        }
-
-    }
-
-    public static int max(int[] array,int begin,int end){
-        int min = Math.min(begin,end)-1;
-        int max = Math.max(begin,end);
-
-        int result = array[min];
-        for(int i =min+1;i&lt;max;i++){
-            if(array[i]&gt;result)
-                result = array[i];
-        }
-        return result;
-    }
-
+<h1 id="三、-计算机语言的实现"><a href="#三、-计算机语言的实现" class="headerlink" title="三、 计算机语言的实现"></a>三、 计算机语言的实现</h1><ul>
+<li>以前由一个线程来处理的工作，可以通过新增一个线程来达到异步的目的。这也就是JAVA中的多线程技术。</li>
+<li>最后李四写好的材料必须交给张三，以做他用。这就是回调。</li>
+</ul>
+<p>　<strong>回调机制可以这样理解：</strong><br>　A发送消息给B，B处理好A要求的事情后，将结果返回给A，A再对B返回的结果来做进一步的处理。</p>
+<h1 id="四、-Java代码的实现"><a href="#四、-Java代码的实现" class="headerlink" title="四、 Java代码的实现"></a>四、 Java代码的实现</h1><p>回调的实现</p>
+<pre><code>/**
+ * 回调接口
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:45:06
+ */
+public interface CallBack {
+    /**
+     * 执行回调方法
+     * @param objects 将处理后的结果作为参数返回给回调函数
+     * @return: void
+     */
+    public void execute(Object...objects);
 
 }
-</code></pre><p>　<strong>总结：在习惯了编辑器后，发现有些代码拼写不正确，还有多练习把！！！</strong></p>
+</code></pre><p>消息的发送者</p>
+<pre><code>/**
+ * 简单本地发送异步消息的类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:47:07
+ */
+public class Local implements CallBack, Runnable {
+    /**
+     * 远程接收消息的类。
+     */
+    private Remote remote;
+    /**
+     * 发送出去的消息
+     */
+    private String message;
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/排序的Java实现/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/04/排序的Java实现/" itemprop="url">
-                  排序的Java实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T20:46:53+08:00">
-                2017-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　<strong>数据结构学习了好久，有时候不复习都快忘了，那么今天我就来复习一下内部排序，包括选择排序、插入排序、冒泡排序、归并排序、快速排序、希尔排序、堆排序；然后简单介绍一下各种排序的思想，然后利用Java进行实现；最后比较各算法的优劣。</strong></p>
-<h1 id="1、选择排序"><a href="#1、选择排序" class="headerlink" title="1、选择排序"></a>1、选择排序</h1><p>　基本原理：对于给定的一组记录，经过第一轮比较后得到最小的记录，然后将该记录与第一个记录的位置进行交换；接着对不包括第一个记录以外的其他记录进行第二轮比较，得到较小的记录并与第二个记录的位置进行交换；重复该过程，直到进行比较的记录只有一个时为止。<br>　具体实现：</p>
-<pre><code>public class TestSelectSort {
-
-    public static void main(String[] args) {
-        int[] a = {5,4,9,8,7,6,0,1,3,2};
-        selectSort(a);
-        show(a);
+    public Local(Remote remote ,String message){
+        super();
+        this.remote = remote;
+        this.message = message;
     }
 
-    public static void selectSort(int[] a){
-        int i,j;
-        int temp =0,flag =0;
-        for(i =0;i&lt;a.length;i++){
-            temp =a[i];
-            flag =i;
-            for(j =i+1;j&lt;a.length;j++){
-                if(a[j]&lt;temp){
-                    temp= a[j];
-                    flag =j;
-                }
-            }
-            if(flag!=i){
-                a[flag] =a[i];
-                a[i] = temp;
-            }
-        }
-    }
-
-    public static void show(int[] a){
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-
-}
-</code></pre><h1 id="2、插入排序："><a href="#2、插入排序：" class="headerlink" title="2、插入排序："></a>2、插入排序：</h1><p>　基本思想：对于给定的一组记录，初始时假设第一个记录自成一个有序序列，其余记录为无序序列；接着从第二个记录开始，按照记录的大小依次将当前处理的记录插入到其之前的有序序列中，直到最后一个记录插入到有序序列为止。<br>　具体实现：</p>
-<pre><code>public class TestInsertSort {
-    public static void main(String[] args) {
-        int[] array = {7,3,4,9,10,6};
-        insertSort(array);
-        for(int i=0;i&lt;array.length;i++)
-            System.out.print(array[i]+&quot; &quot;);
-
-    }
-    public static void insertSort(int[] a){
-        if(a!=null){
-            for(int i=1;i&lt;a.length;i++){
-                int temp = a[i],j =i;
-                if(temp&lt;a[j-1]){
-                    while(j&gt;=1 &amp;&amp; temp&lt;a[j-1]){
-                        a[j] = a[j-1];
-                        j--;
-                    }
-                }
-                a[j] = temp;
-            }
-        }
-    }
-}
-</code></pre><h1 id="3、冒泡排序"><a href="#3、冒泡排序" class="headerlink" title="3、冒泡排序"></a>3、冒泡排序</h1><p>　基本思想：对于给定的n个记录，从第一个记录开始依次对相邻的两个记录进行比较，当前面的记录大于后面的记录时，交换位置，进行第一轮比较和换位后，n个记录最大的记录位于第n位；然后对前(n-1)个记录进行第二轮比较；重复该过程直到进行比较的记录只剩下一个为止。<br>　具体实现：</p>
-<pre><code>public class TestBubbleSort {
-    public static void main(String[] args) {
-        int[] array = {4,2,9,10,8,6};
-        BubbleSort(array);
-        for(int i=0;i&lt;array.length;i++){
-            System.out.print(array[i]+&quot; &quot;);
-        }
-    }
-    public static void BubbleSort(int[] a){
-        int i,j,temp,len = a.length;
-        for( i=0;i&lt;len-1;i++){
-            for(j =0;j&lt;len-i-1;j++){
-                if(a[j]&gt;a[j+1]){
-                    temp = a[j];
-                    a[j] = a[j+1];
-                    a[j+1] = temp;
-                }
-            }
-        }
-    }
-}
-</code></pre><h1 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h1><p>　基本思想：对于给定的一组记录（假设共有n个记录），首先将每两个相邻的长度为1的子序列进行归并，得到n/2（向上取整）个长度为2或1的有序子序列，在将其进行两两归并，反复执行此过程，直到得到一个有序序列。<br>　具体实现：</p>
-<pre><code>public class TestMergeSort {
-    public static void main(String[] args) {
-        int[] a = {5,3,4,2,9,7,6,1};
-        MergeSort(a, 0, a.length-1);
-        for(int i =0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void Merge(int[] array,int left,int middle,int right){
-        int i,j,k,n1,n2;
-        n1 = middle-left+1;
-        n2 = right-middle;
-        int[] L = new int[n1];
-        int[] R = new int[n2];
-        for(i =0,k =left;i&lt;n1;i++,k++)
-            L[i] = array[k];
-        for(j =0,k=middle+1;j&lt;n2;j++,k++)
-            R[j] = array[k];
-        for(k =left,i =0,j =0;i&lt;n1 &amp;&amp; j&lt;n2;k++){
-            if(L[i]&lt;R[j])
-                array[k] = L[i++];
-            else
-                array[k] = R[j++];
-        }
-        //没有再声明一个变量是因为一下两种情况只会出现一种情况。
-        if(i&lt;n1){
-            for(j =i;j&lt;n1;j++,k++)
-                array[k] =L[j];
-        }
-        if(j&lt;n2){
-            for(i =j;i&lt;n2;i++,k++)
-                array[k] =R[i];    
-        }    
-    }
-
-    public static void MergeSort(int[] array,int left,int right){
-        if(left&lt;right){
-            int middle = (left+right)/2;
-            MergeSort(array, left, middle);
-            MergeSort(array,middle+1,right);
-            Merge(array,left,middle,right);
-        }
-    }
-}
-</code></pre><h1 id="5、快速排序"><a href="#5、快速排序" class="headerlink" title="5、快速排序"></a>5、快速排序</h1><p>　基本思想：对于一组给定的记录，通过一趟排序后，将原序列分为两个部分，其中前一部分的所有记录均比后一部分的所有记录小，然后再依次对前后两部分的记录进行快速排序，递归该过程，直到序列中的所有记录均有序为止。<br>　具体实现：</p>
-<pre><code>public class TestQuickSort {
-    public static void main(String[] args) {
-        int[] a = {5,3,2,9,7,6,1};
-        quickSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void sort(int[] array,int low,int high){
-        int i,j,index;
-        if(low&gt;=high) return;
-        i =low;
-        j = high;
-        index = array[low];
-        while(i&lt;j){
-            while(i&lt;j &amp;&amp; array[j]&gt;index)
-                j--;
-            if(i&lt;j)
-                array[i++] = array[j];
-            while(i&lt;j &amp;&amp; array[i]&lt;index)
-                i++;
-            if(i&lt;j){
-                array[j--] = array[i];
-            }
-        }
-        array[i] = index;
-        sort(array,low,i-1);
-        sort(array,i+1,high);
-    }
-    public static void quickSort(int[] array){
-        sort(array,0,array.length-1);
-    }
-}
-</code></pre><h1 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h1><p>　基本思想：先将待排序的的数组元素分成多个子序列，使得整个子序列的元素个数相对较少，然后对各个子序列分别进行直接插入排序，代整个待排序序列“基本有序后”，最后在对所有元素进行一次直接插入排序。<br>　具体实现：</p>
-<pre><code>public class TestShellSort {    
-    public static void main(String[] args) {    
-        int[] a = {5,3,2,9,7,6,1};
-        shellSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void shellSort(int[] array){
-        int len = array.length;
-        int i,j,h;//h为步长
-        int temp;
-        for(h =len/2;h&gt;0;h/=2){
-            for(i =h;i&lt;len;i++){//从每组至少第二个元素开始遍历
-                temp = array[i];
-                for(j=i-h;j&gt;=0;j-=h){
-                    if(temp&lt;array[j])
-                        array[j+h] = array[j];
-                    else 
-                        break;
-                }
-                array[j+h] = temp;
-            }
-        }
-    }
-}
-</code></pre><h1 id="7、堆排序"><a href="#7、堆排序" class="headerlink" title="7、堆排序"></a>7、堆排序</h1><p>　基本思想：对于给定的n个记录，初始时把这些记录看做一颗顺序存储的二叉树，然后将其调整为一个最大堆，然后将堆的最后一个元素和堆顶元素进行交换，堆的最后一个元素即为最大记录；接着将前（n-1）个元素重新调整为一个最大堆，在将堆顶元素和最后一个元素进行交换得到次的的记录，重复该过程直到调整的堆中只剩下一个元素为止，该元素为最小记录，此时得到一个有序序列。<br>　具体实现：</p>
-<pre><code>public class TestHeapSort {
-    public static void main(String[] args) {
-        int[] a = {4,3,2,7,6,5};
-        heapSort(a);
-        for(int i=0;i&lt;a.length;i++)
-            System.out.print(a[i]+&quot; &quot;);
-    }
-    public static void adjustHeap(int[] a,int pos,int len){
-        int temp;
-        int child;
-        for(temp = a[pos];2*pos+1&lt;=len;pos = child){
-            child = 2*pos+1;
-            if(child&lt;len &amp;&amp; a[child+1]&gt;a[child])
-                child++;
-            if(a[child]&gt;temp)
-                a[pos] = a[child];
-            else
-                break;
-        }
-        a[pos] = temp;
-    }
-    public static void heapSort(int[] array){
-        int i;
-        int len = array.length;
-        for(i=len/2-1;i&gt;=0;i--)
-            adjustHeap(array, i, len-1);
-        for(i = len-1;i&gt;=0;i--){
-            int temp = array[0];
-            array[0] = array[i];
-            array[i] = temp;
-            adjustHeap(array, 0, i-1);
-        }
-    }
-}
-</code></pre><h1 id="8、这7种排序算法的比较"><a href="#8、这7种排序算法的比较" class="headerlink" title="8、这7种排序算法的比较"></a>8、这7种排序算法的比较</h1><p><img src="http://i.imgur.com/R5XdooQ.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/04/JAVA多线程（二）/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="冯佳欣">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="冯佳欣的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="冯佳欣的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/04/JAVA多线程（二）/" itemprop="url">
-                  JAVA多线程（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-04T18:41:27+08:00">
-                2017-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA总结/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　接着上篇博客继续，还有一些多线程的概念，我以前也没听过，正好整理学习一下，加油！！</p>
-<h2 id="1、sleep-方法与wait-方法的不同？"><a href="#1、sleep-方法与wait-方法的不同？" class="headerlink" title="1、sleep()方法与wait()方法的不同？"></a>1、sleep()方法与wait()方法的不同？</h2><p>　区别主要显示在一下几个方面：</p>
-<ol>
-<li>原理不同，sleep()方法时Thread的静态方法，是线程控制自身流程的，会让此线程暂停一段时间，把机会让给其他线程；而wait()方法时Object的方法，用于线程见的通信，这个方法会使拥有该对象锁的进程等待，直到其他线程调用notify()方法。</li>
-<li>对锁的处理机制不同，sleep()方法不涉及线程间通信，不释放锁，而wait()会释放掉它所占用的锁，从而使线程所在对象的其他synchronized数据可被别的线程使用。</li>
-<li>使用区域不同，sleep()可以在任何地方使用，而wait()方法必须放在同步控制方法或语句块中使用；除此之外，sleep()方法必须捕获异常，而wait()方法不需要，在sleep()过程中，有可能被其他对象调用它的interrupt(),产生interruptedException异常。</li>
-</ol>
-<p>　<strong>那么扩展一下：sleep()和yield()有什么区别？</strong></p>
-<ol>
-<li>sleep()给其他线程运行机会时不考虑线程的优先级，而yield()只给相同优先级或更高优先级的线程运行的机会。</li>
-<li>线程执行sleep()后转入阻塞状态，所以在休眠的时间段内肯定不会被执行；但是yield()只是使当前线程重新回到可执行状态，所以可能执行yield()后进入到可执行状态后马上又被执行。</li>
-<li>sleep()方法抛出InterruptedException，而yield()没有声明任何异常。</li>
-<li>sleep()方法比yield()有更好地可移植性（操作系统方面）。</li>
-</ol>
-<h2 id="2、终止线程的方法？"><a href="#2、终止线程的方法？" class="headerlink" title="2、终止线程的方法？"></a>2、终止线程的方法？</h2><p>　<strong>stop()和suspend()方法。</strong></p>
-<p>　stop()方法释放已经锁定的所有监视资源，suspend()不会释放锁。这两种方式都不安全，一般建议让线程自行结束进入Dead状态；在学习这个方法前，先补充一下基础知识。</p>
-<hr>
-<p>　关键字<strong>volatile</strong>,类型修饰符，系统每次用它时都是直接从内存中读取，而不是从缓存中读取。</p>
-<hr>
-<p>　那么建议方式是通过设置flag()标志来控制循环是否执行，通过这种方法来让线程离开run()方法从而终止线程。</p>
-<p>　<strong>实例代码如下：</strong></p>
-<pre><code>public class MyThreadStop implements Runnable {
-    private volatile Boolean flag;
-
-    public void stop(){
-        flag = false;
-    }
-
-    @Override
-    public void run() {
-        while(flag){
-            //执行
-        }
-    }
-
-}
-</code></pre><p>　在上例中，调用stop()虽然能够终止线程，但是，当线程处于非运行状态时，这个方法就不可用啦，此时可以使用interrupt()方法来打破阻塞的情况，当interrupt()被调用时，会抛出interruptedException异常，可以通过在run()方法中来捕获这个异常让线程安全退出。</p>
-<p>　<strong>示例代码如下：</strong></p>
-<pre><code>public class MYThread {
-
-    public static void main(String[] args) {
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                System.out.println(&quot;thread go to sleep&quot;);
-
-                try {
-                    Thread.sleep(5000);
-                    System.out.println(&quot;thread end&quot;);
-                } catch (InterruptedException e) {
-                    //e.printStackTrace();
-                    System.out.println(&quot;thread is interupted&quot;);
-                }
-            }
-        });
-
+    public void sendMessage(){
+        //当前线程的名称
+        System.out.println(Thread.currentThread().getName());
+        //创建一个新的线程发送消息
+        Thread thread = new Thread(this);
         thread.start();
-        thread.interrupt();
-
+        //当前线程继续执行
+        System.out.println(&quot;Message has been sent by Local&quot;);
     }
 
-}
-
-运行结果如下：
-thread go to sleep
-thread is interupted
-</code></pre><h2 id="3、什么是守护线程？"><a href="#3、什么是守护线程？" class="headerlink" title="3、什么是守护线程？"></a>3、什么是守护线程？</h2><p>　守护线程是指程序在运行时在后台提供一种通用服务的线程，用户线程跟守护线程的差别在：如果用户线程已经全部退出运行，只剩下守护线程存在，JVM也就退出了。</p>
-<p>　在Java中，守护线程一般具有较低的优先级，它可以由用户设置，方法就是在调用<strong>start()前</strong>调用对象的setDaemon(true)方法，注意：当在一个守护线程中产生了其他线程，那么这些新产生的线程默认还是守护线程。</p>
-<p>　<strong>说了这么多，代码实战一下更加清晰明了：</strong></p>
-<pre><code>class ThreadJoin extends Thread{
-    @Override
-    public void run() {
-        System.out.println(Thread.currentThread().getName()+&quot;:begin&quot;);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(Thread.currentThread().getName()+&quot;:end&quot;);
-    }
-
-}
-
-public class ThreadJoinDemo {
-
-    public static void main(String[] args) {
-        System.out.println(&quot;test:begin&quot;);
-        Thread t1 = new ThreadJoin();
-        t1.setDaemon(true);
-        t1.start();
-        System.out.println(&quot;test:end&quot;);
-
-    }
-
-}
-
-运行结果：
-test:begin
-test:end
-Thread-0:begin
-</code></pre><p>　其中守护线程最典型的的一个例子就是垃圾回收器，只要JVM启动，它始终在运行，实时监控和管理系统中可以被回收的资源。</p>
-<h2 id="4、join-方法的作用是什么？"><a href="#4、join-方法的作用是什么？" class="headerlink" title="4、join()方法的作用是什么？"></a>4、join()方法的作用是什么？</h2><p>　join()的作用是让调用该方法的线程在执行完run()方法后，再执行join()方法后面的代码。简单来说就是将两个线程合并，实现同步的功能；具体就是可以通过线程A的join()方法来等待线程A的结束，或者使用线程A的join(2000)方法来等待线程A的结束，但最多只等2s。</p>
-<p>　<strong>来，写个代码实例把：</strong></p>
-<pre><code>public class JoinTest {
-
-    public static void main(String[] args) {
-        Thread t = new Thread(new ThreadImp());
-        t.start();
-        try {
-            t.join(1000);
-            if(t.isAlive()){
-                System.out.println(&quot;t has not finished&quot;);
-            }else{
-                System.out.println(&quot;t has finished&quot;);
-            }
-            System.out.println(&quot;joinFinish&quot;);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-}
-
-class ThreadImp implements Runnable{
 
     @Override
     public void run() {
-        System.out.println(&quot;ThreadImp begin:&quot;);
-        try {
-            Thread.sleep(5000);
-            System.out.println(&quot;ThreadImp end:&quot;);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        remote.excuteMessage(message, this);
+    }
+    /**
+     * 发送消息后的回调函数
+     */
+    @Override
+    public void execute(Object... objects) {
+        //打印返回的消息
+        System.out.println(objects[0]);
+        //打印发送消息的线程名称
+        System.out.println(Thread.currentThread().getName());
+        //中断发送消息的线程
+        Thread.interrupted();
+    }
+
+    public static void main(String[] args){
+        Local local = new Local(new Remote(),&quot;hello&quot;);
+        local.sendMessage();
     }
 
 }
+</code></pre><p>远程消息的接收者</p>
+<pre><code>/**
+ * 处理消息的远程类
+ * @author: 冯佳欣  
+ * @date: 2017年2月23日 下午3:49:43
+ */
+public class Remote {
+    /**
+     * 处理消息
+     * @param msg 接收的消息
+     * @param callBack 回调函数处理类
+     * @return: void
+     */
+    public void excuteMessage(String msg,CallBack callBack){
+        /**
+         * 模拟远程类正在处理其他事情
+         */
+        for(int i =0;i&lt;10000;i++)
+        {
 
-运行结果如下：
-ThreadImp begin:
-t has not finished
-joinFinish
-ThreadImp end:
-</code></pre><p>　<strong>到这里，关于线程的知识差不多整理完毕，有很多知识我也是重新学习了一遍，代码重新编写一次，写了这么多可真累，不过以后再捡起来就相对容易些了，先记录这些吧，以后再有新知识，新感悟在补充。</strong></p>
+        }
+        /**
+         * 处理完其他事情，现在来处理消息
+         */
+        System.out.println(msg);
+        System.out.println(&quot;I have executed the message by Local&quot;);
+        /**
+         * 执行回调
+         */
+        callBack.execute(new String[]{&quot;Nice to meet you~!&quot;});
+    }
+
+}
+</code></pre><p>执行结果为</p>
+<pre><code>main
+Message has been sent by Local
+hello
+I have executed the message by Local
+Nice to meet you~!
+</code></pre><p><strong>注意：remote.executeMessage(message, this);</strong><br>　executeMessage方法需要接收一个message参数，表示发送出去的消息，而CallBack参数是他自己，也就是这里的this。表示发送消息后，由Local类自己来处理，调用自身的execute方法来处理消息结果。<br>　如果这里不是用this，而是用其他的CallBack接口的实现类的话，那就不能称之为“回调”了，在OO的世界里，那就属于“委派”。也就是说，“回调”必须是消息的发送者来处理消息结果，否则不能称之为回调。这个概念必须明确。</p>
 
           
         
@@ -1353,7 +1075,7 @@ ThreadImp end:
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/03/JAVA多线程（一）/">
+  <link itemprop="mainEntityOfPage" href="https://fengjiaxin.github.io/2017/02/20/Comparable接口的实现和使用/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="冯佳欣">
@@ -1378,8 +1100,8 @@ ThreadImp end:
             
               
                 
-                <a class="post-title-link" href="/2017/02/03/JAVA多线程（一）/" itemprop="url">
-                  JAVA多线程（一）
+                <a class="post-title-link" href="/2017/02/20/Comparable接口的实现和使用/" itemprop="url">
+                  Comparable接口的实现和使用
                 </a>
               
             
@@ -1395,8 +1117,8 @@ ThreadImp end:
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T20:42:34+08:00">
-                2017-02-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-20T22:07:31+08:00">
+                2017-02-20
               </time>
             
 
@@ -1455,254 +1177,62 @@ ThreadImp end:
       
         
           
-            <p>　在上学期学习了操作系统的相关知识，首先学的就是进程与线程的知识概念，但是linux操作系统是用c语言编写的，并且关于线程的代码太底端，平时做题也是运用伪代码来写的，那么今天在整理Java多线程的相关知识的同时，正好与之前学习的操作系统知识相结合，那么这篇文章主要介绍一下多线程的Java实现。</p>
-<h2 id="1、线程与进程的概念"><a href="#1、线程与进程的概念" class="headerlink" title="1、线程与进程的概念"></a>1、线程与进程的概念</h2><p>　线程是指程序在执行过程中，能够执行程序代码的一个执行单元，在Java语言中有四种状态：运行、就绪、挂起、结束。</p>
-<p>　进程是指一段正在执行的程序，而线程有时成为轻量级进程，是程序执行的最小单元，一个进程可以有多个线程，各个线程之间共享程序的内存空间（代码段、数据段、堆空间）以及一些进程级的资源，但是各个线程拥有自己的栈空间。</p>
-<p>　在网上找到一个图片很合适的表现的进程与线程的对比关系，图如下：</p>
-<p><img src="http://i.imgur.com/Tv9A8OA.png" alt=""></p>
-<p>　在操作系统级别上，程序的执行都是以进程为单位，每个进程通常有多个线程互不影响并发的执行，那么为什么使用多线程呢？</p>
-<ol>
-<li>使用多线程可以减少程序的响应时间。</li>
-<li>与进程相比，线程的创建和切换开销更小。</li>
-<li>多CPU或多核计算机本身就具有执行多线程的能力。</li>
-<li>使用多线程能简化程序的结构，使程序便于理解和维护。</li>
-</ol>
-<h2 id="2、同步和异步的区别？"><a href="#2、同步和异步的区别？" class="headerlink" title="2、同步和异步的区别？"></a>2、同步和异步的区别？</h2><p>　答：如果系统中存在临界资源（资源数量少于竞争资源的线程数量的资源），例如正在写的数据以后可能被另一个线程读到，或者正在读的数据可能已经被另一个线程写过了，那么这些数据就必须进行同步存取（数据库操作中的排他锁就是最好的例子）。当应用程序在对象上调用了一个需要花费很长时间来执行的方法，并且不希望让程序等待方法的返回时，就应该使用异步编程，在很多情况下采用异步途径往往更有效率。事实上，所谓的同步就是指阻塞式操作，而异步就是非阻塞式操作。</p>
-<h2 id="3、如何实现JAVA多线程？"><a href="#3、如何实现JAVA多线程？" class="headerlink" title="3、如何实现JAVA多线程？"></a>3、如何实现JAVA多线程？</h2><p>　Java虚拟机允许应用程序并发的运行多个线程，在Java中，一共有三种实现方式，那么根据我的掌握程度，我只写前两个实现方式。</p>
-<ol>
-<li>继承Thread类，重写run()方法</li>
-<li><p>声明实现Runnable接口类，并实现run()方法。</p>
-<p> <strong>对于方式一：</strong></p>
-</li>
-</ol>
-<p>　启动线程的唯一方法就是通过Thread的start()方法。start()方法是一个本地方法，将启动一个新线程，并执行run()方法；需要注意的是：调用start()方法是使得该线程变为可运行状态，什么时候运行线程代码是由操作系统决定。</p>
-<p>　代码示例如下：</p>
-<pre><code>class Demo extends Thread    
-{  
-    private String name;  
-    Demo(String name)//构造函数  
-    {  
-        //this.name = name;  
-        super(name);  
-
-    }  
-    public void run()//复写run方法  
-    {  
-        for ( int i = 0 ; i &lt; 60  ; i++ )  
-        {  
-            System.out.println(Thread.currentThread().getName()+&quot;run=&quot;+i);  
-        }  
-    }  
-} 
-public class ThreadExtendsDemo {
-
-    public static void main(String[] args) {
-        Demo t1 = new Demo(&quot;one&quot;);//创建一个对象t1  
-        Demo t2 = new Demo(&quot;two&quot;);  
-        t1.start();// 通过调用start方法，开启多线程  
-        t2.start();  
-        run();  
+            <p>　在c语言中，有一个非常重要的概念就是<strong>回调函数</strong>，<strong>所谓回调函数，就是指函数先在某处注册，而他将在某个需要的时刻被调用</strong>。<br>　关于回调函数的概念，我将另起一篇文章进行学习。<br>　在Java中没有指针的概念，那么如何在Java语言中实现类似于函数指针的功能？可以利用接口与类来实现同样的效果，具体而言，就是先定义一个接口，然后在接口中声明要被调用的方法，接着实现这个接口，最后把这个实现类的一个对象作为参数传递给调用程序，调用程序通过这个参数来调用指定的函数，从而实现回调函数的功能。  </p>
+<hr>
+<p>　那么接下来学习Compareble接口的实现和使用。</p>
+<h1 id="1-什么是Comparable接口"><a href="#1-什么是Comparable接口" class="headerlink" title="1.什么是Comparable接口"></a>1.什么是Comparable接口</h1><p>　此接口强行对实现它的每个类的对象进行整体排序。此排序被称为该类的自然排序 ，类的 compareTo 方法被称为它的自然比较方法 。实现此接口的对象列表（和数组）可以通过 Collections.sort （和 Arrays.sort ）进行自动排序。实现此接口的对象可以用作有序映射表中的键或有序集合中的元素，无需指定比较器。</p>
+<h1 id="2-实现什么方法"><a href="#2-实现什么方法" class="headerlink" title="2.实现什么方法"></a>2.实现什么方法</h1><pre><code>int compareTo(T o)
+</code></pre><p>　比较此对象与指定对象的顺序。如果该对象小于、等于或大于指定对象，则分别返回负整数、零或正整数。<br>　强烈推荐 (x.compareTo(y)==0) == (x.equals(y)) 这种做法，但不是 严格要求这样做。一般来说，任何实现 Comparable 接口和违背此条件的类都应该清楚地指出这一事实。推荐如此阐述：“注意：此类具有与 equals 不一致的自然排序。”</p>
+<pre><code>参数：
+       o - 要比较的对象。 
+返回：
+        负整数、零或正整数，根据此对象是小于、等于还是大于指定对象。 
+抛出：
+        ClassCastException - 如果指定对象的类型不允许它与此对象进行比较。
+</code></pre><h1 id="3-代码实例"><a href="#3-代码实例" class="headerlink" title="3.代码实例"></a>3.代码实例</h1><pre><code>import java.util.Arrays;
+import java.util.Random;
+class Employee implements Comparable&lt;Employee&gt;{
+    private int id;
+    private String name;
+    private double salary;
+    public Employee(String n,double s){
+        this.name = n;
+        this.salary =s;
+        Random ID = new Random();
+        id = ID.nextInt(10000000);
     }
-
-    private static void run() {
-        for(int i =0;i&lt;60;i++)
-            System.out.println(&quot;main&quot; +i);
+    public int getId() {
+        return id;
     }
-
-}
-</code></pre><p>　需要注意的是：<br>　t1.start()开启线程并执行该线程的run方法。<br>　t1.run()仅仅是对象调用方法。而线程创建了，并没有运行。还是在主线程的运行中。</p>
-<p>　　<strong>对于方式二：</strong></p>
-<p>　首先定义类实现Runnable接口，实现run()方法；然后创建Thread对象，用实现Runnable接口的对象作为参数实例化该Thread对象；最有调用Thread的start()方法。</p>
-<p>　代码示例如下：</p>
-<pre><code>class MyThread implements Runnable{
-
+    public String getName() {
+        return name;
+    }
+    public double getSalary() {
+        return salary;
+    }
     @Override
-    public void run() {
-        System.out.println(&quot;Thread Body&quot;);
+    //这里比较的是什么 sort方法实现的就是按照此比较的东西从小到大排列
+    public int compareTo(Employee o) {
+        if(id&lt;o.id)
+            return -1;
+        if(id&gt;o.id)
+            return 1;
+        return 0;
     }
-
 }
-public class ThreadImmDemo {
-
+public class EmployeeSortTest {
     public static void main(String[] args) {
-        MyThread thread = new MyThread();
-        Thread t = new Thread(thread);
-        t.start();
-
-    }
-
-}
-</code></pre><p>　其实，不管是通过继承Thread类还是通过实现Runnable接口来实现多线程的方法，最终还是通过Thread对象的API来控制线程。</p>
-<p>　在学习了这两种方式实现多线程，那么有一个问题：<strong>一个类是否可以同时继承Thread类并实现Runnable接口</strong>？<br>　答案是可以的;代码示例如下：</p>
-<pre><code>public class Test extends Thread implements Runnable {
-
-    public static void main(String[] args) {
-        Thread t = new Thread(new Test());
-        t.start();
-    }
-
-}
-</code></pre><p>　上面这段代码是可以编译通过的，因为Test类从Thread类继承了run()方法，这个继承的run()方法可以被当做对RUnnable接口的实现，因此此段代码可以编译通过。</p>
-<h2 id="4、run-方法和start-方法的区别？"><a href="#4、run-方法和start-方法的区别？" class="headerlink" title="4、run()方法和start()方法的区别？"></a>4、run()方法和start()方法的区别？</h2><p>　通常，系统通过调用线程类的start()方法来启动一个线程，此时该线程处于就绪状态，而非运行状态，也就意味着这个线程可以被JVM来调度执行；在调度过程中，JVM通过调用线程类的run()方法来完成实际的操作，当run()方法结束后，此线程就会终止。</p>
-<p>　如果直接调用run()方法，这会别当做一个普通的函数调用，程序中仍然只有主线程这一个线程；<br>由此可知，只有通过调用线程类的start()方法才能真正达到多线程的目的。</p>
-<h2 id="5、多线程同步的实现方法？"><a href="#5、多线程同步的实现方法？" class="headerlink" title="5、多线程同步的实现方法？"></a>5、多线程同步的实现方法？</h2><p><strong>Java主要提供了3种实现同步机制的方法：</strong></p>
-<h3 id="1-synchronized关键字"><a href="#1-synchronized关键字" class="headerlink" title="1 synchronized关键字"></a>1 synchronized关键字</h3><p>　在Java中，每个对象都有一个对象锁与之相关联，该锁表明对象在任何时候只允许被一个线程所拥有，当一个线程调用对象的一段synchronized代码时，需要先获取这个锁，然后去执行相应的代码，执行结束后，释放锁。</p>
-<p>　synchronized关键字有两种用法：synchronized方法和synchronized块，此外，该关键字可以用作于静态方法、类、或某个实例。</p>
-<p>　讲解了这么多，我编写一个买票程序，使用两个线程买票，一个线程在同步块中，一个线程在同步函数中，代码实例如下：</p>
-<pre><code>class Ticket implements Runnable{
-    private int ticket =100;
-    boolean flag = true;
-
-    @Override
-    public void run() {
-        if(flag){
-            while(true){
-                synchronized (this) {
-                    if(ticket&gt;0){
-                        try {
-                            Thread.sleep(10);
-                            System.out.println(Thread.currentThread().getName()+&quot;runs=&quot;+ticket--);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-            }
-        }
-        else{
-            show();
-        }
-    }
-
-    private synchronized void show() {
-        while(true){
-            if(ticket&gt;0){
-                try {
-                    Thread.sleep(10);
-                    System.out.println(Thread.currentThread().getName()+&quot;show =&quot;+ticket--);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-}
-
-public class TicketDemo {
-
-    public static void main(String[] args) {
-        Ticket t = new Ticket();
-        Thread t1 = new Thread(t);
-        Thread t2 = new Thread(t);
-        t1.start();
-
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        t.flag = false;
-        t2.start();
-
-    }
-
-}
-</code></pre><p>　那么如果同步函数被static修饰后，使用的锁是什么呢？我们知道静态进内存时一定没有本类对象，但一定有该类对应的字节码文件对象，即类.class,实在不行，我们创建一个对象，<strong>Object obj = new Objext()</strong>;然后利用obj锁。</p>
-<h3 id="2-wait-和notify-方法"><a href="#2-wait-和notify-方法" class="headerlink" title="2 wait()和notify()方法"></a>2 wait()和notify()方法</h3><p>　在synchronized代码被执行期间，线程可以通过调用对象的wait()方法，释放对象锁，进入等待状态，并且可以调用notify()或notifyAll()方法通知正在等待的其他线程。其中，notify()方法仅唤醒一个线程（等待队列的第一个线程），并允许它去获得锁；notifyAll()方法唤醒所有等待这个对象的线程并允许他们获得锁（让这些线程竞争获得）。</p>
-<p>　接下来编写一个生产者消费者的实例，代码实例如下：</p>
-<pre><code>public class ProducerConsumerDemo {
-
-    public static void main(String[] args) {
-        Resource res = new Resource();
-        Producer pro = new Producer(res);
-        Consumer con = new Consumer(res);
-
-        Thread t0 = new Thread(pro);
-        Thread t1 = new Thread(pro);
-        Thread t2 = new Thread(con);
-        Thread t3 = new Thread(con);
-
-        t0.start();
-        t1.start();
-        t2.start();
-        t3.start();
-
-    }
-
-}
-
-class Resource{
-    private String name ;
-    private int count =1;
-    private boolean flag = false;//true代表有产品，false代笔没有产品
-
-    //生产
-    public synchronized void set(String name){
-        while(flag){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        this.name = name;
-        System.out.println(Thread.currentThread().getName()+&quot;...生产者&quot;+this.name);
-        flag = true;
-        this.notifyAll();
-    }
-
-    //消费
-    public synchronized void out(){
-        while(!flag){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(Thread.currentThread().getName()+&quot;...消费者&quot;+this.name);
-        flag = false;
-        this.notifyAll();
-
+        Employee[] staff = new Employee[3];
+        staff[0] = new Employee(&quot;fengjiaxin&quot;,35000);
+        staff[1] = new Employee(&quot;yangqi&quot;,40000);
+        staff[2] = new Employee(&quot;james&quot;,50000);
+        //sort方法可以实现对对象数组排序，但是必须实现 Comparable接口
+        Arrays.sort(staff);
+        for(Employee e:staff)
+            System.out.println(&quot;id:&quot;+e.getId()+&quot; name:&quot;+e.getName()+&quot; salary:&quot;+e.getSalary());
     }
 }
-
-class Producer implements Runnable{
-    private Resource res;
-    Producer(Resource res){
-        this.res = res;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            res.set(&quot;商品&quot;);
-        }
-    }
-
-}
-
-class Consumer implements Runnable{
-    private Resource res;
-    Consumer(Resource res){
-        this.res = res;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            res.out();
-        }
-    }
-
-}
-</code></pre><h3 id="3-Lock"><a href="#3-Lock" class="headerlink" title="3 Lock"></a>3 Lock</h3><p>　JDK5后新增了Lock接口以及一个实现类ReentrantLock(重入锁)，我也第一次接触，好好学习一下，Lock也可以用来实现多线程的同步，它提供一些放法实现多线程的同步：</p>
-<p>　1 lock():以阻塞的方式获取锁，即如果获取到了锁，立即返回，如果别的线程持有锁，当前线程等待，直到获取锁后返回。</p>
-<p>　2 tryLock():以非阻塞的方式来获取锁，只是试探获取，如果获取到锁，立即返回true,否则返回false。</p>
-<p>　3 lockInterruptibly():如果获取到了锁，立即返回，否则，当前线程处于休眠状态，直到获得锁，注意：如果当前线程被别的线程中断，会收到InterruptedException异常。</p>
-<p>　<strong>先总结到这里，没想到写了这么多还有很多没写完，那么只好再写一篇啦。</strong></p>
+</code></pre><h1 id="4-与Comparator的区别"><a href="#4-与Comparator的区别" class="headerlink" title="4.与Comparator的区别"></a>4.与Comparator的区别</h1><p>　Comparator位于包java.util下，而Comparable位于包java.lang下，Comparable接口将比较代码嵌入自身类中，而后者在一个独立的类中实现比较。<br>　如果类的设计师没有考虑到Compare的问题而没有实现Comparable接口，可以通过  Comparator来实现比较算法进行排序，并且为了使用不同的排序标准做准备，比如：升序、降序。</p>
 
           
         
@@ -1736,7 +1266,7 @@ class Consumer implements Runnable{
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1779,7 +1309,7 @@ class Consumer implements Runnable{
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1788,7 +1318,7 @@ class Consumer implements Runnable{
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

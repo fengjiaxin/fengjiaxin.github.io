@@ -96,17 +96,17 @@
 一、介绍ArrayList继承了AbstractList，实现了List。构造图如下:蓝色线条：继承绿色线条：接口实现  
 
 二、ArrayList定义public class ArrayList&amp;lt;E&amp;gt; extends Abstrac">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/ArrayList/1.png">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/ArrayList/2.jpg">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/ArrayList/3.jpg">
-<meta property="og:updated_time" content="2017-02-27T10:13:36.006Z">
+<meta property="og:image" content="http://i.imgur.com/peqvBDX.png">
+<meta property="og:image" content="http://i.imgur.com/6zFE4RX.jpg">
+<meta property="og:image" content="http://i.imgur.com/ERLuySC.jpg">
+<meta property="og:updated_time" content="2017-03-02T08:13:28.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ArrayList源码学习">
 <meta name="twitter:description" content="关于Java的集合我经常用到，学习的数据结构知识也差不多啦，那么今天就来分析一下Java中的ArrayList源代码，看看Java中的代码是如何编写的。
 一、介绍ArrayList继承了AbstractList，实现了List。构造图如下:蓝色线条：继承绿色线条：接口实现  
 
 二、ArrayList定义public class ArrayList&amp;lt;E&amp;gt; extends Abstrac">
-<meta name="twitter:image" content="https://fengjiaxin.github.io/jpg/ArrayList/1.png">
+<meta name="twitter:image" content="http://i.imgur.com/peqvBDX.png">
 
 
 
@@ -362,7 +362,7 @@
       
         <p>关于Java的集合我经常用到，学习的数据结构知识也差不多啦，那么今天就来分析一下Java中的ArrayList源代码，看看Java中的代码是如何编写的。</p>
 <h1 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h1><p>ArrayList继承了AbstractList，实现了List。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现  </p>
-<p><img src="jpg/ArrayList/1.png" alt=""></p>
+<p><img src="http://i.imgur.com/peqvBDX.png" alt=""></p>
 <h1 id="二、ArrayList定义"><a href="#二、ArrayList定义" class="headerlink" title="二、ArrayList定义"></a>二、ArrayList定义</h1><pre><code>public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt; implements List&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable
 </code></pre><p>　ArrayList是一个数组队列，相当于动态数组。与Java中的数组相比，它的容量能动态增长。它继承于AbstractList，实现了List, RandomAccess, Cloneable, java.io.Serializable这些接口。</p>
 <ol>
@@ -567,7 +567,7 @@ private void RangeCheck(int index) {
            &quot;Index: &quot;+index+&quot;, Size: &quot; +size);
 }
 </code></pre><p>　增加和删除方法到这里就解释完了，代码是很简单，主要是：1.数组扩容，2.数组复制，这两个操作都是极费效率的，最惨的情况下(添加到list第一个位置，删除list最后一个元素或删除list第一个索引位置的元素)时间复杂度可达O(n)。</p>
-<p><img src="jpg/ArrayList/2.jpg" alt=""><br><img src="jpg/ArrayList/3.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/6zFE4RX.jpg" alt=""><br><img src="http://i.imgur.com/ERLuySC.jpg" alt=""></p>
 <p>　上面两张图分别是数组扩容和数组复制的过程，需要注意的是，数组扩容伴随着开辟新建的内存空间以创建新数组然后进行数据复制，而数组复制不需要开辟新内存空间，只需将数据进行复制。</p>
 <p>　增加元素可能会进行扩容，而删除元素却不会进行缩容，如果在已删除为主的场景下使用list，一直不停的删除而很少进行增加，那么会出现浪费空间，需要将数组的大小调整为当前实际元素大小，进行释放空间。</p>
 <pre><code>/**
@@ -877,7 +877,7 @@ iteratorThroughFor2：5 ms
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -886,7 +886,7 @@ iteratorThroughFor2：5 ms
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

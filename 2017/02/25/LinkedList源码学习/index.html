@@ -90,18 +90,18 @@
 <meta property="og:url" content="https://fengjiaxin.github.io/2017/02/25/LinkedList源码学习/index.html">
 <meta property="og:site_name" content="冯佳欣的博客">
 <meta property="og:description" content="今天来介绍下LinkedList，LinkedList与ArrayList一样实现List接口，只是ArrayList是List接口的大小可变数组的实现，LinkedList是List接口链表的实现。基于链表实现的方式使得LinkedList在插入和删除时更优于ArrayList，而随机访问则比ArrayList逊色些。构造图如下:蓝色线条：继承绿色线条：接口实现LinkedList是基于链表结">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/1.png">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/2.jpg">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/3.jpg">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/4.jpg">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/5.jpg">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/6.jpg">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/LinkedList/7.jpg">
-<meta property="og:updated_time" content="2017-02-28T01:56:04.264Z">
+<meta property="og:image" content="http://i.imgur.com/f7jNXnT.png">
+<meta property="og:image" content="http://i.imgur.com/DG7dwOB.jpg">
+<meta property="og:image" content="http://i.imgur.com/OnUnxNY.jpg">
+<meta property="og:image" content="http://i.imgur.com/GnS0xDM.jpg">
+<meta property="og:image" content="http://i.imgur.com/zLSOytY.jpg">
+<meta property="og:image" content="http://i.imgur.com/krPleJN.jpg">
+<meta property="og:image" content="http://i.imgur.com/wf3cy39.jpg">
+<meta property="og:updated_time" content="2017-03-02T08:16:46.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LinkedList源码学习">
 <meta name="twitter:description" content="今天来介绍下LinkedList，LinkedList与ArrayList一样实现List接口，只是ArrayList是List接口的大小可变数组的实现，LinkedList是List接口链表的实现。基于链表实现的方式使得LinkedList在插入和删除时更优于ArrayList，而随机访问则比ArrayList逊色些。构造图如下:蓝色线条：继承绿色线条：接口实现LinkedList是基于链表结">
-<meta name="twitter:image" content="https://fengjiaxin.github.io/jpg/LinkedList/1.png">
+<meta name="twitter:image" content="http://i.imgur.com/f7jNXnT.png">
 
 
 
@@ -355,16 +355,16 @@
       
 
       
-        <p>　今天来介绍下LinkedList，LinkedList与ArrayList一样实现List接口，只是ArrayList是List接口的大小可变数组的实现，LinkedList是List接口链表的实现。基于链表实现的方式使得LinkedList在插入和删除时更优于ArrayList，而随机访问则比ArrayList逊色些。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现<br><img src="jpg/LinkedList/1.png" alt=""><br>LinkedList是基于链表结构的一种List，在分析LinkedList源码前有必要对链表结构进行说明。</p>
+        <p>　今天来介绍下LinkedList，LinkedList与ArrayList一样实现List接口，只是ArrayList是List接口的大小可变数组的实现，LinkedList是List接口链表的实现。基于链表实现的方式使得LinkedList在插入和删除时更优于ArrayList，而随机访问则比ArrayList逊色些。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现<br><img src="http://i.imgur.com/f7jNXnT.png" alt=""><br>LinkedList是基于链表结构的一种List，在分析LinkedList源码前有必要对链表结构进行说明。</p>
 <h1 id="1-链表的概念"><a href="#1-链表的概念" class="headerlink" title="1.链表的概念"></a>1.链表的概念</h1><p>　链表是由一系列非连续的节点组成的存储结构，简单分下类的话，链表又分为单向链表和双向链表，而单向/双向链表又可以分为循环链表和非循环链表，下面简单就这四种链表进行图解说明。</p>
 <h2 id="1-1-单向链表"><a href="#1-1-单向链表" class="headerlink" title="1.1.单向链表"></a>1.1.单向链表</h2><p>单向链表就是通过每个结点的指针指向下一个结点从而链接起来的结构，最后一个节点的next指向null。</p>
-<p><img src="jpg/LinkedList/2.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/DG7dwOB.jpg" alt=""></p>
 <h2 id="1-2-单向循环链表"><a href="#1-2-单向循环链表" class="headerlink" title="1.2.单向循环链表"></a>1.2.单向循环链表</h2><p>单向循环链表和单向列表的不同是，最后一个节点的next不是指向null，而是指向head节点，形成一个“环”。</p>
-<p><img src="jpg/LinkedList/3.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/OnUnxNY.jpg" alt=""></p>
 <h2 id="1-3-双向链表"><a href="#1-3-双向链表" class="headerlink" title="1.3.双向链表"></a>1.3.双向链表</h2><p>从名字就可以看出，双向链表是包含两个指针的，pre指向前一个节点，next指向后一个节点，但是第一个节点head的pre指向null，最后一个节点的tail指向null。</p>
-<p><img src="jpg/LinkedList/4.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/GnS0xDM.jpg" alt=""></p>
 <h2 id="1-4-双向循环链表"><a href="#1-4-双向循环链表" class="headerlink" title="1.4.双向循环链表"></a>1.4.双向循环链表</h2><p>双向循环链表和双向链表的不同在于，第一个节点的pre指向最后一个节点，最后一个节点的next指向第一个节点，也形成一个“环”。而LinkedList就是基于双向循环链表设计的。</p>
-<p><img src="jpg/LinkedList/5.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/zLSOytY.jpg" alt=""></p>
 <h1 id="LinkedList简介"><a href="#LinkedList简介" class="headerlink" title="LinkedList简介"></a>LinkedList简介</h1><h2 id="LinkedList定义"><a href="#LinkedList定义" class="headerlink" title="LinkedList定义"></a>LinkedList定义</h2><pre><code>public class LinkedList&lt;E&gt;
     extends AbstractSequentialList&lt;E&gt;
     implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable
@@ -470,7 +470,7 @@ predecessor = e;
 </ul>
 </li>
 </ul>
-<p><img src="jpg/LinkedList/6.jpg" alt=""><br><img src="jpg/LinkedList/7.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/krPleJN.jpg" alt=""><br><img src="http://i.imgur.com/wf3cy39.jpg" alt=""></p>
 <p><strong>删除</strong></p>
 <pre><code>/**
  * 删除第一个匹配的指定元素
@@ -842,7 +842,7 @@ public class LinkedList&lt;E&gt;
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -851,7 +851,7 @@ public class LinkedList&lt;E&gt;
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

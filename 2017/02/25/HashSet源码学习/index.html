@@ -100,10 +100,10 @@ HashSet定义public class HashSet&amp;lt;E&amp;gt;
      extends AbstractSet&amp;lt;E&amp;gt;
      implements Set&amp;lt;E&amp;gt;, Cloneable, java.io.Serializable
 1.H">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/HashSet/1.png">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/HashSet/3.png">
-<meta property="og:image" content="https://fengjiaxin.github.io/jpg/HashSet/2.png">
-<meta property="og:updated_time" content="2017-03-01T00:16:18.263Z">
+<meta property="og:image" content="http://i.imgur.com/R1BZxqy.png">
+<meta property="og:image" content="http://i.imgur.com/Bx9HWo2.png">
+<meta property="og:image" content="http://i.imgur.com/eRDWrGL.png">
+<meta property="og:updated_time" content="2017-03-02T08:14:32.078Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashSet源码学习">
 <meta name="twitter:description" content="今天学习一下HashSet,HashSet是通过HashMap实现的。构造图如下:蓝色线条：继承绿色线条：接口实现  
@@ -112,7 +112,7 @@ HashSet定义public class HashSet&amp;lt;E&amp;gt;
      extends AbstractSet&amp;lt;E&amp;gt;
      implements Set&amp;lt;E&amp;gt;, Cloneable, java.io.Serializable
 1.H">
-<meta name="twitter:image" content="https://fengjiaxin.github.io/jpg/HashSet/1.png">
+<meta name="twitter:image" content="http://i.imgur.com/R1BZxqy.png">
 
 
 
@@ -367,7 +367,7 @@ HashSet定义public class HashSet&amp;lt;E&amp;gt;
 
       
         <p>　今天学习一下HashSet,HashSet是通过HashMap实现的。<br>构造图如下:<br>蓝色线条：继承<br>绿色线条：接口实现  </p>
-<p><img src="jpg/HashSet/1.png" alt=""></p>
+<p><img src="http://i.imgur.com/R1BZxqy.png" alt=""></p>
 <h1 id="HashSet定义"><a href="#HashSet定义" class="headerlink" title="HashSet定义"></a>HashSet定义</h1><pre><code>public class HashSet&lt;E&gt;
      extends AbstractSet&lt;E&gt;
      implements Set&lt;E&gt;, Cloneable, java.io.Serializable
@@ -420,7 +420,7 @@ HashSet( int initialCapacity, float loadFactor, boolean dummy) {
     map = new LinkedHashMap&lt;E,Object&gt;(initialCapacity, loadFactor);
 }
 </code></pre><p>　从构造方法可以很轻松的看出，HashSet的底层是一个HashMap，理解了HashMap后，这里没什么可说的。只有最后一个构造方法有写区别，这里构造的是LinkedHashMap，该方法不对外公开，实际上是提供给LinkedHashSet使用的，而第三个参数dummy是无意义的，只是为了区分其他构造方法。</p>
-<h1 id="API方法摘要"><a href="#API方法摘要" class="headerlink" title="API方法摘要"></a>API方法摘要</h1><p><img src="jpg/HashSet/3.png" alt=""></p>
+<h1 id="API方法摘要"><a href="#API方法摘要" class="headerlink" title="API方法摘要"></a>API方法摘要</h1><p><img src="http://i.imgur.com/Bx9HWo2.png" alt=""></p>
 <h1 id="HashSet源码解析-基于JDK1-6-0-45"><a href="#HashSet源码解析-基于JDK1-6-0-45" class="headerlink" title="HashSet源码解析(基于JDK1.6.0_45)"></a>HashSet源码解析(基于JDK1.6.0_45)</h1><p><strong>增加和删除</strong></p>
 <pre><code>/**
  * 利用HashMap的put方法实现add方法
@@ -524,7 +524,7 @@ for(Iterator iterator = set.iterator();
 String[] arr = (String[])set.toArray(new String[0]);
 for (String str:arr)
     System.out.printf(&quot;for each : %s\n&quot;, str);
-</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>　<strong>HashSet和HashMap、Hashtable的区别</strong><br><img src="jpg/HashSet/2.png" alt=""></p>
+</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>　<strong>HashSet和HashMap、Hashtable的区别</strong><br><img src="http://i.imgur.com/eRDWrGL.png" alt=""></p>
 
       
     </div>
@@ -639,7 +639,7 @@ for (String str:arr)
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -648,7 +648,7 @@ for (String str:arr)
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
